@@ -1,8 +1,21 @@
-from controller.run_epic import Controller
+from controller.menu_controller import MenuController
+from controller.db_controller import DbController
+from view.menu_view import Menu
+
 
 def main():
-    epic_events = Controller()
-    epic_events.run()
+    db_control = DbController()
+    
+    
+    
+    
+    menu = Menu()
+    app = MenuController(menu)
+    app.run()
+    db_control.run()
+
+    # main cree les controllers : session accessible a tous les controllers.
 
 if __name__ == "__main__":
     main()
+

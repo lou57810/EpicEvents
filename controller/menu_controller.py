@@ -1,5 +1,7 @@
 from view.menu_view import Menu
 from .db_controller import DbController
+from view.db_menu import DbMenu
+import mysql.connector
 # import mariadb
 
 
@@ -9,28 +11,40 @@ class MenuController:
 
 
     def run(self):
-        
+        menu_db = DbMenu()
         menu = Menu()
-        menu.admin_register()
+
+        # menu.menu_sign_in()
+        self.verify_sign_in()
+        # menu.user_connect()
+        db_app = DbController()
+        db_app.run()
+        menu.menu_gestion_admin()
         
+    def verify_sign_in(self):
+        menu = Menu()
+        user_name, password = menu.menu_sign_in()
         
-        """try:
-            conn = mariadb.connect(
-                user="root",
-                password="edwood111",
-                host="127.0.0.1",
-                port=3306,
-                )
+        conn = None
+        try:
+            conn = mysql.connector.connect(
+            user = user_name, passwd = password,
+            host="localhost",
+            auth_plugin="mysql_native_password"
+        )
+            if conn.is_connected():
+                print('Connected to MySQL database')
 
-            # cur = conn.cursor()
+                mycursor = conn.cursor()
+                mycursor.execute("SHOW DATABASES")
+                for db in mycursor:
+                    print('Databases:', db)
 
-        except mariadb.Error as e:
-            print(f"Error : {e}")
+        except ValueError as e:
+            print(e)
 
-        
-        menu.admin_register()
-
-
-        # /c/Program Files/MariaDB 11.3/bin
-        """
+        finally:
+            if conn is not None and conn.is_connected():
+                conn.close()
+                print('Connection closed.')
 

@@ -1,18 +1,14 @@
 from controller.menu_controller import MenuController
-from controller.db_controller import DbController
+# from controller.db_controller import DbController
 from view.menu_view import Menu
 
 
 def main():
-    db_control = DbController()
-    
-    
-    
-    
+    # db_control = DbController()    
     menu = Menu()
     app = MenuController(menu)
     app.run()
-    db_control.run()
+    print('Ouverture de la database !')
 
     # main cree les controllers : session accessible a tous les controllers.
 

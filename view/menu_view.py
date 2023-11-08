@@ -1,7 +1,16 @@
+import mysql.connector
+
+
 
 class Menu:
     def __init__(self):
         pass
+
+
+    def menu_sign_in(self):        
+        user_name = input('Nom d\'utilisateur: ')
+        password = input('Mot de passe: ')
+        return user_name, password
 
 
     def menu_gestion_admin(self):
@@ -48,19 +57,60 @@ class Menu:
         role = input('A quel département est affecté le nouveau collaborateur ?: ')
         print('result:', complete_name, email, tel, role)
 
-
-    def admin_register(self):        
-        email = "admin"
-        password = "admin"
+    """
+    def user_connect(self):
+        # create instance 'mydb'
+        mydb = mysql.connector.connect(
+            user="root", passwd="edwood",
+            host="localhost",  # , database="dbepic",
+            auth_plugin="mysql_native_password"
+        )
+        print("mydb:", mydb)
+        
         print('Sign in \n')
+        n = 3
+        
+        #email = "admin"
+        #password = "admin"
+        # mysql -u root -p dbepic < input.sql
+        # Mysql SQL>  connect root@localhost
+        
         var_email = input("email : ")
         var_pass = input("password : ")
-        if var_pass != password or var_email != email:
-            print("retry!")
-            self.register()
-        else:
-            print("You are logged as Root Administrator User! ")
+        if var_pass == password and var_email == email:
+            print("You are logged as Gestion Departement User! ")
             # self.menu_create_database()
+        else:
+            while n > 0:
+                var_email = input("email : ")
+                var_pass = input("password : ")
+                print("retry!")
+                n = n - 1
+                print('n:', n)
+                if n == 0:
+                    print("\n Bye!")
+                    raise SystemExit
+        
+    def user_register(self, email, password):
+        print('Sign in \n')
+        n = 3        
+        
+        var_email = input("email : ")
+        var_pass = input("password : ")
+        if var_pass == password and var_email == email:
+            print("You are logged as Gestion Departement User! ")
+            # self.menu_create_database()
+        else:
+            while n > 0:
+                var_email = input("email : ")
+                var_pass = input("password : ")
+                print("retry!")
+                n = n - 1
+                print('n:', n)
+                if n == 0:
+                    print("\n Bye!")
+                    raise SystemExit
+        
 
     def register(self):
         password = "edwood"
@@ -79,11 +129,11 @@ class Menu:
         print("Choose options")
         answer = True
         while answer:
-            print("""            
+            print(triple quote            
             1. Commercial Departement.
             2. Support Departement.
             3. Quit
-            """)
+            triple quote)
             answer = input("Faites votre choix ! \n")
 
             if answer == "1":
@@ -97,5 +147,5 @@ class Menu:
                 raise SystemExit
             elif answer == "":
                 print("\n Choice are 1, 2, or 3!")
-
+     """    
 

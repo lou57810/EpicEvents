@@ -1,25 +1,47 @@
+from view.main_menu_view import MainMenu
 from view.menu_view import Menu
-from .db_controller import DbController
-from view.db_menu import DbMenu
+from .admin_controller import AdminController
+# from view.db_menu import DbMenu
 import mysql.connector
 # import mariadb
 
 
 class MenuController:
-    def __init__(self, menu: Menu):
-        self.menu = menu
+    # def __init__(self, menu: Menu):
+        # self.menu = menu
+    pass
 
 
     def run(self):
-        menu_db = DbMenu()
-        menu = Menu()
+        # menu_db = DbMenu()
+        # menu = Menu()
+        db_app = AdminController()
+        # admin_app = MenuAdmin()
+        app = MainMenu()
+
+        
+
+        choice = app.main_menu()
+
+        if choice == "1":
+            print('administrateur')
+            # self.verify_sign_in()
+            db_app.run()
+            
+        elif choice == "2":
+            print('EventEpic user')
+            # self.verify_sign_in()
+            app.connect_database()
+            menu.menu_gestion_admin()
+        elif choice == "3":
+            print("\n Bye!")
+            raise SystemExit
 
         # menu.menu_sign_in()
-        self.verify_sign_in()
+        # self.verify_sign_in()
         # menu.user_connect()
-        db_app = DbController()
-        db_app.run()
-        menu.menu_gestion_admin()
+        
+        
         
     def verify_sign_in(self):
         menu = Menu()

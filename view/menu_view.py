@@ -1,4 +1,4 @@
-import mysql.connector
+# import mysql.connector
 
 
 
@@ -13,6 +13,19 @@ class Menu:
         return user_name, password
 
 
+    def main_menu(self):
+        print("Choose options:")
+        answer = True
+        while answer:
+            print("""
+            1. Administrateur.
+            2. Collaborateur.
+            3. Quit.
+            """)
+            answer = input("Choix:")
+            return answer
+
+
     def menu_gestion_admin(self):
         print("Choose options")
         answer = True
@@ -25,7 +38,7 @@ class Menu:
             5. Update contracts.
             6. Select events.
             7. Update events.
-            8. Quit.                    
+            8. Quit.
             """)
             answer = input("Faites votre choix ! \n")
 

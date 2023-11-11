@@ -1,14 +1,24 @@
-from controller.menu_controller import MenuController
+# from controller.menu_controller import MenuController
 # from controller.db_controller import DbController
-from view.menu_view import Menu
+from controller.main_menu_controller import MenuController
+# from view.main_menu_view import MainMenu
+# import sqlalchemy
+# from sqlalchemy import create_engine ###
 
 
 def main():
-    # db_control = DbController()    
-    menu = Menu()
-    app = MenuController(menu)
+    
+    # app = MenuAdmin()
+     
+    app = MenuController()
+    
     app.run()
-    print('Ouverture de la database !')
+
+    
+    """db_connection = sqlalchemy.create_engine(
+        'mysql+mysqlconnector://user:pwd@hostname/db_name',
+        connect_args={'auth_plugin': 'mysql_native_password'})"""
+    
 
     # main cree les controllers : session accessible a tous les controllers.
 

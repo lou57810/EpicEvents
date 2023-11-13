@@ -2,49 +2,31 @@
 
 
 
-class Menu:
+class UserMenu:
     def __init__(self):
         pass
 
 
-    def menu_sign_in(self):        
-        user_name = input('Nom d\'utilisateur: ')
-        password = input('Mot de passe: ')
-        return user_name, password
-
-
-    def main_menu(self):
-        print("Choose options:")
-        answer = True
-        while answer:
-            print("""
-            1. Administrateur.
-            2. Collaborateur.
-            3. Quit.
-            """)
-            answer = input("Choix:")
-            return answer
-
-
-    def menu_gestion_admin(self):
+    def menu_user(self):        
         print("Choose options")
         answer = True
         while answer:
-            print("""            
-            1. Create collaborator.
+            print("""
+            1. Database name.
             2. Update collaborator.
             3. Delete collaborator.
             4. Create contracts.
             5. Update contracts.
             6. Select events.
             7. Update events.
-            8. Quit.
+            8. Create table.
+            9. Quit.
             """)
             answer = input("Faites votre choix ! \n")
 
             if answer == "1":
-                print("\n Creer un collaborateur.")
-                self.create_collaborator_account()
+                name = input('Entrer le nom de la base de donnees: ')
+                return 1, name   # Renvoi tuple                
             elif answer == "2":
                 print("\n Update collaborator")
             elif answer == "3":
@@ -58,6 +40,8 @@ class Menu:
             elif answer == "7":
                 print("\n Update events")
             elif answer == "8":
+                return 8, name  # create_db(db_name, self.username, self.password)
+            elif answer == "9":
                 print("\n Bye!")
                 raise SystemExit
             elif answer == "":

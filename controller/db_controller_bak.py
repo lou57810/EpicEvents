@@ -7,7 +7,6 @@ import sqlalchemy
 from sqlalchemy import create_engine, ForeignKey, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database, drop_database
-from model.users_model import Collaborator
 from sqlalchemy import URL
 import mysql.connector
 from getpass import getpass

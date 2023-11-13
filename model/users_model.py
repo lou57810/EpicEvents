@@ -34,7 +34,7 @@ class Collaborator(Base):
         self.role = role
 
     def __repr__(self):
-        return f"({self.email} {self.role})"
+        return f"({self.id} {self.email} {self.role})"
 
 
 
@@ -62,7 +62,7 @@ class Customer(Base):
         self.contact = contact
 
     def __repr__(self):
-        return f"({self.full_name} {self.email} {self.tel} {self.company_name} {self.first_date} {self.last_date} {self.contact})"
+        return f"({self.id} {self.full_name} {self.email} {self.tel} {self.company_name} {self.first_date} {self.last_date} {self.contact})"
 
 
  

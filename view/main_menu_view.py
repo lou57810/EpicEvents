@@ -14,3 +14,10 @@ class MainMenu:
                 """)
                 answer = input("Choix:")
                 return answer
+
+
+    def menu_sign_in(self):
+        print("sign_in: ")
+        user_name = input('Nom d\'utilisateur: ')
+        password = input('Mot de passe: ')
+        return user_name, password

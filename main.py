@@ -1,27 +1,20 @@
-# from controller.menu_controller import MenuController
-# from controller.db_controller import DbController
-from controller.main_menu_controller import MenuController
-# from view.main_menu_view import MainMenu
-# import sqlalchemy
-# from sqlalchemy import create_engine ###
+import os
+
+from controller.main_menu_controller import MainMenuController
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def main():
-    
-    # app = MenuAdmin()
-     
-    app = MenuController()
-    
+    print('BASE_DIR:', BASE_DIR)
+    print('Repertoire de base: ', os.getcwd(),'\n')
+
+    app = MainMenuController()
     app.run()
 
-    
-    """db_connection = sqlalchemy.create_engine(
-        'mysql+mysqlconnector://user:pwd@hostname/db_name',
-        connect_args={'auth_plugin': 'mysql_native_password'})"""
-    
 
     # main cree les controllers : session accessible a tous les controllers.
 
 if __name__ == "__main__":
     main()
-

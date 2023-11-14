@@ -74,6 +74,6 @@ class UserController:
                     print(row)
 
         except Exception as e:
-            print("Exception occured:{}".format(e))
+            print("Exeception occured:{}".format(e))
         finally:
             conn.close()

@@ -1,9 +1,9 @@
 
-class MainMenu:
+class MainMenuView:
     def __init__(self):
         pass
 
-    def main_menu(self):
+    def main_menu_view(self):
             print("Choose options:")
             answer = True
             while answer:

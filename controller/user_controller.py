@@ -1,5 +1,5 @@
 from mysql.connector import connect, Error
-from view.user_menu_view import UserMenu
+from view.user_menu_view import UserMenuView
 from sqlalchemy import URL
 from sqlalchemy import create_engine, ForeignKey, text
 from sqlalchemy_utils import database_exists, create_database, drop_database
@@ -15,13 +15,13 @@ class UserController:
 
     def run(self):
         menuApp = UserMenu()
-        choice, db_name = menuApp.menu_user() 
+        choice, db_name = menuApp.user_menu_view() 
         if choice == 1:
             print('db_name:', db_name)
-            self.create_db(db_name, self.username, self.password)
+            self.initialize_db(db_name, self.username, self.password)
 
 
-    def create_db(self, db_name, username, password):
+    def initialize_db(self, db_name, username, password):
         # "<dialect>+<driver>://<username>:<password>@<host>/<database>"
         # example mysql:
         # mysql_db_url = "mysql://<username>:<password>@<hostname>:<port>/<database>"
@@ -43,10 +43,6 @@ class UserController:
             print(db_name, 'Ok, start working !')
         self.display_databases()
         self.run()
-
-    def create_table(self):
-        engine = self.db_connect()
-        Base.metadata.create_all(bind=engine)
 
 
     def db_connect(self):

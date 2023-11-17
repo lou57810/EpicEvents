@@ -6,12 +6,14 @@ import keyring
 from mysql.connector import connect, Error
 import sqlalchemy
 from sqlalchemy import URL
-from sqlalchemy import create_engine, ForeignKey, text
+from sqlalchemy import create_engine, ForeignKey, text # Column, String, Integer, CHAR
+# from sqlalchemy.ext.declarative_base import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database, drop_database
-
-from view.admin_menu_view import MenuAdminDb
+from sqlalchemy.orm import DeclarativeBase
+from view.admin_menu_view import AdminMenuView
 from model.users_model import Base, Collaborator, Customer
+
 
 
 class AdminController:
@@ -21,54 +23,50 @@ class AdminController:
         self.password = password
 
 
-    def run(self):
+    def run_db(self):
         self.test()
-        menuApp = MenuAdminDb()
-        choice, db_name = menuApp.menu_administrator()  # From admin_menu_view        
+        dbApp = AdminMenuView()
+        choice, db_name = dbApp.admin_menu_db()  # From admin_menu_view
 
         if choice == 1:
             print('db_name:', db_name)
-            self.create_db(db_name, self.username, self.password)
+            self.create_db_connection(db_name, self.username, self.password)
         elif choice == 2:
             self.delete_db(db_name)
         elif choice == 3:
-            self.create_table()
-        
+            # print('choice:', choice)
+            self.build_table()
+        elif choice == 4:
+            print("\n Bye!")
+            raise SystemExit
         return
 
 
-    def test(self):        
+    def test(self):
         print('Version sqlalchemy: ', sqlalchemy.__version__, '\n')
         print('Repertoire de base: ', os.getcwd(),'\n')
         self.display_databases()
-        
 
-    def create_db(self, db_name, username, password):
-        # "<dialect>+<driver>://<username>:<password>@<host>/<database>"
-        # example mysql:
-        # mysql_db_url = "mysql://<username>:<password>@<hostname>:<port>/<database>"
-        
-        url_object = URL.create(
-                    "mysql+pymysql",
-                    username = username,
-                    password = password,
-                    host="localhost",
-                    database=db_name,
-                )
-        engine = create_engine(url_object)
+
+    def create_db_connection(self, db_name, username, password):
+        engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
         
         if not database_exists(engine.url):
             create_database(engine.url)
             print('Nouvelle Base de donnees:', db_name)
             self.display_databases()
+            Base.metadata.create_all(bind=engine)
+
         else:
-            print(db_name, 'Is existing, try another name')
-        self.run()
- 
+            with engine.connect() as connection:
+                Base.metadata.create_all(bind=engine)
+                result = connection.execute(text('select "Hello"'))
+                print('result:', result.all())
+                print(db_name, 'Is existing, try another name')
 
 
     def delete_db(self, db_name):
-        conn = self.db_connect()        
+        conn = self.db_connect()
 
         try:
             # Create a cursor object
@@ -84,11 +82,13 @@ class AdminController:
         finally:
             self.display_databases()
             conn.close()
-        self.run()
+        self.run_db()
+        
 
     
     def db_connect(self):
-        conn = mysql.connector.connect(            
+        print('Enter db_connect !')
+        conn = mysql.connector.connect(
             username = self.username,
             password = self.password,
             host="localhost",
@@ -97,12 +97,8 @@ class AdminController:
         return conn
 
 
-    def create_table(self):
-        engine = self.db_connect()
-        Base.metadata.create_all(bind=engine)
-    
-
     def display_databases(self):
+        print('Enter display_databases')
         conn = self.db_connect()
 
         try:
@@ -116,6 +112,6 @@ class AdminController:
                     print(row)
 
         except Exception as e:
-            print("Exeception occured:{}".format(e))
+            print("Exception occured:{}".format(e))
         finally:
             conn.close()

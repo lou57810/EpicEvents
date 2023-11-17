@@ -11,7 +11,7 @@ def main():
     print('Repertoire de base: ', os.getcwd(),'\n')
 
     app = MainMenuController()
-    app.run()
+    app.run_db()
 
 
     # main cree les controllers : session accessible a tous les controllers.

@@ -2,12 +2,12 @@
 
 
 
-class UserMenu:
+class UserMenuView:
     def __init__(self):
         pass
 
 
-    def menu_user(self):        
+    def user_menu_view(self):        
         print("Choose options")
         answer = True
         while answer:
@@ -26,7 +26,7 @@ class UserMenu:
 
             if answer == "1":
                 name = input('Entrer le nom de la base de donnees: ')
-                return 1, name   # Renvoi tuple                
+                return 1, name   # Renvoi tuple
             elif answer == "2":
                 print("\n Update collaborator")
             elif answer == "3":
@@ -46,6 +46,7 @@ class UserMenu:
                 raise SystemExit
             elif answer == "":
                 print("\n Choice are 1, 2, 3, 4, 5, 6, 7, or 8 : Retry!")
+
 
     def create_collaborator_account(self):
         complete_name = input("Renseignez le nom suivi du prénom : ")

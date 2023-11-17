@@ -1,0 +1,16 @@
+greenlet==3.0.1
+jaraco.classes==3.3.0
+keyring==24.2.0
+more-itertools==10.1.0
+mysql-client==0.0.1
+mysql-connector==2.2.9
+mysql-connector-python==8.2.0
+packaging==23.2
+protobuf==4.21.12
+psycopg2==2.9.9
+PyMySQL==1.1.0
+pywin32-ctypes==0.2.2
+SQLAlchemy==2.0.22
+SQLAlchemy-Utils==0.41.1
+typing_extensions==4.8.0
+wheel==0.41.2

@@ -21,20 +21,27 @@ class Base(DeclarativeBase):
 class Collaborator(Base):
     
     __tablename__ = "collaborators"
-    
-    
+
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(50))
     role: Mapped[str] = mapped_column(String(50))
 
-    def __init__(self, id, email, role):
+    def __init__(self, id, email, password, role):
         self.id = id
         self.email = email
+        self.password = password
         self.role = role
 
+    """def serialize(self):
+       return {
+           'id' : self.id,
+           'email' : self.email,
+           'role': self.role,
+       }"""
+
     def __repr__(self):
-        return f"({self.id} {self.email} {self.role})"
+        return f"({self.id} {self.email} {self.password} {self.role})"
 
 
 

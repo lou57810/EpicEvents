@@ -7,53 +7,70 @@ class UserMenuView:
         pass
 
 
-    def user_menu_view(self):        
+    def user_menu_view(self):
         print("Choose options")
         answer = True
         while answer:
             print("""
             1. Connect database.
-            2. Update collaborator.
-            3. Delete collaborator.
-            4. Create contracts.
-            5. Update contracts.
-            6. Select events.
-            7. Update events.
-            8. Create table.
-            9. Quit.
+            2. Create collaborator.
+            3 Quit.
             """)
+
+            
+            # 3. Update collaborator.
+            # 4. Delete collaborator.
+            # 5. Create contracts.
+            # 6. Update contracts.
+            # 7. Select events.
+            # 8. Update events.
+            # 9. Create table.
+            # 10. Quit.
+            
             answer = input("Faites votre choix ! \n")
 
             if answer == "1":
-                name = input('Entrer le nom de la base de donnees: ')
-                return 1, name   # Renvoi tuple
-            elif answer == "2":
-                print("\n Update collaborator")
+                db_name = input('Entrer le nom de la base de donnees: ')
+                return 1, db_name   # Renvoi tuple
+            if answer == "2":
+                value_table = self.create_collaborator_account()
+                print('value_table:', value_table)
+                # email = input('Entrer l\'email collaborateur: ')
+                # return 2, email
+                # return 2, value_table
+                return 2, value_table
             elif answer == "3":
+                print("\n Bye!")
+                raise SystemExit
+            # elif answer == "3":
+                # print("\n Update collaborator")
+            """elif answer == "4":
                 print("\n Delete collaborator")
-            elif answer == "4":
-                print("\n Create contracts")
             elif answer == "5":
-                print("\n Update contracts")
+                print("\n Create contracts")
             elif answer == "6":
-                print("\n Select events")
+                print("\n Update contracts")
             elif answer == "7":
-                print("\n Update events")
+                print("\n Select events")
             elif answer == "8":
-                return 8, name  # create_db(db_name, self.username, self.password)
+                print("\n Update events")
             elif answer == "9":
+                return 8, name  # create_db(db_name, self.username, self.password)
+            elif answer == "10":
                 print("\n Bye!")
                 raise SystemExit
             elif answer == "":
-                print("\n Choice are 1, 2, 3, 4, 5, 6, 7, or 8 : Retry!")
+                print("\n Choice are 1, 2, 3, 4, 5, 6, 7, or 8 : Retry!")"""
 
 
     def create_collaborator_account(self):
-        complete_name = input("Renseignez le nom suivi du prénom : ")
-        email = input("Renseignez l' email: ")
-        tel = input('Renseignez le n° de téléphone: ')
-        role = input('A quel département est affecté le nouveau collaborateur ?: ')
-        print('result:', complete_name, email, tel, role)
+        db_name = input("Nom de la base de donnees: ")
+        email = input("collaborator email : ")
+        password = input("Mot de passe : ")
+        role = input('A quel departement est affecte le nouveau collaborateur ?: ')
+        # return db_name, email, password, role
+        return db_name, email, password, role
+
 
     """
     def user_connect(self):

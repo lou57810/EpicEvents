@@ -1,10 +1,14 @@
 from mysql.connector import connect, Error
 from view.user_menu_view import UserMenuView
+import sqlalchemy
 from sqlalchemy import URL
-from sqlalchemy import create_engine, ForeignKey, text
+from sqlalchemy import create_engine, ForeignKey, text, inspect
 from sqlalchemy_utils import database_exists, create_database, drop_database
 import mysql.connector
 from mysql.connector import connect, Error
+from model.users_model import Base, Collaborator, Customer
+# from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
 
 class UserController:
@@ -13,45 +17,54 @@ class UserController:
         self.password = password
 
 
-    def run(self):
-        menuApp = UserMenu()
-        choice, db_name = menuApp.user_menu_view() 
+    def run_table(self):
+        menu_user = UserMenuView()
+        choice, value = menu_user.user_menu_view()    # value = table_name
+        # menutable = UserMenuView()
+        # choice, value_table = menutable.user_menu_view()
         if choice == 1:
-            print('db_name:', db_name)
-            self.initialize_db(db_name, self.username, self.password)
+            print('db_name:', value)
+            self.create_db_connection(value, self.username, self.password)
+        elif choice == 2:
+            print('table_name: ', value)
+            self.create_collaborator(value)
+            # choice, value_table = menu_user.user_menu_view()
+            # choice, value_table = menu_user.create_collaborator_account()
+            # choice, value_table = menu_user.create_collaborator_account()
+            # value_table = menu_user.create_collaborator_account()
+            # print('values0: ', value_table)
+            # self.create_collaborator(value_table)
+            
+            
+        elif choice == 3:
+            print("\n Bye!")
+            raise SystemExit
+        return
 
 
-    def initialize_db(self, db_name, username, password):
-        # "<dialect>+<driver>://<username>:<password>@<host>/<database>"
-        # example mysql:
-        # mysql_db_url = "mysql://<username>:<password>@<hostname>:<port>/<database>"
-        self.display_databases()
-        url_object = URL.create(
-                    "mysql+pymysql",
-                    username = username,
-                    password = password,
-                    host="localhost",
-                    database="dbepic",
-                )
-        engine = create_engine(url_object)
+    def create_db_connection(self, db_name, username, password):
+        engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
         
         if not database_exists(engine.url):
             create_database(engine.url)
-            print('Bad database, Retry !')
-            
+            print('Nouvelle Base de donnees:', db_name)
+            self.display_databases()
+            Base.metadata.create_all(bind=engine)
+
         else:
-            print(db_name, 'Ok, start working !')
-        self.display_databases()
-        self.run()
+            with engine.connect() as connection:
+                result = connection.execute(text('select "Hello"'))
+                print('result:', result.all())
+                print('You are connected with: ', db_name)
+                self.display_tables(engine)
+        self.run_table()
 
 
     def db_connect(self):
         conn = mysql.connector.connect(
-            # username = "lou", password = "edwood",
             username = self.username,
             password = self.password,
             host="localhost",
-            # auth_plugin="mysql_native_password"
             )
         return conn
 
@@ -73,3 +86,48 @@ class UserController:
             print("Exeception occured:{}".format(e))
         finally:
             conn.close()
+
+
+    def display_tables(self, engine):
+        inspector = inspect(engine)
+
+        for table_name in inspector.get_table_names():
+            print('\n')
+            print('tables:', table_name)
+            for column in inspector.get_columns(table_name):
+               print("Column: %s" % column['name'])
+
+    """def define_engine(self):
+        engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
+        return engine"""
+
+
+    def create_collaborator(self, value):
+        # menu_user = UserMenuView()
+        # db_name, email, password, role = user_app.create_collaborator_account()
+        db_name, email, password, role = value
+        print('values1:', db_name, email, password, role)
+        # engine = self.define_engine()
+        engine = create_engine("mysql+pymysql://" + email + ":" + password + "@localhost/" + db_name)
+        # connection = sqlalchemy.create_engine(
+                # "mysql+mysqlconnector://" + email + ":" + password + "@localhost/" + db_name)   # ?auth_plugin=mysql_native_password
+        
+        with Session(engine) as session:
+            new_collaborator = Collaborator(db_name, email=email, password=password, role=role)
+            session.add(new_collaborator)
+            session.commit()
+        
+        """connection = engine.connect()
+        # make a cursor to run sql queries
+        mycursor = connection.cursor()
+        mycursor.execute("Grant all on *.* to email@localhost")
+        mycursor.execute("Show grants for geeksforgeeks@localhost")
+        result = mycursor.fetchall()
+        print(result)
+ 
+        # commit privileges
+        mycursor.execute("Flush Privileges")
+ 
+        # close connection to MySQL
+        connection.close()"""
+            

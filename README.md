@@ -7,6 +7,10 @@
 
 ## Création d'un environnement virtuel:
 `python -m venv env`
+## Puis activation avec Windows, depuis git bash:
+`source env/scripts/activate`
+## Ou sur Linux:
+`source env/bin/activate`
 
 ## Installation de mysql depuis le site de son nom.
 

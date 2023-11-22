@@ -18,7 +18,6 @@ class MainMenuController:
         main_app = MainMenuView()
         choice = main_app.main_menu_view()
 
-
         if choice == "1":
             username, password = main_app.menu_sign_in()
             admin_app = AdminController(username, password)
@@ -27,8 +26,7 @@ class MainMenuController:
         elif choice == "2":
             username, password = main_app.menu_sign_in()
             user_app = UserController(username, password)
-            user_app.run()
-            
+            user_app.run_table()
 
         elif choice == "3":
             print("\n Bye!")

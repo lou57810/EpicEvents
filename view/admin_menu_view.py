@@ -11,9 +11,8 @@ class AdminMenuView:
         while answer:
             print("""
             1. Create or connect database.
-            2. Delete database.
-            3. Tables menu.
-            4. Quit.
+            2. Delete database.            
+            3. Quit.
             """)
             
             answer = input("Choix: ")
@@ -23,15 +22,15 @@ class AdminMenuView:
             elif answer == "2":
                 db_name = input('Entrer le nom de la base de donnees a supprimer: ')
                 return 2, db_name   # Renvoi tuple
-            elif answer == "3":
-                db_name = input('Entrer le nom de la bd: ')
-                return 3, db_name
+            # elif answer == "3":
+                # db_name = input('Entrer le nom de la bd: ')
+                # return 3, db_name
             elif answer == "":
-                print("\n Choice are 1, 2, 3, 4: Retry !")
-            elif answer == "4":
-                return 4, None 
-                
-                
+                print("\n Choice are 1, 2, 3: Retry !")
+            elif answer == "3":
+                return 3, None 
+
+
 
     """def admin_menu_table(self):
         answer = True

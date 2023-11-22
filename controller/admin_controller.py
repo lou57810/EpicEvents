@@ -6,7 +6,7 @@ import keyring
 from mysql.connector import connect, Error
 import sqlalchemy
 from sqlalchemy import URL
-from sqlalchemy import create_engine, ForeignKey, text # Column, String, Integer, CHAR
+from sqlalchemy import create_engine, ForeignKey, text, select, inspect # Column, String, Integer, CHAR
 # from sqlalchemy.ext.declarative_base import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database, drop_database
@@ -33,10 +33,10 @@ class AdminController:
             self.create_db_connection(db_name, self.username, self.password)
         elif choice == 2:
             self.delete_db(db_name)
-        elif choice == 3:
+        # elif choice == 3:
             # print('choice:', choice)
-            self.build_table()
-        elif choice == 4:
+            # self.build_table()
+        elif choice == 3:
             print("\n Bye!")
             raise SystemExit
         return
@@ -59,10 +59,12 @@ class AdminController:
 
         else:
             with engine.connect() as connection:
-                Base.metadata.create_all(bind=engine)
                 result = connection.execute(text('select "Hello"'))
                 print('result:', result.all())
-                print(db_name, 'Is existing, try another name')
+                print('You are connected with: ', db_name)
+                self.display_tables(engine)
+        self.run_db()
+
 
 
     def delete_db(self, db_name):
@@ -115,3 +117,13 @@ class AdminController:
             print("Exception occured:{}".format(e))
         finally:
             conn.close()
+
+
+    def display_tables(self, engine):        
+        inspector = inspect(engine)
+
+        for table_name in inspector.get_table_names():
+            print('\n')
+            print('tables:', table_name)
+            for column in inspector.get_columns(table_name):
+               print("Column: %s" % column['name'])

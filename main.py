@@ -10,11 +10,12 @@ def main():
     print('BASE_DIR:', BASE_DIR)
     print('Repertoire de base: ', os.getcwd(),'\n')
 
-    app = MainMenuController()
+    # MainMenuController  tous les controllers.
+    app = MainMenuController()    
     app.run_db()
 
 
-    # main cree les controllers : session accessible a tous les controllers.
+    
 
 if __name__ == "__main__":
     main()

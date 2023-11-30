@@ -23,14 +23,20 @@ class Collaborator(Base):
     __tablename__ = "collaborators"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
+    ident: Mapped[int] = mapped_column()
+    username: Mapped[str] = mapped_column(String(50))
     password: Mapped[str] = mapped_column(String(50))
-    role: Mapped[str] = mapped_column(String(50))
+    email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)    
+    role: Mapped[str] = mapped_column(String(50))   # choices=[("Deparement Gestion", "Deparement Gestion"),
+                                                    # ("Deparement Commercial, "Deparement Commercial"),
+                                                    # (Deparement Support", "Deparement Support")])
 
-    def __init__(self, id, email, password, role):
+    def __init__(self, id, ident, username, password, email, role):
         self.id = id
-        self.email = email
+        self.ident = ident
+        self.username = username
         self.password = password
+        self.email = email
         self.role = role
 
     """def serialize(self):
@@ -41,7 +47,7 @@ class Collaborator(Base):
        }"""
 
     def __repr__(self):
-        return f"({self.id} {self.email} {self.password} {self.role})"
+        return f"({self.id} {self.ident} {self.username} {self.password} {self.email} {self.role})"
 
 
 

@@ -1,7 +1,8 @@
+import os
 from mysql.connector import connect, Error
 from view.user_menu_view import UserMenuView
-import sqlalchemy
-from sqlalchemy import URL
+import sqlalchemy 
+from sqlalchemy import URL, insert
 from sqlalchemy import create_engine, ForeignKey, text, inspect
 from sqlalchemy_utils import database_exists, create_database, drop_database
 import mysql.connector
@@ -9,125 +10,65 @@ from mysql.connector import connect, Error
 from model.users_model import Base, Collaborator, Customer
 # from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
+import pymysql.cursors
+import pymysql
+
+# Connect to the database
+
 
 
 class UserController:
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    def __init__(self):
+        pass
 
 
-    def run_table(self):
+    def run_table(self, db_name):
+        
+        self.create_db_connection(db_name)
+        self.display_tables(db_name)
         menu_user = UserMenuView()
-        choice, value = menu_user.user_menu_view()    # value = table_name
-        # menutable = UserMenuView()
-        # choice, value_table = menutable.user_menu_view()
+        choice, value_table = menu_user.user_menu_view(db_name)    # value = table_name
+        
+            
         if choice == 1:
-            print('db_name:', value)
-            self.create_db_connection(value, self.username, self.password)
+            # print('table_name: ', value)
+            self.create_collaborator(value_table)
+
         elif choice == 2:
-            print('table_name: ', value)
-            self.create_collaborator(value)
-            # choice, value_table = menu_user.user_menu_view()
-            # choice, value_table = menu_user.create_collaborator_account()
-            # choice, value_table = menu_user.create_collaborator_account()
-            # value_table = menu_user.create_collaborator_account()
-            # print('values0: ', value_table)
-            # self.create_collaborator(value_table)
-            
-            
-        elif choice == 3:
             print("\n Bye!")
             raise SystemExit
-        return
-
-
-    def create_db_connection(self, db_name, username, password):
-        engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
         
-        if not database_exists(engine.url):
-            create_database(engine.url)
-            print('Nouvelle Base de donnees:', db_name)
-            self.display_databases()
-            Base.metadata.create_all(bind=engine)
 
-        else:
-            with engine.connect() as connection:
-                result = connection.execute(text('select "Hello"'))
-                print('result:', result.all())
-                print('You are connected with: ', db_name)
-                self.display_tables(engine)
-        self.run_table()
-
-
-    def db_connect(self):
-        conn = mysql.connector.connect(
-            username = self.username,
-            password = self.password,
-            host="localhost",
-            )
-        return conn
-
-
-    def display_databases(self):
-        conn = self.db_connect()
-
-        try:
-            # Create a cursor object
-            if conn.is_connected():
-                print('Connected to MySQL database')
-                mycursor = conn.cursor()
-                mycursor.execute("SHOW DATABASES")
-                rows = mycursor.fetchall()
-                for row in rows:
-                    print(row)
-
-        except Exception as e:
-            print("Exeception occured:{}".format(e))
-        finally:
-            conn.close()
-
-
-    def display_tables(self, engine):
-        inspector = inspect(engine)
-
-        for table_name in inspector.get_table_names():
-            print('\n')
-            print('tables:', table_name)
-            for column in inspector.get_columns(table_name):
-               print("Column: %s" % column['name'])
-
-    """def define_engine(self):
-        engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
-        return engine"""
-
-
-    def create_collaborator(self, value):
-        # menu_user = UserMenuView()
-        # db_name, email, password, role = user_app.create_collaborator_account()
-        db_name, email, password, role = value
-        print('values1:', db_name, email, password, role)
-        # engine = self.define_engine()
-        engine = create_engine("mysql+pymysql://" + email + ":" + password + "@localhost/" + db_name)
-        # connection = sqlalchemy.create_engine(
-                # "mysql+mysqlconnector://" + email + ":" + password + "@localhost/" + db_name)   # ?auth_plugin=mysql_native_password
         
-        with Session(engine) as session:
-            new_collaborator = Collaborator(db_name, email=email, password=password, role=role)
-            session.add(new_collaborator)
-            session.commit()
-        
-        """connection = engine.connect()
-        # make a cursor to run sql queries
+        # return
+    def create_collaborator(self, value_table):
+        db_name, ident, username, password, email, role = value_table
+        connection = self.create_db_connection(db_name, self.username, self.password)
         mycursor = connection.cursor()
-        mycursor.execute("Grant all on *.* to email@localhost")
-        mycursor.execute("Show grants for geeksforgeeks@localhost")
-        result = mycursor.fetchall()
-        print(result)
- 
-        # commit privileges
-        mycursor.execute("Flush Privileges")
- 
-        # close connection to MySQL
-        connection.close()"""
-            
+        mycursor.execute("select * from collaborators")
+        for i in mycursor:
+            print('Collaborators:', i)
+        sql = "INSERT INTO collaborators (ident, username, email, password, role) VALUES (%d, %s, %s, %s, %s)"
+        val = ("ident", "username", "email", "password", "role")
+
+        mycursor.execute(sql, val)
+        connection.commit()
+
+
+    def create_db_connection(self, db_name):
+        username = os.environ.get('DB_USER')
+        password = os.environ.get('DB_PASS')
+        try:
+            connection = mysql.connector.connect(host="localhost", user=username, passwd=password, database=db_name)            
+        except Error as e:
+            print(f"Error: '{e}'")
+        return connection
+
+    def display_tables(self, db_name):
+        print('Connexion établie! ')
+        connection = self.create_db_connection(db_name)
+        print('TABLES:')
+        mycursor = connection.cursor()
+        mycursor.execute("SHOW TABLES")
+        for x in mycursor:
+            print(x)

@@ -1,3 +1,5 @@
+import os
+
 
 class MainMenuView:
     def __init__(self):
@@ -8,8 +10,8 @@ class MainMenuView:
             answer = True
             while answer:
                 print("""
-                1. Administrateur.
-                2. EpicEvent user.
+                1. Administrateur mysql.
+                2. other databases.
                 3. Quit.
                 """)
                 answer = input("Choix:")
@@ -17,7 +19,12 @@ class MainMenuView:
 
 
     def menu_sign_in(self):
-        print("sign_in: ")
-        user_name = input('Nom d\'utilisateur: ')
-        password = input('Mot de passe: ')
-        return user_name, password
+        # print("sign_in: ")
+        username = os.environ.get('DB_USER')
+        password = os.environ.get('DB_PASS')
+        db_name = input('Database: ')
+        # username = input('Nom d\'utilisateur: ')
+        # password = input('Mot de passe: ')
+        return db_name, username, password
+
+        

@@ -12,43 +12,44 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database, drop_database
 from sqlalchemy.orm import DeclarativeBase
 from view.admin_menu_view import AdminMenuView
+from view.user_menu_view import UserMenuView
 from model.users_model import Base, Collaborator, Customer
+from .user_controller import UserController
+# from view.user_menu_view import UserMenuView
+
 
 
 
 class AdminController:
 
-    def __init__(self, username, password):
+    def __init__(self, db_name, username, password):
+        self.db_name = db_name
         self.username = username
         self.password = password
 
 
-    def run_db(self):
-        self.test()
+    def start_db(self, db_name):
+        
         dbApp = AdminMenuView()
         choice, db_name = dbApp.admin_menu_db()  # From admin_menu_view
 
         if choice == 1:
-            print('db_name:', db_name)
             self.create_db_connection(db_name, self.username, self.password)
+            self.start_db(db_name)
+
         elif choice == 2:
             self.delete_db(db_name)
-        # elif choice == 3:
-            # print('choice:', choice)
-            # self.build_table()
+            self.start_db(db_name)
+
         elif choice == 3:
             print("\n Bye!")
             raise SystemExit
-        return
-
-
-    def test(self):
-        print('Version sqlalchemy: ', sqlalchemy.__version__, '\n')
-        print('Repertoire de base: ', os.getcwd(),'\n')
-        self.display_databases()
+ 
 
 
     def create_db_connection(self, db_name, username, password):
+        user_app = UserMenuView()
+        user_app_controller = UserController()
         engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
         
         if not database_exists(engine.url):
@@ -63,7 +64,7 @@ class AdminController:
                 print('result:', result.all())
                 print('You are connected with: ', db_name)
                 self.display_tables(engine)
-        self.run_db()
+                
 
 
 
@@ -83,13 +84,12 @@ class AdminController:
             print("Exception occured:{}".format(e))
         finally:
             self.display_databases()
-            conn.close()
-        self.run_db()
+            # conn.close()
+        # self.start_db()
         
 
     
     def db_connect(self):
-        print('Enter db_connect !')
         conn = mysql.connector.connect(
             username = self.username,
             password = self.password,
@@ -100,13 +100,12 @@ class AdminController:
 
 
     def display_databases(self):
-        print('Enter display_databases')
         conn = self.db_connect()
 
         try:
             # Create a cursor object
             if conn.is_connected():
-                print('Connected to MySQL database')
+                # print('Connected to MySQL database')
                 mycursor = conn.cursor()
                 mycursor.execute("SHOW DATABASES")
                 rows = mycursor.fetchall()
@@ -119,11 +118,11 @@ class AdminController:
             conn.close()
 
 
-    def display_tables(self, engine):        
+    def display_tables(self, engine):
         inspector = inspect(engine)
 
         for table_name in inspector.get_table_names():
             print('\n')
-            print('tables:', table_name)
+            print('table:', table_name)
             for column in inspector.get_columns(table_name):
                print("Column: %s" % column['name'])

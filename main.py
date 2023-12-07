@@ -11,11 +11,10 @@ def main():
     print('Repertoire de base: ', os.getcwd(),'\n')
 
     # MainMenuController  tous les controllers.
-    app = MainMenuController()    
+    app = MainMenuController()
     app.run_db()
 
 
-    
 
 if __name__ == "__main__":
     main()

@@ -12,16 +12,26 @@ class UserMenuView:
         answer = True
         while answer:
             print("""
-            1. Create collaborator.
-            2. Quit.
+            1. Sign in.
+            2. Create collaborator.
+            3. Quit.
             """)
 
             answer = input("Faites votre choix ! \n")
             if answer == "1":
-                value_table = self.create_collaborator_account(db_name)
-                return 1, value_table
+                login_data = self.user_sign_in()
+                return 1, login_data
             elif answer == "2":
-                return 2, None
+                value_table = self.create_collaborator_account(db_name)
+                return 2, value_table
+            elif answer == "3":
+                return 3, None
+
+    def user_sign_in(self):
+        username = input('Username: ')
+        password = input('Password: ')
+        return username, password
+
 
 
     def create_collaborator_account(self, db_name):

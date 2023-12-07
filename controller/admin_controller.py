@@ -21,11 +21,14 @@ from .user_controller import UserController
 
 
 class AdminController:
+    def __init__(self, db_name):
+        # self.db_name = db_name
+        pass
 
-    def __init__(self, db_name, username, password):
-        self.db_name = db_name
-        self.username = username
-        self.password = password
+    # def __init__(self, db_name, username, password):
+        # self.db_name = db_name
+        # self.username = username
+        # self.password = password
 
 
     def start_db(self, db_name):
@@ -34,7 +37,8 @@ class AdminController:
         choice, db_name = dbApp.admin_menu_db()  # From admin_menu_view
 
         if choice == 1:
-            self.create_db_connection(db_name, self.username, self.password)
+            # self.create_db_connection(db_name, self.username, self.password)
+            self.create_db_connection(db_name)
             self.start_db(db_name)
 
         elif choice == 2:
@@ -47,7 +51,10 @@ class AdminController:
  
 
 
-    def create_db_connection(self, db_name, username, password):
+    # def create_db_connection(self, db_name, username, password):
+    def create_db_connection(self, db_name):
+        username = os.environ.get('DB_USER')
+        password = os.environ.get('DB_PASS')
         user_app = UserMenuView()
         user_app_controller = UserController()
         engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
@@ -55,7 +62,7 @@ class AdminController:
         if not database_exists(engine.url):
             create_database(engine.url)
             print('Nouvelle Base de donnees:', db_name)
-            self.display_databases()
+            self.display_databases(db_name)
             Base.metadata.create_all(bind=engine)
 
         else:
@@ -63,13 +70,15 @@ class AdminController:
                 result = connection.execute(text('select "Hello"'))
                 print('result:', result.all())
                 print('You are connected with: ', db_name)
-                self.display_tables(engine)
+                # self.display_tables(engine)
                 
 
 
 
     def delete_db(self, db_name):
         conn = self.db_connect()
+        # conn = self.create_db_connection(db_name)
+        
 
         try:
             # Create a cursor object
@@ -83,24 +92,28 @@ class AdminController:
         except Exception as e:
             print("Exception occured:{}".format(e))
         finally:
-            self.display_databases()
+            self.display_databases(db_name)
             # conn.close()
         # self.start_db()
         
 
     
     def db_connect(self):
+        username = os.environ.get('DB_USER')
+        password = os.environ.get('DB_PASS')
         conn = mysql.connector.connect(
-            username = self.username,
-            password = self.password,
+            username = username,
+            password = password,
             host="localhost",
-            # auth_plugin="mysql_native_password"
             )
         return conn
+    
 
 
-    def display_databases(self):
+    def display_databases(self, db_name):
         conn = self.db_connect()
+        # conn = self.create_db_connection(db_name)
+        
 
         try:
             # Create a cursor object
@@ -117,12 +130,4 @@ class AdminController:
         finally:
             conn.close()
 
-
-    def display_tables(self, engine):
-        inspector = inspect(engine)
-
-        for table_name in inspector.get_table_names():
-            print('\n')
-            print('table:', table_name)
-            for column in inspector.get_columns(table_name):
-               print("Column: %s" % column['name'])
+ 

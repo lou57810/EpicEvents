@@ -11,20 +11,14 @@ class MainMenuView:
             while answer:
                 print("""
                 1. Administrateur mysql.
-                2. other databases.
+                2. Choose and Connect database.
                 3. Quit.
                 """)
                 answer = input("Choix:")
                 return answer
 
 
-    def menu_sign_in(self):
-        # print("sign_in: ")
-        username = os.environ.get('DB_USER')
-        password = os.environ.get('DB_PASS')
+    
+    def choose_db_and_connect(self):
         db_name = input('Database: ')
-        # username = input('Nom d\'utilisateur: ')
-        # password = input('Mot de passe: ')
-        return db_name, username, password
-
-        
+        return db_name

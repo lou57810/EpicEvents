@@ -10,15 +10,10 @@ class MainMenuView:
             answer = True
             while answer:
                 print("""
-                1. Administrateur mysql.
-                2. Choose and Connect database.
+                1. Administration.
+                2. Sign in.
                 3. Quit.
                 """)
                 answer = input("Choix:")
                 return answer
-
-
     
-    def choose_db_and_connect(self):
-        db_name = input('Database: ')
-        return db_name

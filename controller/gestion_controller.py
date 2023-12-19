@@ -25,6 +25,14 @@ class GestionController:
         elif choice == 3:
             self.delete_collaborator(values)
         elif choice == 4:
+            self.create_contract()
+        elif choice == 5:
+            self.update_contract()
+        elif choice == 6:
+            self.display_filtered_events()
+        elif choice == 7:
+            self.update_events()
+        elif choice == 8:
             print("\n Bye!")
             raise SystemExit
 
@@ -36,13 +44,14 @@ class GestionController:
         # Création Collaborator = Input mot de passe: password =>bd
         bytes = password.encode('utf-8')
         salt = bcrypt.gensalt()
+        print('salt:', salt)
         hashed_password = bcrypt.hashpw(bytes, salt)
         print('hashed_password:', bcrypt.hashpw(bytes, salt))
         
         Session = sessionmaker(bind=engine)
         session = Session()
 
-        user = Collaborator(ident, username, password, salt, email, role)
+        user = Collaborator(ident, username, password, salt, hashed_password, email, role)
         
         session.add(user)   # stage
         session.commit()    # push
@@ -59,6 +68,7 @@ class GestionController:
 
         bytes = new_password.encode('utf-8')
         salt = bcrypt.gensalt()
+        
         hashed_password = bcrypt.hashpw(bytes, salt)
         print('hashed_password:', bcrypt.hashpw(bytes, salt))
 
@@ -94,9 +104,17 @@ class GestionController:
         self.gestion_menu_controller()
 
 
-    
+    def create_contract(self, values):
+        pass
 
 
-    
-        
+    def update_contract(self, values):
+        pass
 
+
+    def display_filtered_events(self):
+        pass
+
+
+    def update_events(self):
+        pass

@@ -30,7 +30,6 @@ class UserController:
 
 
     def sign_in(self):
-
         user_app = UserMenuView()
         login_email, login_password = user_app.user_sign_in()
         

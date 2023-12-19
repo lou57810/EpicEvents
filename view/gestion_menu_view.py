@@ -22,7 +22,7 @@ class GestionMenuView:
             5. Update contract.
             6. Display events.
             7. Update events.
-            5. Quit.
+            8. Quit.
             """)
 
             answer = input("Faites votre choix ! \n")
@@ -36,13 +36,13 @@ class GestionMenuView:
                 value = self.get_collaborator_ident()
                 return 3, value
             elif answer == "4":
-                value = self.create_or_update_contract()
+                value = self.get_or_update_contract_data()
                 return 4, value
             elif answer == "5":
-                value = self.create_or_update_contract()
+                value = self.get_or_update_contract_data()
                 return 5, value
             elif answer == "6":
-                value = self.display_filterd_events()
+                value = self.display_filtered_events()
                 return 6, value
             elif answer == "7":
                 value = self.update_events(self)
@@ -62,7 +62,7 @@ class GestionMenuView:
         
 
     def set_collaborator_account(self):
-        self.display_gestion_table(engine)
+        # self.display_gestion_table(engine)
         value = self.get_collaborator_data()
         return value
 
@@ -87,7 +87,7 @@ class GestionMenuView:
                 print('Collaborators:', row)
 
 
-    def create_or_update_contract(self):
+    def get_or_update_contract_data(self):
         ident = input('Idenfifiant numérique: ')
         customer_info = input('Informations sur le client: ')
         commercial_contact = input('Contact commercial associé au client: ')
@@ -98,7 +98,7 @@ class GestionMenuView:
         return ident, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status
 
 
-    def display_filterd_events(self):   # afficher tous les événements qui n’ont pas de « support » associé.
+    def display_filtered_events(self):   # afficher tous les événements qui n’ont pas de « support » associé.
         pass
 
 

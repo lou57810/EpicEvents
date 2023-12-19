@@ -38,18 +38,20 @@ class Collaborator(Base):
         ]
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=True)  # Ou ssn self security number
-    ident: Mapped[int] = mapped_column()
+    ident: Mapped[int] = mapped_column(nullable=False, unique=True)
     username: Mapped[str] = mapped_column(String(50))
     password : Mapped[str] = mapped_column(String(120))
-    salt: Mapped[str] = mapped_column(String(60))
+    # salt: Mapped[str] = mapped_column(String(60))
+    hashed_pass: Mapped[str] = mapped_column(String(60))
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     role: Mapped[str] = mapped_column(String(50), ChoiceType(ROLE))
 
-    def __init__(self, ident, username, password, salt, email, role):
+    def __init__(self, ident, username, password, hashed_pass, email, role):
         self.ident = ident
         self.username = username
         self.password = password
-        self.salt = salt
+        # self.salt = salt
+        self.hashed_pass = hashed_pass
         self.email = email
         self.role = role
 
@@ -58,12 +60,13 @@ class Collaborator(Base):
             'ident' : self.ident,
             'username' : self.username,
             'password' : self.password,
+            'hashed_pass' : self.hashed_pass,
             'email' : self.email,
             'role': self.role,
        }"""
 
     def __repr__(self):
-        return f"({self.ident} {self.username} {self.password}  {self.salt} {self.email} {self.role})"
+        return f"({self.ident} {self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
 
 
 
@@ -72,7 +75,7 @@ class Customer(Base):
     __tablename__ = "customers"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    ident: Mapped[int]
+    ident: Mapped[int] = mapped_column(nullable=False, unique=True)
     full_name: Mapped[str] = mapped_column(String(150), nullable=False)
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     tel: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
@@ -100,6 +103,7 @@ class Contracts(Base):
     __tablename__ = "contracts"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    contract_id: Mapped[int] = mapped_column(nullable=False, unique=True) 
     customer_info: Mapped[str] = mapped_column(String(150), nullable=False)
     commercial_contact: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False, unique=True)
@@ -107,7 +111,8 @@ class Contracts(Base):
     start_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())    
     contract_status: Mapped[str] = mapped_column(String(150), nullable=False)
 
-    def __init__(self, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status):
+    def __init__(self, contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status):
+        self.contract_id = contract_id
         self.customer_info = customer_info
         self.commercial_contact = commercial_contact
         self.total_amount = total_amount
@@ -116,7 +121,7 @@ class Contracts(Base):
         self.contract_status = contract_status
 
     def __repr__(self):
-        return f"({self.customer_info} {self.commercial_contact} {self.total_amount} {self.balance_payable} {self.start_date} {self.contract_status})"
+        return f"({self.contract_id} {self.customer_info} {self.commercial_contact} {self.total_amount} {self.balance_payable} {self.start_date} {self.contract_status})"
 
 
 class Events(Base):
@@ -125,7 +130,7 @@ class Events(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=True)  # Ou ssn self security number
     contract_name: Mapped[str] = mapped_column(String(50), nullable=False)
-    event_id: Mapped[int] = mapped_column()
+    event_id: Mapped[int] = mapped_column(nullable=False, unique=True)
     contract_id: Mapped[int] = mapped_column()
     customer_name: Mapped[str] = mapped_column(String(100), nullable=False)
     customer_contact: Mapped[str] = mapped_column(String(150), nullable=False)

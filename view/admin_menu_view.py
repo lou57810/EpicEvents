@@ -10,7 +10,7 @@ class AdminMenuView:
         answer = True
         while answer:
             print("""
-            1. Create database.            
+            1. Create database.
             2. Delete database.
             3. Quit.
             """)

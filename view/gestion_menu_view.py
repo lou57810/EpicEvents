@@ -88,14 +88,14 @@ class GestionMenuView:
 
 
     def get_or_update_contract_data(self):
-        ident = input('Idenfifiant numérique: ')
+        contract_id = input('Idenfifiant numérique: ')
         customer_info = input('Informations sur le client: ')
         commercial_contact = input('Contact commercial associé au client: ')
         total_amount = input('Montant total du contrat: ')
         balance_payable = input('Montant restant à payer: ')
         start_date = input('Date de création du contrat: ')
         contract_status = input('Contrat signé ou non ? ')
-        return ident, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status
+        return contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status
 
 
     def display_filtered_events(self):   # afficher tous les événements qui n’ont pas de « support » associé.
@@ -103,6 +103,17 @@ class GestionMenuView:
 
 
     def update_events(self):    # pour associer un collaborateur support à l’événement)
-        pass
+        contract_name = input("Nom du contrat: ")
+        event_id = input("N° de l'évenement: ")
+        contract_id = input("N° du contrat: ")
+        customer_name = input("Nom du client: ")
+        customer_contact = input("Contact nom client, mail et tél: ")
+        start_date = input("Date du début de l'évenement': ")
+        end_date = input("Date de fin de l'évenement: ")
+        support_contact = input("Nom du contact: ")
+        location = input("Lieu de l'évenement: ")
+        attendees = input("Nombre de participants: ")
+        notes = input("Précisions sur le déroulement de l'évenement: ")
+        return contract_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
     
 

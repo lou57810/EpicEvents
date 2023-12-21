@@ -3,7 +3,7 @@ from sqlalchemy import text, update
 from sqlalchemy.orm import Session, sessionmaker
 from view.gestion_menu_view import GestionMenuView
 from .engine_controller import EngineController
-from model.users_model import Collaborator
+from model.users_model import Collaborator, Contracts
 from .engine_controller import engine
 
 
@@ -25,9 +25,9 @@ class GestionController:
         elif choice == 3:
             self.delete_collaborator(values)
         elif choice == 4:
-            self.create_contract()
+            self.create_contract(values)
         elif choice == 5:
-            self.update_contract()
+            self.update_contract(values)
         elif choice == 6:
             self.display_filtered_events()
         elif choice == 7:
@@ -51,7 +51,7 @@ class GestionController:
         Session = sessionmaker(bind=engine)
         session = Session()
 
-        user = Collaborator(ident, username, password, salt, hashed_password, email, role)
+        user = Collaborator(ident, username, password, hashed_password, email, role)
         
         session.add(user)   # stage
         session.commit()    # push
@@ -105,11 +105,42 @@ class GestionController:
 
 
     def create_contract(self, values):
-        pass
+        contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status = values
+
+        Session = sessionmaker(bind=engine)
+        session = Session()
+
+        contract = Contracts(contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status)
+        # contract = Contracts(values)
+        
+        session.add(contract)   # stage
+        session.commit()    # push
+
+        with engine.connect() as conn:
+            result = conn.execute(text("select * from contracts"))
+            for rows in result:
+                print("Contracts:", rows)
+        self.gestion_menu_controller()     # Retour menu gestion"""
 
 
     def update_contract(self, values):
-        pass
+        contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status = values
+        
+
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        contract = session.query(Contracts).filter_by(contract_id=contract_id).one_or_none()
+
+        contract.contract_id = contract_id
+        contract.customer_info = customer_info
+        contract.commercial_contact = commercial_contact
+        contract.total_amount = total_amount
+        contract.balance_payable = balance_payable
+        contract.start_date = start_date
+        contract.contract_status = contract_status
+
+        session.commit()
+        self.gestion_menu_controller()
 
 
     def display_filtered_events(self):

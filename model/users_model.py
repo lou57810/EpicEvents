@@ -1,6 +1,6 @@
 import os
 # from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import LargeBinary
+from sqlalchemy import LargeBinary, ForeignKey
 from sqlalchemy.dialects.mysql import LONGTEXT
 import datetime
 
@@ -27,8 +27,7 @@ class Base(DeclarativeBase):
 
 class Collaborator(Base):
 
-    
-    
+
     __tablename__ = "collaborators"
 
     ROLE = [
@@ -104,10 +103,10 @@ class Contracts(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     contract_id: Mapped[int] = mapped_column(nullable=False, unique=True) 
-    customer_info: Mapped[str] = mapped_column(String(150), nullable=False)
-    commercial_contact: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
-    total_amount: Mapped[int] = mapped_column(String(150), nullable=False, unique=True)
-    balance_payable: Mapped[int] = mapped_column(String(150), nullable=False, unique=True)    
+    customer_info: Mapped[int] = mapped_column(ForeignKey("customers.ident"))
+    commercial_contact: Mapped[str] = mapped_column(String(150), nullable=False)
+    total_amount: Mapped[int] = mapped_column(String(150), nullable=False)
+    balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)
     start_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())    
     contract_status: Mapped[str] = mapped_column(String(150), nullable=False)
 
@@ -142,11 +141,12 @@ class Events(Base):
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
 
 
-    def __init__(self, contract_name, event_id, contract_id, customer_name, start_date, end_date, support_contact, location, attendees, notes):
+    def __init__(self, contract_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes):
         self.contract_name = contract_name
         self.event_id = event_id
         self.contract_id = contract_id
         self.customer_name = customer_name
+        self.customer_contact = customer_contact
         self.start_date = start_date
         self.end_date = end_date
         self.support_contact = support_contact
@@ -155,8 +155,13 @@ class Events(Base):
         self.notes = notes
 
     def __repr__(self):
-        return f"({self.contract_name} {self.event_id} {self.contract_id} {self.customer_name} {self.start_date} {self.end_date} {self.support_contact} {self.location} {self.attendees} {self.notes} )"
+        return f"({self.contract_name} {self.event_id} {self.contract_id} {self.customer_name} {customer_contact} {self.start_date} {self.end_date} {self.support_contact} {self.location} {self.attendees} {self.notes} )"
 
     
-
+    """class role(str, enum.Enum):
+            Departement Gestion, "Departement Gestion",
+            Departement Commercial, "Departement Commercial",
+            Departement Support, "Departement Support"
+    """
+        
 

@@ -35,7 +35,7 @@ class CommercialMenuView:
                 value = self.display_filtered_contracts()
                 return 4, value
             elif answer == "5":
-                value = self.create_validate_contract_event()
+                value = self.create_validated_contract_event()
                 return 5, value
             elif answer == "6":
                 return 8, None
@@ -73,7 +73,7 @@ class CommercialMenuView:
         pass
 
 
-    def create_validate_contract_event(self):
+    def create_validated_contract_event(self):
         contract_name = input("Nom du contrat: ")
         event_id = input("N° de l'évenement: ")
         contract_id = input("N° du contrat: ")

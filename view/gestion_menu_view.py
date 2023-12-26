@@ -2,7 +2,7 @@
 from sqlalchemy import text
 from sqlalchemy.orm import Session, sessionmaker
 from model.users_model import Collaborator, Events
-from controller.engine_controller import engine
+from controller.engine_controller import engine, session
 
 
 class GestionMenuView:
@@ -20,7 +20,7 @@ class GestionMenuView:
             3. Delete collaborator.
             4. Create contract.
             5. Update contract.
-            6. Display events.
+            6. Display filtered events: No associated support.
             7. Update events.
             8. Quit.
             """)
@@ -42,8 +42,8 @@ class GestionMenuView:
                 value = self.get_or_update_contract_data()
                 return 5, value
             elif answer == "6":
-                value = self.display_filtered_events()
-                return 6, value
+                self.display_filtered_events()
+                # return 6, value
             elif answer == "7":
                 self.display_events()
                 value = self.update_events()
@@ -82,14 +82,7 @@ class GestionMenuView:
 
 
     def display_gestion_table(self):
-        """
-        with engine.connect() as conn:
-            result = conn.execute(text("select * from collaborators"))
-            for row in result:
-                print('Collaborators:', row)
-        """
-        Session = sessionmaker(bind=engine)
-        session = Session()
+       
         collaborators = session.query(Collaborator).all()
         for collaborator in collaborators:
             print(f"id: {collaborator.id}, ident: {collaborator.ident}, username: {collaborator.username}, mail: {collaborator.email}, role: {collaborator.role}")
@@ -107,7 +100,8 @@ class GestionMenuView:
 
 
     def display_filtered_events(self):   # afficher tous les événements qui n’ont pas de « support » associé.
-        pass
+        event = session.query(Events).filter_by(support_contact="").all()
+        print('event:', event)
 
 
     def update_events(self):    # pour associer un collaborateur support à l’événement)
@@ -135,9 +129,10 @@ class GestionMenuView:
 
 
     def display_events(self):
-        Session = sessionmaker(bind=engine)
-        session = Session()
         events = session.query(Events).all()
         for event in events:
             print(f"contract_name: {event.contract_name}, event_id: {event.event_id}, contract_id: {event.contract_id}, customer_name: {event.customer_name}, customer_contact: {event.customer_contact}, start_date: {event.start_date}, end_date: {event.end_date}, customer_contact: {event.customer_contact}, location: {event.location}, attendees: {event.attendees}, notes: {event.notes}, \n")
+
+
+    
 

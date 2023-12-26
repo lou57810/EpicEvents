@@ -28,8 +28,7 @@ class GestionController:
             self.create_contract(values)
         elif choice == 5:
             self.update_contract(values)
-        elif choice == 6:
-            self.display_filtered_events()
+        
         elif choice == 7:
             self.update_events(values)
         elif choice == 8:
@@ -37,8 +36,7 @@ class GestionController:
             raise SystemExit
 
 
-    def create_collaborator(self, values):
-        # crypt_app = CryptoController()
+    def create_collaborator(self, values):        
         ident, username, password, email, role = values
 
         # Création Collaborator = Input mot de passe: password =>bd
@@ -124,10 +122,6 @@ class GestionController:
 
         session.commit()
         self.gestion_menu_controller()
-
-
-    def display_filtered_events(self):
-        pass
 
 
     def update_events(self, values):

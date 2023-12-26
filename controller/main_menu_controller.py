@@ -23,11 +23,11 @@ class MainMenuController:
 
 
     def run_db(self):           # Administration, Sign in
+        self.display_databases()
         main_app = MainMenuView()
         choice = main_app.main_menu_view()
 
         if choice == "1":
-            self.display_databases()
             self.start_administration()
 
         if choice == "2":

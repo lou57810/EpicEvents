@@ -18,7 +18,7 @@ class AdminMenuView:
             answer = input("Choix: ")
             if answer == "1":
                 db_name = input('Entrer le nom de la base de donnees à créer: ')
-                return 1, db_name   # Renvoi tuple            
+                return 1, db_name   # Renvoi tuple
             elif answer == "2":
                 db_name = input('Entrer le nom de la base de donnees a supprimer : ')
                 return 2, db_name   # Renvoi tuple

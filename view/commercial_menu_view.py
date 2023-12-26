@@ -74,7 +74,7 @@ class CommercialMenuView:
 
 
     def create_validated_contract_event(self):
-        contract_name = input("Nom du contrat: ")
+        contract_name = input("Nom de l'evenement: ")
         event_id = input("N° de l'évenement: ")
         contract_id = input("N° du contrat: ")
         customer_name = input("Nom du client: ")

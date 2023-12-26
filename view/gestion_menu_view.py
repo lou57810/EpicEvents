@@ -1,7 +1,7 @@
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session, sessionmaker
-from model.users_model import Collaborator
+from model.users_model import Collaborator, Events
 from controller.engine_controller import engine
 
 
@@ -45,13 +45,14 @@ class GestionMenuView:
                 value = self.display_filtered_events()
                 return 6, value
             elif answer == "7":
-                value = self.update_events(self)
+                self.display_events()
+                value = self.update_events()
                 return 7, value
             elif answer == "8":
                 return 8, None
 
     def get_collaborator_data(self):
-        self.display_gestion_table(engine)
+        self.display_gestion_table()
         ident = input('Identifiant numérique: ')
         print('/n')
         username = input('Nom du collaborateur: ')
@@ -68,23 +69,30 @@ class GestionMenuView:
 
 
     def update_collaborator_account(self):
-        self.display_gestion_table(engine)
+        self.display_gestion_table()
         value = self.get_collaborator_data()
         return value
 
 
 
     def get_collaborator_ident(self):
-        self.display_gestion_table(engine)
+        self.display_gestion_table()
         ident = input('Identifiant numérique:' )
         return ident
 
 
-    def display_gestion_table(self, engine):
+    def display_gestion_table(self):
+        """
         with engine.connect() as conn:
             result = conn.execute(text("select * from collaborators"))
             for row in result:
                 print('Collaborators:', row)
+        """
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        collaborators = session.query(Collaborator).all()
+        for collaborator in collaborators:
+            print(f"id: {collaborator.id}, ident: {collaborator.ident}, username: {collaborator.username}, mail: {collaborator.email}, role: {collaborator.role}")
 
 
     def get_or_update_contract_data(self):
@@ -115,5 +123,21 @@ class GestionMenuView:
         attendees = input("Nombre de participants: ")
         notes = input("Précisions sur le déroulement de l'évenement: ")
         return contract_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
-    
+        
+
+    """def update_events(self):
+        self.display_events()
+        event_to_update = input('N° de l\'evenement :')
+        field_to_udpate = input('Champ à modifier :')
+        new_value = input('Nouvelle valeur: ')
+
+        return event_to_update, field_to_udpate, new_value"""
+
+
+    def display_events(self):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        events = session.query(Events).all()
+        for event in events:
+            print(f"contract_name: {event.contract_name}, event_id: {event.event_id}, contract_id: {event.contract_id}, customer_name: {event.customer_name}, customer_contact: {event.customer_contact}, start_date: {event.start_date}, end_date: {event.end_date}, customer_contact: {event.customer_contact}, location: {event.location}, attendees: {event.attendees}, notes: {event.notes}, \n")
 

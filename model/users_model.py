@@ -135,7 +135,7 @@ class Events(Base):
     customer_contact: Mapped[str] = mapped_column(String(150), nullable=False)
     start_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     end_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    support_contact: Mapped[str] = mapped_column(String(50), nullable=False)
+    support_contact: Mapped[str] = mapped_column(String(50))
     location: Mapped[str] = mapped_column(String(150), nullable=False)
     attendees: Mapped[str] = mapped_column(String(50), nullable=False)
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
@@ -155,7 +155,11 @@ class Events(Base):
         self.notes = notes
 
     def __repr__(self):
-        return f"({self.contract_name} {self.event_id} {self.contract_id} {self.customer_name} {customer_contact} {self.start_date} {self.end_date} {self.support_contact} {self.location} {self.attendees} {self.notes} )"
+        return f"({self.contract_name} {self.event_id} {self.contract_id} {self.customer_name} {self.customer_contact} {self.start_date} {self.end_date} {self.support_contact} {self.location} {self.attendees} {self.notes} )"
+
+
+
+    
 
     
     """class role(str, enum.Enum):

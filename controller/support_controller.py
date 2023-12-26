@@ -14,13 +14,17 @@ class SupportController:
 
 
         if choice == 1:
-            self.create_event()
+            self.display_filtered_event()
         elif choice == 2:
-            print('2')
+            self.update_own_events()
         elif choice == 3:
             print("\n Bye!")
             raise SystemExit
 
 
-    def create_event():
+    def display_filtered_event():
+        pass
+
+
+    def update_own_events():
         pass

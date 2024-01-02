@@ -1,7 +1,7 @@
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session, sessionmaker
-from model.users_model import Collaborator, Events
+from model.users_model import Collaborator, Events, Contracts
 from controller.engine_controller import engine, session
 
 
@@ -36,14 +36,15 @@ class GestionMenuView:
                 value = self.get_collaborator_ident()
                 return 3, value
             elif answer == "4":
-                value = self.get_or_update_contract_data()
+                self.display_contracts()
+                value = self.create_contract_data()
                 return 4, value
             elif answer == "5":
-                value = self.get_or_update_contract_data()
+                self.display_contracts()
+                value = self.update_contract_data()
                 return 5, value
             elif answer == "6":
                 self.display_filtered_events()
-                # return 6, value
             elif answer == "7":
                 self.display_events()
                 value = self.update_events()
@@ -88,7 +89,17 @@ class GestionMenuView:
             print(f"id: {collaborator.id}, ident: {collaborator.ident}, username: {collaborator.username}, mail: {collaborator.email}, role: {collaborator.role}")
 
 
-    def get_or_update_contract_data(self):
+    """def get_or_update_contract_data(self):
+        contract_id = input('Idenfifiant numérique: ')
+        customer_info = input('Informations sur le client: ')
+        commercial_contact = input('Contact commercial associé au client: ')
+        total_amount = input('Montant total du contrat: ')
+        balance_payable = input('Montant restant à payer: ')
+        start_date = input('Date de création du contrat: ')
+        contract_status = input('Contrat signé ou non ? ')
+        return contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status"""
+
+    def create_contract_data(self):
         contract_id = input('Idenfifiant numérique: ')
         customer_info = input('Informations sur le client: ')
         commercial_contact = input('Contact commercial associé au client: ')
@@ -99,40 +110,35 @@ class GestionMenuView:
         return contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status
 
 
-    def display_filtered_events(self):   # afficher tous les événements qui n’ont pas de « support » associé.
+    def update_contract_data(self):
+        contract_to_update = input('N° du contrat: ')
+        attribut_to_update = input('Attribut à modifier: ')
+        new_attribut_value = input('Nouvelle valeur: ')
+        return contract_to_update, attribut_to_update, new_attribut_value
+
+
+    def display_filtered_events(self):   # affiche tous les événements qui n’ont pas de « support » associé.
         event = session.query(Events).filter_by(support_contact="").all()
         print('event:', event)
 
 
-    def update_events(self):    # pour associer un collaborateur support à l’événement)
-        contract_name = input("Nom du contrat: ")
-        event_id = input("N° de l'évenement: ")
-        contract_id = input("N° du contrat: ")
-        customer_name = input("Nom du client: ")
-        customer_contact = input("Contact nom client, mail et tél: ")
-        start_date = input("Date du début de l'évenement': ")
-        end_date = input("Date de fin de l'évenement: ")
-        support_contact = input("Nom du contact: ")
-        location = input("Lieu de l'évenement: ")
-        attendees = input("Nombre de participants: ")
-        notes = input("Précisions sur le déroulement de l'évenement: ")
-        return contract_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
-        
-
-    """def update_events(self):
-        self.display_events()
+    def update_events(self):
         event_to_update = input('N° de l\'evenement :')
-        field_to_udpate = input('Champ à modifier :')
-        new_value = input('Nouvelle valeur: ')
-
-        return event_to_update, field_to_udpate, new_value"""
+        attribut_to_update = input("Attribut à modifier :")
+        new_attribut_value = input("Nouvelle valeur :")
+        return event_to_update, attribut_to_update, new_attribut_value
 
 
     def display_events(self):
         events = session.query(Events).all()
         for event in events:
-            print(f"contract_name: {event.contract_name}, event_id: {event.event_id}, contract_id: {event.contract_id}, customer_name: {event.customer_name}, customer_contact: {event.customer_contact}, start_date: {event.start_date}, end_date: {event.end_date}, customer_contact: {event.customer_contact}, location: {event.location}, attendees: {event.attendees}, notes: {event.notes}, \n")
+            print(f"event_name: {event.event_name}, event_id: {event.event_id}, contract_id: {event.contract_id}, customer_name: {event.customer_name}, customer_contact: {event.customer_contact}, start_date: {event.start_date}, end_date: {event.end_date}, support_contact: {event.support_contact}, location: {event.location}, attendees: {event.attendees}, notes: {event.notes}, \n")
 
 
-    
+    def display_contracts(self):
+        contracts = session.query(Contracts).all()
+        for contract in contracts:
+            print(f"contract_id: {contract.contract_id}, customer_info: {contract.customer_info}, commercial_contact: {contract.commercial_contact}, total_amount: {contract.total_amount}, balance_payable: {contract.balance_payable}, start_date: {contract.start_date}, contract_status: {contract.contract_status}, \n")
+
+
 

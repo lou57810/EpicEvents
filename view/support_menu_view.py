@@ -20,8 +20,7 @@ class SupportMenuView:
 
             answer = input("Faites votre choix ! \n")
             if answer == "1":
-                value = self.display_own_events()
-                return 1, value
+                return 1, None
             elif answer == "2":
                 value = self.update_own_events()
                 return 2, value
@@ -29,10 +28,8 @@ class SupportMenuView:
                 return 3, None
 
 
-    def display_own_events():
-        pass
-        
-
-
-    def update_own_events():
-        pass
+    def update_own_events(self):
+        event_to_update = input("N° de l\'evenement :")
+        attribut_to_update = input("Attribut à modifier :")
+        new_attribut_value = input("Nouvelle valeur :")
+        return event_to_update, attribut_to_update, new_attribut_value

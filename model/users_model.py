@@ -103,7 +103,7 @@ class Contracts(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     contract_id: Mapped[int] = mapped_column(nullable=False, unique=True) 
-    customer_info: Mapped[int] = mapped_column(ForeignKey("customers.ident"))
+    customer_info: Mapped[str] = mapped_column(String(150))  # (ForeignKey("customers.ident"))
     commercial_contact: Mapped[str] = mapped_column(String(150), nullable=False)
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False)
     balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)
@@ -128,7 +128,7 @@ class Events(Base):
     __tablename__ = "events"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=True)  # Ou ssn self security number
-    contract_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    event_name: Mapped[str] = mapped_column(String(50))
     event_id: Mapped[int] = mapped_column(nullable=False, unique=True)
     contract_id: Mapped[int] = mapped_column()
     customer_name: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -141,8 +141,8 @@ class Events(Base):
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
 
 
-    def __init__(self, contract_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes):
-        self.contract_name = contract_name
+    def __init__(self, event_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes):
+        self.event_name = event_name
         self.event_id = event_id
         self.contract_id = contract_id
         self.customer_name = customer_name
@@ -155,7 +155,7 @@ class Events(Base):
         self.notes = notes
 
     def __repr__(self):
-        return f"({self.contract_name} {self.event_id} {self.contract_id} {self.customer_name} {self.customer_contact} {self.start_date} {self.end_date} {self.support_contact} {self.location} {self.attendees} {self.notes} )"
+        return f"({self.event_name} {self.event_id} {self.contract_id} {self.customer_name} {self.customer_contact} {self.start_date} {self.end_date} {self.support_contact} {self.location} {self.attendees} {self.notes} )"
 
 
 

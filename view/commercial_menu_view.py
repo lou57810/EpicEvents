@@ -15,7 +15,7 @@ class CommercialMenuView:
             print("""
             1. Create customer.
             2. Update customer.
-            3. Validate realized contract.
+            3. Update own contract.
             4. Display filtered contract.
             5. Create event for contract.
             6. Quit.
@@ -40,8 +40,21 @@ class CommercialMenuView:
             elif answer == "6":
                 return 8, None
 
+    
+    """def get_customer_data(self):
+        ident = input('N° du Client: ')
+        full_name = input('Nom du Client: ')
+        email = input('Email: ')
+        tel = input('Tel: ')
+        company_name = input('Entreprise: ')
+        first_date = input('Date création: ')
+        last_date = input('Dernier contact: ')
+        contact = input('Contact commercial chez EpicEvents: ')
+        return ident, full_name, email, tel, company_name, first_date, last_date, contact"""
 
-    def get_customer_data(self):
+
+    # Création client
+    def set_customer_account(self):
         ident = input('N° du Client: ')
         full_name = input('Nom du Client: ')
         email = input('Email: ')
@@ -51,22 +64,24 @@ class CommercialMenuView:
         last_date = input('Dernier contact: ')
         contact = input('Contact commercial chez EpicEvents: ')
         return ident, full_name, email, tel, company_name, first_date, last_date, contact
-
-
-    def set_customer_account(self):
         # self.display_customer_table(engine)
-        value = self.get_customer_data()
-        return value
+        # value = self.get_customer_data()
+        # return value
 
 
-
+    # Maj client
     def update_own_customer(self):
-        value = self.get_customer_data()
-        return value
+        ident = input('Id Client: ')
+        key_to_update = input('Clé à modifier: ')
+        value_to_update = input('Nouvelle valeur: ')
+        return ident, key_to_update, value_to_update
 
 
     def update_own_contract(self):
-        pass
+        contract_to_update = input("N° de l\'evenement :")
+        key_to_update = input("Clé à modifier :")
+        value_to_update = input("Nouvelle valeur :")
+        return contract_to_update, key_to_update, value_to_update
 
 
     def display_filtered_contracts(self):
@@ -81,7 +96,7 @@ class CommercialMenuView:
         customer_contact = input("Contact nom client, mail et tél: ")
         start_date = input("Date du début de l'évenement': ")
         end_date = input("Date de fin de l'évenement: ")
-        support_contact = input("Nom du contact: ")
+        support_contact = input("Email contact support: ")
         location = input("Lieu de l'évenement: ")
         attendees = input("Nombre de participants: ")
         notes = input("Précisions sur le déroulement de l'évenement: ")

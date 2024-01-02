@@ -44,20 +44,32 @@ class UserController:
                 if (row[5] == login_email) & (bcrypt.checkpw(password, hashed) == True):
                     print('You are logged in dbepic as :', login_email, ', departement: ', row[6])
                     print('logged_row:', row)
-                    self.departement_redirect(row[6])
+                    self.departement_redirect(row[5], row[6])
                     logged = True
             if logged == False:
                 print('User or Pass incorrect ! retry.')
 
 
 
-    def departement_redirect(self, departement):
+    """def departement_redirect(self, departement):
         if departement == 'gestion':
             gestion_app = GestionController()
             gestion_app.gestion_menu_controller()
         elif departement == 'support':
             support_app = SupportController()
             support_app.support_menu_controller()
+        elif departement == 'commercial':
+            commercial_app = CommercialController()
+            commercial_app.commercial_menu_controller()"""
+
+
+    def departement_redirect(self, email, departement):
+        if departement == 'gestion':
+            gestion_app = GestionController()
+            gestion_app.gestion_menu_controller()
+        elif departement == 'support':
+            support_app = SupportController()
+            support_app.support_menu_controller(email)
         elif departement == 'commercial':
             commercial_app = CommercialController()
             commercial_app.commercial_menu_controller()

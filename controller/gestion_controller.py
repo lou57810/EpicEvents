@@ -28,7 +28,8 @@ class GestionController:
             self.create_contract(values)
         elif choice == 5:
             self.update_contract(values)
-        
+        elif choice == 6:
+            pass
         elif choice == 7:
             self.update_events(values)
         elif choice == 8:
@@ -36,7 +37,7 @@ class GestionController:
             raise SystemExit
 
 
-    def create_collaborator(self, values):        
+    def create_collaborator(self, values):
         ident, username, password, email, role = values
 
         # Création Collaborator = Input mot de passe: password =>bd
@@ -104,10 +105,10 @@ class GestionController:
             result = conn.execute(text("select * from contracts"))
             for rows in result:
                 print("Contracts:", rows)
-        self.gestion_menu_controller()     # Retour menu gestion"""
+        self.gestion_menu_controller()     # Retour menu gestion
 
 
-    def update_contract(self, values):
+    """def update_contract(self, values):
         contract_id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status = values
         
         contract = session.query(Contracts).filter_by(contract_id=contract_id).one_or_none()
@@ -121,34 +122,98 @@ class GestionController:
         contract.contract_status = contract_status
 
         session.commit()
-        self.gestion_menu_controller()
+        self.gestion_menu_controller()"""
+
+
+    def update_contract(self, values):
+        contract_id, attribut_to_update, new_attribut_value = values
+
+        contract = session.query(Contracts).filter_by(contract_id=contract_id).one_or_none()
+        print('contract_to_update:', contract)
+        # print('contrac.attribut:', contract.attribut_to_update) # ==>  'Contract' object has no attribute 'attribut_to_update'
+        print('attribut: ', attribut_to_update)
+        query = session.query(Contracts)
+        column_names = query.statement.columns.keys()
+        print('col:', column_names)
+        for elt in column_names:
+
+            if elt == attribut_to_update:
+                if attribut_to_update == 'contract_id':
+                    contract.contract_id = new_attribut_value
+                elif attribut_to_update == 'customer_info':
+                    contract.customer_info = new_attribut_value
+                elif attribut_to_update == 'commercial_contact':
+                    contract.commercial_contact = new_attribut_value
+                elif attribut_to_update == 'total_amount':
+                    contract.total_amount = new_attribut_value
+                elif attribut_to_update == 'balance_payable':
+                    contract.balance_payable = new_attribut_value
+                elif attribut_to_update == 'start_date':
+                    contract.start_date = new_attribut_value
+                elif attribut_to_update == 'contract_status':
+                    contract.contract_status = new_attribut_value
+
+        print('new session:', session.commit())
+        session.commit()
+        
+
+        # menu_app = GestionMenuView()        # Affichage update
+        # menu_app.display_contracts()
+        
+        self.gestion_menu_controller()      # Retour au menu
+                
+
 
 
     def update_events(self, values):
-        # Retour input view:
-        # event_to_update, field_to_update, new_value = values     # value1: row, value2: column, value3: new value for row and column 
-        # Pour info:
-        contract_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = values
-        
+        event_id, attribut_to_update, new_attribut_value = values
+
         event = session.query(Events).filter_by(event_id=event_id).one_or_none()
-
-        print('event:', type(event))
-        # print('event.value2:', type(event.value2))
-        # print('contract_name:', type(field_to_update), field_to_update)
-        # print('Nouvelle valeur:', type(new_value), new_value)
-        event.contract_name = contract_name
-        event.event_id = event_id
-        event.contract_id = contract_id
-        event.customer_name = customer_name
-        event.customer_contact = customer_contact
-        event.start_date = start_date
-        event.end_date = end_date
-        event.support_contact = support_contact
-        event.location = location
-        event.attendees = attendees
-        event.notes = notes
-
+        print('event_to_update:', event)
+        # print('event.attribut:', event.attribut_to_update) # ==>  'Events' object has no attribute 'attribut_to_update'
+        print('attribut: ', attribut_to_update)
+        query = session.query(Events)
+        column_names = query.statement.columns.keys()
+        print('col:', column_names)
+        for elt in column_names:
+            
+            if elt == attribut_to_update:
+                if attribut_to_update == 'event_name':
+                    event.event_name = new_attribut_value
+                elif attribut_to_update == 'event_id':
+                    event.event_id = new_attribut_value
+                elif attribut_to_update == 'contract_id':
+                    event.contract_id = new_attribut_value
+                elif attribut_to_update == 'customer_name':
+                    event.customer_name = new_attribut_value
+                elif attribut_to_update == 'customer_contact':
+                    event.customer_contact = new_attribut_value
+                elif attribut_to_update == 'start_date':
+                    event.start_date = new_attribut_value
+                elif attribut_to_update == 'end_date':
+                    event.end_date = new_attribut_value
+                elif attribut_to_update == 'support_contact':
+                    event.support_contact = new_attribut_value
+                elif attribut_to_update == 'location':
+                    event.location = new_attribut_value
+                elif attribut_to_update == 'attendees':
+                    event.attendees = new_attribut_value
+                elif attribut_to_update == 'notes':
+                    event.notes = new_attribut_value
+        
+                    
+                    
+                    #, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
+                # attribut_to_update = elt
+                # event.insert(1, new_attribut_value)
+                # print('elt:', elt)
+                # event. = new_attribut_value
+                
+        # event.contract_name = new_attribut_value
+        # print('event.attrib:', attribut_to_update, event.attribut_to_update)
+        print('new session:', session.commit())
         session.commit()
+        
 
         menu_app = GestionMenuView()        # Affichage update
         menu_app.display_events()

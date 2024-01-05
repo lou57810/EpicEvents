@@ -19,7 +19,7 @@ from model.users_model import Base, Collaborator, Customer
 from sqlalchemy.orm import Session, sessionmaker
 import pymysql.cursors
 import pymysql
-from .engine_controller import engine
+from .engine_controller import engine, session
 
 
 
@@ -31,38 +31,27 @@ class UserController:
 
     def sign_in(self):
         user_app = UserMenuView()
-        login_email, login_password = user_app.user_sign_in()
-        
-        # Login: input = password
-        password = b"login_password"
-        hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+        email, check = user_app.user_sign_in()
+        check = check.encode('utf-8')
+        print('check:', check)
 
-        with engine.connect() as conn:
-            result = conn.execute(text("select * from collaborators"))
-            logged = False
-            for row in result:
-                if (row[5] == login_email) & (bcrypt.checkpw(password, hashed) == True):
-                    print('You are logged in dbepic as :', login_email, ', departement: ', row[6])
-                    print('logged_row:', row)
-                    self.departement_redirect(row[5], row[6])
-                    logged = True
-            if logged == False:
-                print('User or Pass incorrect ! retry.')
+        user_row = session.query(Collaborator).filter_by(email=email).one_or_none()
+        print('user_row:', user_row, user_row.email)
+        db_hash = user_row.hashed_pass  # valeur hashed & salted dans la base de données
+        db_hash = db_hash.encode('utf-8')
+        print('db_hash:', db_hash)
 
-
-
-    """def departement_redirect(self, departement):
-        if departement == 'gestion':
-            gestion_app = GestionController()
-            gestion_app.gestion_menu_controller()
-        elif departement == 'support':
-            support_app = SupportController()
-            support_app.support_menu_controller()
-        elif departement == 'commercial':
-            commercial_app = CommercialController()
-            commercial_app.commercial_menu_controller()"""
+        if bcrypt.checkpw(check, db_hash):
+                    
+            print('You are logged in dbepic as :', user_row.email, ', departement: ', user_row.role)
+            print('logged_row:', user_row)
+            # Redirection en fonction du rôle
+            self.departement_redirect(user_row.email, user_row.role)
+        else:
+            print('User or Pass incorrect ! retry.')
 
 
+    # Redirection en fonction du rôle
     def departement_redirect(self, email, departement):
         if departement == 'gestion':
             gestion_app = GestionController()

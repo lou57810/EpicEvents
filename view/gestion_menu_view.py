@@ -57,7 +57,7 @@ class GestionMenuView:
         ident = input('Identifiant numérique: ')
         print('/n')
         username = input('Nom du collaborateur: ')
-        password = input ('Password: ')
+        password = str(input ('Password: '))
         email = input("collaborator email : ")
         role = input('A quel departement est affecte le nouveau collaborateur ?: ')
         return ident, username, password, email, role

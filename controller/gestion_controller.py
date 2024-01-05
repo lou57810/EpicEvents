@@ -42,9 +42,9 @@ class GestionController:
 
         # Création Collaborator = Input mot de passe: password =>bd
         bytes = password.encode('utf-8')
-        salt = bcrypt.gensalt()
+        
         # print('salt:', salt)
-        hashed_password = bcrypt.hashpw(bytes, salt)
+        hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())
         
         user = Collaborator(ident, username, password, hashed_password, email, role)
         
@@ -88,7 +88,7 @@ class GestionController:
         session.commit()
 
         menu_app = GestionMenuView()
-        menu_app.display_gestion_table(engine)
+        menu_app.display_gestion_table()
 
         self.gestion_menu_controller()
 

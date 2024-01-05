@@ -28,7 +28,7 @@ class UserMenuView:
         from controller.gestion_controller import GestionController
         gestion_app = GestionController()
         email = input('Email: ')
-        password = input('Password: ')
+        password = str(input('Password: '))
         
         return email, password
 

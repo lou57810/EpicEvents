@@ -33,7 +33,7 @@
 	2. Sign in. (Permet de se logger en tant que collaborateur. En fonction de son rôle l'utilisateur, sera orienté vers les commandes lui étant reservées.)
 	3. Quit. (Quitte le programme.)
 
-	###      EMAIL		    PASSWORD		ROLE
+	###      EMAIL		    PASSWORD		ROLE (A ne pas renseigner: redirection implicite)
 	### admin@localhost     admin           GESTION     #  compte générique sans hachage.
 
 	### user2@localhost		user2			GESTION

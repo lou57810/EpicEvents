@@ -1,0 +1,274 @@
+from controller.engine_controller import session
+
+from model.users_model import Contract, Customer, User, Event
+from model.users_model import Permissions_roles
+from model.users_model import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT
+
+
+
+class CommercialMenuView:
+
+    def __init__(self):
+        pass
+
+
+    def get_permission(self, role, role_fct):
+        for elt in Permissions_roles:
+            if elt == role:
+                result = Permissions_roles[role]
+        for elt in result:
+            if elt == role_fct:
+                print('elt')
+                return True
+
+
+    def commercial_menu_view(self, id, role):
+        print("Choose options")
+        answer = True
+        while answer:
+            print("""
+            1. Create customer.
+            2. Update customer.
+            3. Update own contract.
+            4. Display filtered contract.
+            5. Create event for contract.
+            6. Quit.
+            """)
+
+            answer = input("Faites votre choix ! \n")
+            if answer == "1":
+                value = self.create_customer_account(id, role)
+                return 1, value
+            elif answer == "2":
+                value = self.update_own_customer(id, role)
+                return 2, value
+            elif answer == "3":
+                value = self.update_own_contract(id, role)
+                return 3, value
+            elif answer == "4":
+                value = self.display_filtered_contracts(id, role)
+                return 4, None
+            elif answer == "5":
+                self.display_ordered_contracts()
+                value = self.create_validated_contract_event(id, role)
+                return 5, value
+            elif answer == "6":
+                print("\n Bye!")
+                raise SystemExit
+
+    
+
+
+    # Création client
+    def create_customer_account(self, user_id, user_role):
+        self.display_customers()
+        if self.get_permission(user_role, ADD_CUSTOMER):
+            full_name = input('Nom du Client: ')
+            customer_email = input('Email du client: ')
+            tel = input('Tel: ')
+            company_name = input('Entreprise: ')
+            first_date = input('Date création: ')
+            last_date = input('Dernier contact: ')
+            # Contact: Affectation automatique de l'id contact commercial.
+            return full_name, customer_email, tel, company_name, first_date, last_date
+        else:
+            print("Operation only allowed for Commercial departement !")
+            self.commercial_menu_view(user_id, user_role)
+
+
+    # Maj client
+    def update_own_customer(self, user_id, user_role):
+        customer_to_update = self.display_ordered_id_customers()
+        # print('customer to update:' , customer_to_update, customer_to_update.id)
+        customer = session.query(Customer).filter_by(id=customer_to_update.id).one_or_none()
+
+        if self.get_permission(user_role, UPDATE_OWN_CUSTOMER):
+            if customer.contact != user_id:
+                print('Forbidden, this customer is not one of your own customers!')
+            else:
+                key_to_update = input('Clé à modifier: ')
+                value_to_update = input('Nouvelle valeur:' )
+                return customer_to_update.id, key_to_update, value_to_update
+        else:
+            print("Operation only allowed for Commercial departement !")
+        self.commercial_menu_view(user_id, user_role)
+
+
+    def display_ordered_id_customers(self):
+        customers = session.query(Customer).all()
+        i = 0
+        for elt in customers:
+            # Get username from id: (elt.contact)
+            user = session.query(User).filter(User.id == elt.contact).first()
+            print(i,'. full_name:', elt.full_name,\
+            "\n", 'email:', elt.customer_email,\
+            "\n", 'tel:', elt.tel,\
+            "\n", 'company_name:', elt.company_name,\
+            "\n", 'first_date:', elt.first_date,\
+            "\n", 'last_date:', elt.last_date,\
+            "\n", 'contact:', user.username)
+            i = i + 1
+        choix = input("Choisir un id customer:")
+        customer = customers[int(choix)]
+        return customer
+
+
+    def display_customers(self):
+        customers = session.query(Customer).all()
+        i = 0
+        for elt in customers:
+            user = session.query(User).filter(User.id == elt.contact).first()
+            print(i,'. Customer:', elt.full_name, elt.customer_email, elt.tel, elt.company_name, elt.first_date, elt.last_date, user.username)
+            i = i + 1
+
+
+    def update_own_contract(self, user_id, user_role):
+        contract_to_update = self.display_ordered_update_own_contracts()
+        # print('Contract_to_update:', contract_to_update, contract_to_update.id)
+        contract = session.query(Contract).filter_by(id=contract_to_update.id).one_or_none()
+        if self.get_permission(user_role, UPDATE_OWN_CONTRACT):
+            if contract.commercial_contact != user_id:
+                print('Forbidden, this contract is not one of your own contracts!')
+            else:
+                key_to_update = input("Clé à modifier :")
+                value_to_update = input("Nouvelle valeur :")
+                return contract_to_update.id, key_to_update, value_to_update
+        else:
+            print("Operation only allowed for Commercial departement !")
+        self.commercial_menu_view(user_id, user_role)
+
+    def display_ordered_update_own_contracts(self):
+        contracts = session.query(Contract).all()
+        i = 0
+        for elt in contracts:
+            
+            # Get username from id: (elt.contact)
+            user = session.query(User).filter(User.id == elt.commercial_contact).first()
+            # Get info customer from customer_id: (elt.customer_id)
+            customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
+            print(i,'. Contract_id:', elt.id,\
+            "\n", 'customer_info:', customer.full_name, customer.customer_email,\
+            "\n", 'tel:',customer.tel,\
+            "\n", 'commercial_contact:', user.username,\
+            "\n", 'total_amount:', elt.total_amount,\
+            "\n", 'balance_payable:', elt.balance_payable,\
+            "\n", 'start_date:', elt.start_date,\
+            "\n", 'commercial_status:', elt.contract_status.value)
+            i = i + 1
+        choix = input("Choisir un id contrat:")
+        contract = contracts[int(choix)]
+        return contract
+
+
+<<<<<<< HEAD:view/commercial_menu_view.py
+
+    def display_filtered_contracts(self, user_id, user_role):
+        contracts = session.query(Contract).all()
+
+        contracts = session.query(Contract).filter((Contract.balance_payable > '0') | (Contract.contract_status == 'UNSIGNED')).all()
+        i = 0
+        for elt in contracts:
+            print( i,'. Balance_payable:', elt.balance_payable,\
+                    "\n", 'status:', elt.contract_status.value)
+            i = i + 1
+
+        self.commercial_menu_view(user_id, user_role)
+
+    def display_ordered_contracts(self):
+        contracts = session.query(Contract).all()
+        i = 0
+        for elt in contracts:
+            # Get username from id: (elt.contact)
+            user = session.query(User).filter(User.id == elt.commercial_contact).first()
+            # Get info customer from customer_id: (elt.customer_id)
+            customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
+            print(i,'. Contract_id:', elt.id,\
+                    "\n", 'customer_info:', customer.full_name, customer.customer_email,\
+                    "\n", 'tel:',customer.tel,\
+                    "\n", 'commercial_contact:', user.username,\
+                    "\n", 'total_amount:', elt.total_amount,\
+                    "\n", 'balance_payable:', elt.balance_payable,\
+                    "\n", 'start_date:', elt.start_date,\
+                    "\n", 'commercial_status:', elt.contract_status.value)
+            i = i + 1
+
+
+    def create_validated_contract_event(self, user_id, user_role):
+        
+        contract_id = self.display_ordered_update_own_contracts()
+        
+        print('elt:', {contract_id})
+        
+        
+        # contracts = session.query(Contract).all()
+        customers = session.query(Customer).all()
+        users = session.query(User).all()
+
+        if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
+            event_name = input("Nom de l'evenement: ")
+            
+            # contract = session.query(Contract).filter_by(id=contract_id).one_or_none()
+            # print('contract:', contract)
+
+            # print('contract_id', contract.commercial_contact, user_id)
+            if contract.commercial_contact != user_id:
+                print('Forbidden, this contract is not one of your own contracts!')
+            else:
+                if contract.contract_status.value != 'signed':
+                    print('contract_status not signed!')
+                else:
+                    for val in customers:
+                        val = session.query(Customer).filter(Customer.id == contract.customer_info).first()
+                        customer_name = val.full_name
+                        customer_contact = val.id
+                        start_date = val.first_date
+                        end_date = val.last_date
+                    
+                    support_contact = input("Support Contact: ")
+                    location = input("Lieu de l'évenement: ")
+                    attendees = input("Nombre de participants: ")
+                    notes = input("Précisions sur le déroulement de l'évenement: ")
+                return event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
+        else:
+            print("Operation only allowed for Commercial departement !")
+        self.commercial_menu_view(user_id, user_role)
+
+
+        
+        
+        
+    def display_events(self):
+        events = session.query(Event).all()
+        i = 0
+        for elt in events:
+            customer = session.query(Customer).all()
+            user = session.query(User).filter(User.id == elt.support_contact).first()
+            # Get info customer from customer_id: (elt.customer_id)
+            customer = session.query(Customer).filter(Customer.id == elt.customer_contact).first()
+            print(i,'. Event_id:', elt.id,\
+                        "\n", 'Event name:', elt.event_name,\
+                        "\n", 'Customer contact:', customer.full_name, customer.customer_email,\
+                        "\n", 'Tel:', customer.tel,\
+                        "\n", 'start_date:', elt.start_date,\
+                        "\n", 'end_date:', elt.end_date,\
+                        "\n", 'support contact:', user.username,\
+                        "\n", 'location:', elt.location,\
+                        "\n", 'attendees:', elt.attendees,\
+                        "\n",  'notes:', elt.notes)
+            i = i + 1
+=======
+    def create_validated_contract_event(self):
+        id = input("N° de l'évenement: ")
+        event_name = input("Nom de l'evenement: ")
+        contract_id = input("N° du contrat: ")
+        customer_name = input("Nom du client: ")
+        customer_contact = input("Contact nom client, mail et tél: ")
+        start_date = input("Date du début de l'évenement': ")
+        end_date = input("Date de fin de l'évenement: ")
+        support_contact = input("id_contact support: ")     # Peut être null
+        location = input("Lieu de l'évenement: ")
+        attendees = input("Nombre de participants: ")
+        notes = input("Précisions sur le déroulement de l'évenement: ")
+        # return event_name, event_id, contract_id, customer_name, customer_contact, start_date, end_date, location, attendees, notes
+        return id, event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
+>>>>>>> a891adf09afd0adf79f7d2288e7efd794b789e8f:view/commercial_menu_view_bak.py

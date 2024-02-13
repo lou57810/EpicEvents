@@ -175,7 +175,7 @@ class Event(Base):
     __tablename__ = "events"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=True)  # Ou ssn self security number
-    event_name: Mapped[str] = mapped_column(String(50))
+    event_name: Mapped[str] = mapped_column(String(150))
 
     # Relation with contracts:
     # contract_id: Mapped[int] = mapped_column(ForeignKey("contracts.id"), nullable=False)
@@ -195,7 +195,7 @@ class Event(Base):
 
     attendees: Mapped[int] = mapped_column(nullable=False)
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
-    
+
 
     def __init__(self, event_name, contract_id, customer_name,\
         customer_contact, start_date, end_date, support_contact,\

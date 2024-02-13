@@ -49,7 +49,7 @@ class CommercialMenuView:
                 value = self.display_filtered_contracts(id, role)
                 return 4, None
             elif answer == "5":
-                self.display_ordered_contracts()
+                # self.display_ordered_contracts()
                 value = self.create_validated_contract_event(id, role)
                 return 5, value
             elif answer == "6":
@@ -86,6 +86,9 @@ class CommercialMenuView:
             if customer.contact != user_id:
                 print('Forbidden, this customer is not one of your own customers!')
             else:
+                query = session.query(Customer)
+                column_names = query.statement.columns.keys()
+                print('Choose one key :', column_names[1], column_names[2], column_names[3], column_names[4], column_names[5], column_names[6])
                 key_to_update = input('Clé à modifier: ')
                 value_to_update = input('Nouvelle valeur:' )
                 return customer_to_update.id, key_to_update, value_to_update
@@ -100,7 +103,7 @@ class CommercialMenuView:
         for elt in customers:
             # Get username from id: (elt.contact)
             user = session.query(User).filter(User.id == elt.contact).first()
-            print(i,'. full_name:', elt.full_name,\
+            print('N°',i,'. full_name:', elt.full_name,\
             "\n", 'email:', elt.customer_email,\
             "\n", 'tel:', elt.tel,\
             "\n", 'company_name:', elt.company_name,\
@@ -118,7 +121,7 @@ class CommercialMenuView:
         i = 0
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
-            print(i,'. Customer:', elt.full_name, elt.customer_email, elt.tel, elt.company_name, elt.first_date, elt.last_date, user.username)
+            print('N°',i,'. Customer:', elt.full_name, elt.customer_email, elt.tel, elt.company_name, elt.first_date, elt.last_date, user.username)
             i = i + 1
 
 
@@ -130,6 +133,9 @@ class CommercialMenuView:
             if contract.commercial_contact != user_id:
                 print('Forbidden, this contract is not one of your own contracts!')
             else:
+                query = session.query(Contract)
+                column_names = query.statement.columns.keys()
+                print('Choose one key :', column_names[3], column_names[4], column_names[5], column_names[6])
                 key_to_update = input("Clé à modifier :")
                 value_to_update = input("Nouvelle valeur :")
                 return contract_to_update.id, key_to_update, value_to_update
@@ -146,14 +152,14 @@ class CommercialMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
-            print(i,'. Contract_id:', elt.id,\
+            print('N°',i,'. Contract_id:', elt.id,\
             "\n", 'customer_info:', customer.full_name, customer.customer_email,\
             "\n", 'tel:',customer.tel,\
             "\n", 'commercial_contact:', user.username,\
             "\n", 'total_amount:', elt.total_amount,\
             "\n", 'balance_payable:', elt.balance_payable,\
             "\n", 'start_date:', elt.start_date,\
-            "\n", 'commercial_status:', elt.contract_status.value)
+            "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
         choix = input("Choisir un id contrat:")
         contract = contracts[int(choix)]
@@ -162,12 +168,12 @@ class CommercialMenuView:
 
 
     def display_filtered_contracts(self, user_id, user_role):
-        contracts = session.query(Contract).all()
+        # contracts = session.query(Contract).all()
 
         contracts = session.query(Contract).filter((Contract.balance_payable > '0') | (Contract.contract_status == 'UNSIGNED')).all()
         i = 0
         for elt in contracts:
-            print( i,'. Balance_payable:', elt.balance_payable,\
+            print('N°', i,'. Balance_payable:', elt.balance_payable,\
                     "\n", 'status:', elt.contract_status.value)
             i = i + 1
 
@@ -181,22 +187,27 @@ class CommercialMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
-            print(i,'. Contract_id:', elt.id,\
+            print('N°',i,'. Contract_id:', elt.id,\
                     "\n", 'customer_info:', customer.full_name, customer.customer_email,\
                     "\n", 'tel:',customer.tel,\
                     "\n", 'commercial_contact:', user.username,\
                     "\n", 'total_amount:', elt.total_amount,\
                     "\n", 'balance_payable:', elt.balance_payable,\
                     "\n", 'start_date:', elt.start_date,\
-                    "\n", 'commercial_status:', elt.contract_status.value)
+                    "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
 
 
     def create_validated_contract_event(self, user_id, user_role):
         
-        contract_id = self.display_ordered_update_own_contracts()
+        contract = self.display_ordered_update_own_contracts()
         
-        print('elt:', {contract_id})
+        print('elt1:', contract)
+        contract_id = contract.id
+        status = contract.contract_status
+        com = contract.commercial_contact
+        customer_info = contract.customer_info
+        print('status:', contract_id, status, com, customer_info)
         
         
         # contracts = session.query(Contract).all()
@@ -215,6 +226,7 @@ class CommercialMenuView:
             else:
                 if contract.contract_status.value != 'signed':
                     print('contract_status not signed!')
+                    self.commercial_menu_view(user_id, user_role)
                 else:
                     for val in customers:
                         val = session.query(Customer).filter(Customer.id == contract.customer_info).first()
@@ -222,6 +234,7 @@ class CommercialMenuView:
                         customer_contact = val.id
                         start_date = val.first_date
                         end_date = val.last_date
+                        print('vals:', customer_name, customer_contact, start_date, end_date)
                     
                     support_contact = input("Support Contact: ")
                     location = input("Lieu de l'évenement: ")
@@ -233,9 +246,7 @@ class CommercialMenuView:
         self.commercial_menu_view(user_id, user_role)
 
 
-        
-        
-        
+
     def display_events(self):
         events = session.query(Event).all()
         i = 0
@@ -244,7 +255,7 @@ class CommercialMenuView:
             user = session.query(User).filter(User.id == elt.support_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
             customer = session.query(Customer).filter(Customer.id == elt.customer_contact).first()
-            print(i,'. Event_id:', elt.id,\
+            print('N°',i,'. Event_id:', elt.id,\
                         "\n", 'Event name:', elt.event_name,\
                         "\n", 'Customer contact:', customer.full_name, customer.customer_email,\
                         "\n", 'Tel:', customer.tel,\

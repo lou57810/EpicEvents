@@ -85,7 +85,7 @@ class GestionMenuView:
         users = session.query(User).all()
         i = 0
         for elt in users:
-            print(i, '. username:', elt.username, 'password:', elt.password,\
+            print('N°',i, '. username:', elt.username, 'password:', elt.password,\
             'email:', elt.email, 'role:', elt.role.value)
             i = i + 1
         choix = input("Choisir un id user:")
@@ -120,7 +120,7 @@ class GestionMenuView:
         users = session.query(User).all()
         i = 0
         for elt in users:
-            print(i, '. User:', elt.username, elt.email, elt.role.value)
+            print('N°',i, '. User:', elt.username, elt.email, elt.role.value)
             i = i + 1
     
 
@@ -131,7 +131,7 @@ class GestionMenuView:
         print('############# Customers ##############')
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
-            print(i,'. Customer_id:',elt.id, "\n", "full_name:", elt.full_name,\
+            print('N°',i,'. Customer_id:',elt.id, "\n", "full_name:", elt.full_name,\
             "\n", "customer_email:", elt.customer_email, "\n",
             "tel:", elt.tel, "\n", "company_name:", elt.company_name,\
             "\n",  "first_date:", elt.first_date, "\n"
@@ -147,7 +147,7 @@ class GestionMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
             
-            print(i,'. Contract_id:', customer.id,\
+            print('N°',i,'. Contract_id:', customer.id,\
                     "\n", 'customer_info:', customer.full_name, customer.customer_email,\
                     "\n", 'tel:',customer.tel,\
                     "\n", 'commercial_contact:', user.username,\
@@ -182,7 +182,7 @@ class GestionMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
             
-            print(i,'. Contract_id:', elt.id,\
+            print('N°',i,'. Contract_id:', elt.id,\
                     "\n", 'customer_info:', customer.full_name, customer.customer_email,\
                     "\n", 'tel:',customer.tel, "\n", 'commercial_contact:', user.username,\
                     "\n", 'total_amount:', elt.total_amount,\
@@ -233,7 +233,7 @@ class GestionMenuView:
         events = session.query(Event).all()
         i = 0
         for event in events:
-            print(i,'event_name:', event.event_name,\
+            print('N°',i,'event_name:', event.event_name,\
                     "\n", 'id:', event.id,\
                     "\n", 'contract_id:', event.contract_id,\
                     "\n", 'customer_name:', event.customer_name,\
@@ -254,7 +254,7 @@ class GestionMenuView:
         events = session.query(Event).all()
         i = 0
         for event in events:
-            print(i,'event_name:', event.event_name,\
+            print('N°',i,'event_name:', event.event_name,\
                 "\n", 'id:', event.id,\
                 "\n", 'contract_id:', event.contract_id,\
                 "\n", 'customer_name:', event.customer_name,\

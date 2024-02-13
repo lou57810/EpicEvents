@@ -124,19 +124,16 @@ class CommercialController:
     def create_event(self, values, contact_id, role):
         if values:
             event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = values
-            contrat = session.query(Contract).filter(Contract.id == contract_id)
-
-            for elt in contrat:
-                print('status:', elt, elt.contract_status.value)
-                if elt.contract_status.value == 'signed':
-                    print('elt.c_stat_val:', elt.contract_status.value)
-                    event = Event(event_name, contract_id, customer_name,\
-                    customer_contact, start_date, end_date, support_contact,\
-                    location, attendees, notes)
-                    session.add(event)   # stage
-                    session.commit()    # push
-                else: 
-                    print('Contract is not signed, event can\'t be created!')
+            print('values:', values)
+ 
+            event = Event(event_name, contract_id, customer_name,\
+            customer_contact, start_date, end_date, support_contact,\
+            location, attendees, notes)
+            print('event:', event)
+            session.add(event)   # stage
+            session.commit()    # push
+        else: 
+            print('Contract is not signed, event can\'t be created!')
 
             """with engine.connect() as conn:
                 result = conn.execute(text("select * from events"))

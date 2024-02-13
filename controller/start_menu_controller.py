@@ -51,9 +51,12 @@ class StartMenuController:
             self.add_database(db_name)
 
         elif choice == 2:
-            self.delete_db(db_name)
+            pass
 
         elif choice == 3:
+            self.delete_db(db_name)
+
+        elif choice == 4:
             print("\n Bye!")
             raise SystemExit
 

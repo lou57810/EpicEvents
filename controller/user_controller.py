@@ -62,6 +62,7 @@ class UserController:
             else:
                 print('Pass incorrect ! retry.')
                 self.sign_in()
+        
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self, id, role):

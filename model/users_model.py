@@ -190,7 +190,7 @@ class Event(Base):
     location: Mapped[str] = mapped_column(String(150), nullable=False)
 
     # Relation with user:
-    support_contact: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    support_contact: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
     user: Mapped["User"] = relationship(back_populates="events_map")
 
     attendees: Mapped[int] = mapped_column(nullable=False)

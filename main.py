@@ -9,7 +9,7 @@ load_dotenv()
 # print('env:', os.getenv("DB_PASS"), os.getenv("DB_USER"))
 
 def main():
-    print('BASE_DIR:', BASE_DIR)
+    # print('BASE_DIR:', BASE_DIR)
     print('Repertoire de base: ', os.getcwd(),'\n')
 
     main_app = StartMenuController()

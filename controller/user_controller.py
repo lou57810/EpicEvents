@@ -27,6 +27,8 @@ from view.start_menu_view import StartMenuView
 
 
 
+
+
 class UserController:
     def __init__(self):
         pass

@@ -1,13 +1,11 @@
 import bcrypt
-from sqlalchemy import text, update, select
-from sqlalchemy.orm import Session, sessionmaker
+# from sqlalchemy import text, update, select
+# from sqlalchemy.orm import Session, sessionmaker
 from view.gestion_menu_view import GestionMenuView
-from view.start_menu_view import StartMenuView
-from .engine_controller import EngineController
+# from view.start_menu_view import StartMenuView
+# from .engine_controller import EngineController
 from model.users_model import User, Contract, Event, Customer
 from .engine_controller import engine, session
-
-
 
 
 class GestionController:
@@ -18,7 +16,7 @@ class GestionController:
     def gestion_menu_controller(self, id, role):           # Administration, Sign in
         menu_app = GestionMenuView()
         choice, values = menu_app.gestion_menu_view(id, role)
-        
+
         if choice == 1:
             self.create_user(values)
         elif choice == 2:
@@ -48,7 +46,7 @@ class GestionController:
         user = User(username, password, hashed_password, email, role)
         session.add(user)   # stage
         session.commit()    # push
-        
+
         users = session.query(User).all()
         for user in users:
             print(f"id: {user.id}, username: {user.username}," "\n",\
@@ -88,7 +86,7 @@ class GestionController:
             print('Updated:', user.id, user.username, user.email, user.role.value)
         else:
             print('no_values!')
-            self.gestion_menu_controller(id, user_role)
+            self.gestion_menu_controller(id, role)
         self.gestion_menu_controller(id, role)
 
 
@@ -113,7 +111,7 @@ class GestionController:
         id_commercial = session.query(Customer).where(Customer.id == customer_info).all()
         commercial_contact = id_commercial[0].contact
         contract = Contract(customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status)
-        
+
         session.add(contract)   # stage
         session.commit()    # push
 
@@ -200,6 +198,6 @@ class GestionController:
 
             menu_app = GestionMenuView()        # Affichage update
             menu_app.display_events()
-        
+
             self.gestion_menu_controller(id, role)      # Retour au menu
         print('No values')

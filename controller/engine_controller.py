@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from sqlalchemy import create_engine
 import bcrypt
+
 load_dotenv()
 username = os.getenv('DB_USER')
 password = os.getenv('DB_PASS')
@@ -15,7 +16,6 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-
 class EngineController:
 
     def __init__(self):
@@ -23,7 +23,7 @@ class EngineController:
 
 
     def start_engine(self, db_name):
-        Engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)        
+        Engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
         return Engine
 
 

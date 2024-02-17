@@ -1,31 +1,28 @@
-import os
-import datetime
+# import os
+# import datetime
 import bcrypt
-import requests
-import jwt
+# import requests
+# import jwt
 
-from .engine_controller import EngineController
+# from .engine_controller import EngineController
 from .gestion_controller import GestionController
 # from .main_controller import MainController
 from .commercial_controller import CommercialController
 from .support_controller import SupportController
 from mysql.connector import connect, Error
 # from view.user_menu_view import UserMenuView
-from view.start_menu_view import StartMenuView
-import sqlalchemy 
-from sqlalchemy import URL, insert, create_engine, ForeignKey, text, inspect, select
-from sqlalchemy_utils import database_exists, create_database, drop_database
-import mysql.connector
-from mysql.connector import connect, Error
-from model.users_model import Base, User, Customer
-from sqlalchemy.orm import Session, sessionmaker
+# from view.start_menu_view import StartMenuView
+# import sqlalchemy 
+# from sqlalchemy import text, inspect, select        # ForeignKey, URL, create_engine, insert, 
+# from sqlalchemy_utils import database_exists, create_database, drop_database
+# import mysql.connector
+# from mysql.connector import connect, Error
+from model.users_model import User  # , Customer, Base, 
+# from sqlalchemy.orm import Session, sessionmaker
 import pymysql.cursors
-import pymysql
-from .engine_controller import engine, session
+# import pymysql
+from .engine_controller import session   # engine,
 from view.start_menu_view import StartMenuView
-
-
-
 
 
 
@@ -38,7 +35,7 @@ class UserController:
         # user_app = UserMenuView()
         start_app = StartMenuView()
         input_email, input_password = start_app.user_sign_in()
-        all_users = session.query(User).all()
+        # all_users = session.query(User).all()
 
         user_row = session.query(User).filter_by(email=input_email).one_or_none()
         # print('user_row:', user_row)
@@ -63,7 +60,7 @@ class UserController:
             else:
                 print('Pass incorrect ! retry.')
                 self.sign_in()
-        
+
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self, id, role):

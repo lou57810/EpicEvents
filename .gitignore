@@ -1,7 +1,7 @@
 .idea
-env
+venv
 __pycache__
 __init__.py
-main_bak.py
 .vs
 requirements_sauv.txt
+flake-report

@@ -29,12 +29,17 @@
 ## Démarrer le programme:
 `python main.py`
 ## Affichage:
-	1. Administration. (Permet de créer ou de supprimer une base de données.)
+	1. Administration. (Permet de créer ou de supprimer une base de données, et de créer un administrateur.)
+		L'administrateur pourra se logger avec sign_in:
+		email: admin@localhost
+		password: admin_
+		La connection avec Workbench se fera avec root et "edwood" comme password.
+		
 	2. Sign in. (Permet de se logger en tant que collaborateur. En fonction de son rôle l'utilisateur, sera orienté vers les commandes lui étant reservées.)
 	3. Quit. (Quitte le programme.)
 
 	###      EMAIL				PASSWORD			ROLE
-	---------------------------------------------------------
+	-------------------------------------------------------
 	### Exemle:
 	### admin1@localhost			admin1			GESTION
 	

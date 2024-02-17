@@ -2,7 +2,9 @@ import os
 
 from view.start_menu_view import StartMenuView
 from view.user_menu_view import UserMenuView
-from view.database_menu_view import DatabaseMenuView
+from view.administration_menu_view import AdministrationMenuView
+from .administration_controller import AdministrationController
+# from view.start_menu_view import StartMenuView
 from model.users_model import Base  # , engine
 # from .admin_controller import AdminController
 from .user_controller import UserController
@@ -26,13 +28,13 @@ class StartMenuController:
 
 
     def run_db(self):           # Administration, Sign in
-        
-        # self.display_databases()
         main_app = StartMenuView()
         choice = main_app.start_menu_view()
 
+
         if choice == "1":
-            self.start_administration()
+            admin_app = AdministrationController()
+            admin_app.start_administration()
 
         if choice == "2":
             self.display_tables()
@@ -45,60 +47,6 @@ class StartMenuController:
             print("\n Bye!")
             raise SystemExit
 
-
-    def start_administration(self):
-        dbApp = DatabaseMenuView()
-        choice, dbName = dbApp.menu_db()  # From admin_menu_view
-
-        if choice == 1:
-            self.add_database(dbName)
-
-        elif choice == 2:
-            pass # dbApp.menu_db()
-
-        elif choice == 3:
-            self.delete_db(dbName)
-
-        elif choice == 4:
-            print("\n Bye!")
-            raise SystemExit
-
-
-    def add_database(self, dbName):
-        # self.display_databases(dbName)
-        engine_app = EngineController()
-        Engine = engine_app.start_engine(dbName)
-        if database_exists(Engine.url):
-            print('Database exist:', dbName)
-        else:
-            create_database(Engine.url)
-            Base.metadata.create_all(bind=Engine)
-        self.start_administration()
-
-
-    """
-    def update_db(self, db_name):
-        engine_app = EngineController()
-        engine = engine_app.start_engine(db_name)
-        Base.metadata.create_all(bind=engine)
-        with engine.connect() as connection:
-            result = connection.execute(text('select "Update done"'))
-            print('result:', result.all())
-            print('You are connected with: ', db_name)
-        self.start_administration()
-    """
-
-
-    def delete_db(self, dbName):        
-        print('engine_url:', engine.url)
-        if database_exists(engine.url):
-            with engine.connect() as connection:
-                result = connection.execute(text('DROP DATABASE' + ' ' + dbName))
-                connection.close()
-            self.start_administration()
-        else:
-            print("This database doesn't exist !")
-            self.start_administration()
 
     def display_tables(self):
         # print('Connexion à dbepic ! \n')

@@ -6,7 +6,7 @@ class StartMenuView:
         pass
 
     def start_menu_view(self):
-            print("Choose options (main_menu_view):")
+            print("Choose options:")
             answer = True
             while answer:
                 print("""

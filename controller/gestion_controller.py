@@ -33,10 +33,10 @@ class GestionController:
             pass
         elif choice == 7:
             self.update_events(id, role, values)
-        # elif choice == 8:
-            # menu_app = StartMenuView()
-            # menu_app.start_menu_view()
-            
+        elif choice == 8:
+            from .start_menu_controller import StartMenuController
+            menu_app = StartMenuController
+            menu_app.run_db(self)
 
 
     def create_user(self, values):

@@ -64,8 +64,9 @@ class GestionMenuView:
                 value = self.update_events(id, role)
                 return 7, value
             elif answer == "8":
-                print("\n Bye!")
-                raise SystemExit
+                # print("\n Bye!")
+                # raise SystemExit
+                return 8, None
 
 
     def create_user_account(self, user_id, user_role):

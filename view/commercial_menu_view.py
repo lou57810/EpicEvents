@@ -11,7 +11,6 @@ class CommercialMenuView:
     def __init__(self):
         pass
 
-
     def get_permission(self, role, role_fct):
         for elt in Permissions_roles:
             if elt == role:
@@ -20,7 +19,6 @@ class CommercialMenuView:
             if elt == role_fct:
                 print('elt')
                 return True
-
 
     def commercial_menu_view(self, id, role):
         print("Choose options")
@@ -53,10 +51,9 @@ class CommercialMenuView:
                 value = self.create_validated_contract_event(id, role)
                 return 5, value
             elif answer == "6":
-                print("\n Bye!")
-                raise SystemExit
-
-    
+                # print("\n Bye!")
+                # raise SystemExit
+                return 6, None
 
 
     # Création client
@@ -67,8 +64,8 @@ class CommercialMenuView:
             customer_email = input('Email du client: ')
             tel = input('Tel: ')
             company_name = input('Entreprise: ')
-            first_date = input('Date création: ')
-            last_date = input('Dernier contact: ')
+            first_date = input('Date création: (format: year-month-day xxxx-xx-xx)')
+            last_date = input('Dernier contact: (format: year-month-day xxxx-xx-xx)')
             # Contact: Affectation automatique de l'id contact commercial.
             return full_name, customer_email, tel, company_name, first_date, last_date
         else:
@@ -121,7 +118,8 @@ class CommercialMenuView:
         i = 0
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
-            print('N°',i,'. Customer:', elt.full_name, elt.customer_email, elt.tel, elt.company_name, elt.first_date, elt.last_date, user.username)
+            print('N°',i,'. Customer:', elt.full_name, elt.customer_email,
+                elt.tel, elt.company_name, elt.first_date, elt.last_date, user.username)
             i = i + 1
 
 
@@ -166,17 +164,13 @@ class CommercialMenuView:
         return contract
 
 
-
     def display_filtered_contracts(self, user_id, user_role):
-        # contracts = session.query(Contract).all()
-
         contracts = session.query(Contract).filter((Contract.balance_payable > '0') | (Contract.contract_status == 'UNSIGNED')).all()
         i = 0
         for elt in contracts:
-            print('N°', i,'. Balance_payable:', elt.balance_payable,\
+            print('N°', i,'. Balance_payable:', elt.balance_payable,
                     "\n", 'status:', elt.contract_status.value)
             i = i + 1
-
         self.commercial_menu_view(user_id, user_role)
 
     def display_ordered_contracts(self):
@@ -197,34 +191,26 @@ class CommercialMenuView:
                     "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
 
-
     def create_validated_contract_event(self, user_id, user_role):
-        
         contract = self.display_ordered_update_own_contracts()
-        
+
         print('elt1:', contract)
         contract_id = contract.id
         status = contract.contract_status
         com = contract.commercial_contact
         customer_info = contract.customer_info
         print('status:', contract_id, status, com, customer_info)
-        
-        
-        # contracts = session.query(Contract).all()
         customers = session.query(Customer).all()
-        users = session.query(User).all()
 
         if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
             event_name = input("Nom de l'evenement: ")
-            
             # contract = session.query(Contract).filter_by(id=contract_id).one_or_none()
             # print('contract:', contract)
-
             # print('contract_id', contract.commercial_contact, user_id)
             if contract.commercial_contact != user_id:
                 print('Forbidden, this contract is not one of your own contracts!')
             else:
-                if contract.contract_status.value != 'signed':
+                if contract.contract_status.value != '1':
                     print('contract_status not signed!')
                     self.commercial_menu_view(user_id, user_role)
                 else:
@@ -236,7 +222,7 @@ class CommercialMenuView:
                         end_date = val.last_date
                         print('vals:', customer_name, customer_contact, start_date, end_date)
                     
-                    support_contact = input("Support Contact: ")
+                    support_contact = input("Support Contact: id departement support")
                     location = input("Lieu de l'évenement: ")
                     attendees = input("Nombre de participants: ")
                     notes = input("Précisions sur le déroulement de l'évenement: ")

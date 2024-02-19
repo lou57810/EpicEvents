@@ -25,8 +25,8 @@ class UserMenuView:
                 return 2, None
 
     def user_sign_in(self):
-        from controller.gestion_controller import GestionController
-        gestion_app = GestionController()
+        # from controller.gestion_controller import GestionController
+        # gestion_app = GestionController()
         email = input('Email: ')
         password = str(input('Password: '))
         

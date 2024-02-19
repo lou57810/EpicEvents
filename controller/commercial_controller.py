@@ -1,16 +1,14 @@
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text, update
+# from sqlalchemy.orm import sessionmaker
+from sqlalchemy import text # , update
 from view.commercial_menu_view import CommercialMenuView
 # from .engine_controller import EngineController
 from .engine_controller import engine, session
 from model.users_model import Customer, Event, Contract
 
 
-
 class CommercialController:
     def __init__(self):
         pass
-
 
     def commercial_menu_controller(self, id, role):   # Récupération de l'id du commercial
         menu_app = CommercialMenuView()
@@ -28,14 +26,16 @@ class CommercialController:
             menu_app.display_events()
             self.create_event(values, id, role)
             menu_app.display_events()
-
+        elif choice == 6:
+            from .start_menu_controller import StartMenuController
+            menu_app = StartMenuController
+            menu_app.run_db(self)
 
     def create_customer(self, values, contact_id, role):   # Récupération valeurs renseignée, et foreign key: contact_id
-        # print('values:', values)
         full_name, customer_email, tel, company_name, first_date, last_date = values
-
-        customer = Customer(full_name, customer_email, tel, company_name, first_date, last_date, contact_id)    # Association automatique du commercial
-
+        # Association automatique du commercial
+        customer = Customer(full_name, customer_email, tel, company_name, first_date, last_date, contact_id)
+        print('customer:', customer)
         session.add(customer)   # stage
         session.commit()    # push
 
@@ -50,9 +50,7 @@ class CommercialController:
         # print('values:', values)
         if values:
             id, key_to_update, value_to_update = values
-
             customer = session.query(Customer).filter_by(id=id).one_or_none()
-
             query = session.query(Customer)
             column_names = query.statement.columns.keys()
 
@@ -73,7 +71,6 @@ class CommercialController:
                     elif key_to_update == 'last_date':
                         customer.last_date = value_to_update
                     # contact est associé au commercial donc chgt interdit.
-
             session.commit()    # push
 
             print('Customers_after_update:', customer.full_name,\
@@ -88,7 +85,6 @@ class CommercialController:
             contract_to_update, key_to_update, value_to_update = values
             contract = session.query(Contract).filter_by(id=contract_to_update).one_or_none()
             # print('email, contract_to_update:', contact_id, contract)
-
             query = session.query(Contract)
             column_names = query.statement.columns.keys()
 
@@ -132,10 +128,5 @@ class CommercialController:
             session.commit()    # push
         else: 
             print('Contract is not signed, event can\'t be created!')
-
-            """with engine.connect() as conn:
-                result = conn.execute(text("select * from events"))
-                for rows in result:
-                    print("Events:", rows)"""
 
             self.commercial_menu_controller(contact_id, role)     # Retour menu gestion

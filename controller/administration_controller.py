@@ -3,7 +3,7 @@ import bcrypt
 # import mysql.connector
 from sqlalchemy_utils import create_database, database_exists   # , drop_database
 from sqlalchemy import text # , inspecttext
-from sqlalchemy.orm import Session, sessionmaker
+# from sqlalchemy.orm import Session, sessionmaker
 from model.users_model import Base, User
 from view.administration_menu_view import AdministrationMenuView
 from .engine_controller import EngineController
@@ -26,7 +26,6 @@ class AdministrationController:
             elif choice == 3:
                 self.delete_db(dbName)
             elif choice == 4:
-                dbApp.display_databases()
                 self.return_menu()
             elif choice == 5:
                 from .start_menu_controller import StartMenuController
@@ -42,6 +41,8 @@ class AdministrationController:
         else:
             create_database(Engine.url)
             Base.metadata.create_all(bind=Engine)
+            dbApp = AdministrationMenuView()
+            dbApp.display_tables()
         self.start_administration()
 
 
@@ -73,9 +74,7 @@ class AdministrationController:
             print('email:', user_id.email, 'password:', user_id.password, '\n')
             self.start_administration()
         else:
-            
-            # db_name = input('Entrer le nom de la base de donnees à créer: ')
-            # return 1, db_name   # Renvoi tuple
+            # Values from .env
             username = os.getenv("DB_ADMIN")
             password = os.getenv("DB_ADMIN_PASS")
             email = os.getenv("DB_ADMIN_MAIL")
@@ -86,16 +85,11 @@ class AdministrationController:
             user = User(username, password, hashed_password, email, role)
             Session.add(user)   # stage
             Session.commit()    # push
-            # self.menu_db"""
+
             print('Email:', email, 'Password:', password)
             self.start_administration()
 
 
-    """def display_tables(self):
-        # print('Connexion à dbepic ! \n')
-        print('TABLES:')
-        insp = inspect(Engine)
-        print(insp.get_table_names())"""
 
 
     def return_menu(self):

@@ -35,9 +35,9 @@ class SupportMenuView:
                 value = self.update_owner_events(id, role)
                 return 2, value
             elif answer == "3":
-                # return 3, None
-                print("\n Bye!")
-                raise SystemExit
+                return 3, None
+                # print("\n Bye!")
+                # raise SystemExit
 
 
     def display_filtered_events(self, id, role):

@@ -1,15 +1,16 @@
 import os
 from mysql import connector
-import mysql.connector
-from mysql.connector import errorcode
-import bcrypt
-from model.users_model import User
-from controller.engine_controller import EngineController, engine
-from dotenv import load_dotenv, dotenv_values
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import text
+# import mysql.connector
+# from mysql.connector import errorcode
+# import bcrypt
+# from model.users_model import User
+from controller.engine_controller import engine  # EngineController,
+from dotenv import load_dotenv  # , dotenv_values
+# from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy import inspect  # text, 
 
 
+# import depuis .env
 load_dotenv()
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -25,8 +26,6 @@ class AdministrationMenuView:
 
 
     def administration_menu_view(self):
-        # print('env:', os.getenv("DB_PASS"), os.getenv("DB_USER"))
-        # self.display_databases()
         answer = True
         while answer:
             print("""
@@ -38,24 +37,31 @@ class AdministrationMenuView:
             """)
 
             answer = input("Choix: ")
+            # Db creation:
             if answer == "1":
                 db_name = input('Entrer le nom de la base de donnees à créer: ')
-                return 1, db_name   # Renvoi tuple
+                return 1, db_name   # Renvoi 
+            # Admin creation 
             if answer == "2":
                 db_name = input('Entrer la base de données à utiliser:')
                 return 2, db_name
+            # Db deletion
             elif answer == "3":
                 db_name = input('Entrer le nom de la base de donnees a supprimer : ')
                 return 3, db_name   # Renvoi tuple
+            # Return Menu and Db display
             elif answer == "4":
                 return 4, None
+            # Bad entry
             elif answer == "":
                 print("\n Choice are 1, 2, 3, 4 : Retry !")
+            # Return start_menu
             elif answer == "5":
                 return 5, None
 
 
     def display_databases(self):
+        print('DATABASES:')
         show_existing_db = "SHOW DATABASES"
         try:
             with connector.connect(
@@ -73,4 +79,8 @@ class AdministrationMenuView:
             print(e)
 
 
-    
+    def display_tables(self):
+        print('Connexion à dbepic ! \n')
+        print('TABLES:')
+        insp = inspect(engine)
+        print(insp.get_table_names(), '\n')

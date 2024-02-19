@@ -1,19 +1,19 @@
-import os
+# import os
 import enum
 from enum import Enum as PyEnum 
 # from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import LargeBinary, ForeignKey
+from sqlalchemy import ForeignKey # LargeBinary, 
 from sqlalchemy.dialects.mysql import LONGTEXT
 import datetime
 
-from typing import List, Optional, Literal
+from typing import List  # Optional    , Literal
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import create_engine, Column, Integer, String, Date, Text, types
+from sqlalchemy import Column, String, types  # Date, Text,Integer, create_engine, 
 
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
-from sqlalchemy_utils.types.choice import ChoiceType
-import jwt
+# from sqlalchemy_utils.types.choice import ChoiceType
+# import jwt
 
 from typing import List
 # GESTION
@@ -37,20 +37,20 @@ UPDATE_OWN_EVENT = "UPDATE_OWN_EVENT"
 
 
 class RoleEnum(PyEnum):
-    GESTION = "gestion"
-    COMMERCIAL = "commercial"
-    SUPPORT = "support"
+    GESTION = "1"
+    COMMERCIAL = "2"
+    SUPPORT = "3"
 
 
 class SignEnum(PyEnum):
-    SIGNED = "signed"
-    UNSIGNED = "unsigned"
+    SIGNED = "1"
+    UNSIGNED = "2"
 
 
 
-Permissions_roles = {"gestion": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
-                    "commercial": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
-                    "support": [UPDATE_OWN_EVENT]
+Permissions_roles = {"1": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
+                    "2": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
+                    "3": [UPDATE_OWN_EVENT]
                     }
 
 
@@ -99,7 +99,7 @@ class Customer(Base):
     full_name: Mapped[str] = mapped_column(String(150), nullable=False)
     customer_email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     tel: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
-    company_name: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
+    company_name: Mapped[str] = mapped_column(String(150), nullable=False)
     first_date: Mapped[datetime.date] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_date: Mapped[datetime.date] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
@@ -153,7 +153,6 @@ class Contract(Base):
     balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)
     start_date: Mapped[datetime.date] = mapped_column(DateTime(timezone=True), server_default=func.now())
     contract_status = Column(types.Enum(SignEnum, values_callable=lambda obj: [e.value for e in obj]))
-
 
 
     def __init__(self, customer_info,\

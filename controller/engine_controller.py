@@ -1,10 +1,8 @@
 import os
-from dotenv import load_dotenv, dotenv_values
-
+from dotenv import load_dotenv # , dotenv_values
 from sqlalchemy.orm import Session, sessionmaker
-
 from sqlalchemy import create_engine
-import bcrypt
+# import bcrypt
 
 load_dotenv()
 username = os.getenv('DB_USER')
@@ -21,9 +19,6 @@ class EngineController:
     def __init__(self):
         pass
 
-
     def start_engine(self, db_name):
         Engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
         return Engine
-
-

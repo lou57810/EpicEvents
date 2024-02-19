@@ -30,12 +30,17 @@
 `python main.py`
 ## Affichage:
 	1. Administration. (Permet de créer ou de supprimer une base de données, et de créer un administrateur.)
-		L'administrateur pourra se logger avec sign_in:
-		email: admin@localhost
-		password: admin_
+		1. Création de la base de donnée.
+		2. Création de l'administrateur:	(email: admin@localhost password: admin_)
+		3. Suppression de la base de données.
+		4. Affichage des bases de données.
+		5. Quit
+		
 		La connection avec Workbench se fera avec root et "edwood" comme password.
 		
-	2. Sign in. (Permet de se logger en tant que collaborateur. En fonction de son rôle l'utilisateur, sera orienté vers les commandes lui étant reservées.)
+	2. Sign in. Permet de se logger en tant que collaborateur. (1ere connection avec admin@localhost et admin) 
+		En fonction de son rôle l'utilisateur,
+		sera orienté vers les menus lui étant reservés.
 	3. Quit. (Quitte le programme.)
 
 	###      EMAIL				PASSWORD			ROLE
@@ -53,3 +58,5 @@
 
 
 	###  Lien: https://github.com/lou57810/EpicEvents Mais vous y êtes déjà.
+
+### `flake8 --format=html --htmldir=flake-report --line-max-length 110`

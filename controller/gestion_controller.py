@@ -5,7 +5,7 @@ from view.gestion_menu_view import GestionMenuView
 # from view.start_menu_view import StartMenuView
 # from .engine_controller import EngineController
 from model.users_model import User, Contract, Event, Customer
-from .engine_controller import engine, session
+from .engine_controller import session  # engine, 
 
 
 class GestionController:
@@ -15,6 +15,7 @@ class GestionController:
 
     def gestion_menu_controller(self, id, role):           # Administration, Sign in
         menu_app = GestionMenuView()
+        # choice = self.menu_app.gestion_menu_view()
         choice, values = menu_app.gestion_menu_view(id, role)
 
         if choice == 1:
@@ -28,7 +29,8 @@ class GestionController:
         elif choice == 5:
             self.update_contract(id, role, values)
         elif choice == 6:
-            pass
+            menu_app.display_filtered_events()
+            self.gestion_menu_controller(id, role)
         elif choice == 7:
             self.update_events(id, role, values)
         elif choice == 8:
@@ -109,6 +111,7 @@ class GestionController:
         customer_info, total_amount, balance_payable, start_date, contract_status = values
         print('values:', values)
         id_commercial = session.query(Customer).where(Customer.id == customer_info).all()
+        print('id_commercial:')
         commercial_contact = id_commercial[0].contact
         contract = Contract(customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status)
 

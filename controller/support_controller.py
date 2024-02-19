@@ -1,6 +1,6 @@
 from view.support_menu_view import SupportMenuView
-from model.users_model import User, Event
-from .engine_controller import engine, session
+from model.users_model import Event # User, 
+from .engine_controller import session # engine, 
 
 
 class SupportController:
@@ -12,7 +12,6 @@ class SupportController:
     def support_menu_controller(self, id, role):
         menu_app = SupportMenuView()
         choice, values = menu_app.support_menu_view(id, role)
-        
 
         if choice == 1:
             print('Departement Support')
@@ -21,11 +20,10 @@ class SupportController:
             print('Departement Support')
             self.update_own_events(values, id, role)
         elif choice == 3:
-            print("\n Bye!")
-            raise SystemExit
+            from .start_menu_controller import StartMenuController
+            menu_app = StartMenuController
+            menu_app.run_db(self)
 
-
-    
 
     def update_own_events(self, values, id, role):
         if values:
@@ -37,9 +35,8 @@ class SupportController:
         
             query = session.query(Event)
             column_names = query.statement.columns.keys()
-        
+
             # Test sur l'appartenance du contrat evenementiel
-        
             for elt in column_names:
                 if elt == attribut_to_update:
                     if attribut_to_update == 'event_name':
@@ -65,7 +62,7 @@ class SupportController:
                     elif attribut_to_update == 'notes':
                         event.notes = new_attribut_value
             session.commit()
-        
+
             print('Event updated: ', event)
         else:
             print('No values')

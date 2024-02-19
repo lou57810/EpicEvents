@@ -1,9 +1,9 @@
 
-from sqlalchemy import text
-from sqlalchemy.orm import Session, sessionmaker
+# from sqlalchemy import text
+# from sqlalchemy.orm import Session, sessionmaker
 from model.users_model import User, Event, Contract, Customer
-from controller.engine_controller import engine, session
-from .start_menu_view import StartMenuView
+from controller.engine_controller import session # engine, 
+# from .start_menu_view import StartMenuView
 from model.users_model import Permissions_roles
 from model.users_model import ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT
 
@@ -29,11 +29,11 @@ class GestionMenuView:
         while answer:
             print("""
             1. Create user.
-            2. Update user: GESTION, COMMERCIAL, or SUPPORT.
+            2. Update user.
             3. Delete user.
             4. Create contract.
             5. Update contract.
-            6. Display filtered events: No associated support.
+            6. Display filtered events.
             7. Update events.
             8. Quit.
             """)
@@ -49,7 +49,7 @@ class GestionMenuView:
                 value = self.delete_user_account(id, role)
                 return 3, value
             elif answer == "4":
-                self.display_customers()
+                # self.display_customers()
                 value = self.create_contract(id, role)
                 # self.display_ordered_contracts()
                 return 4, value
@@ -58,7 +58,6 @@ class GestionMenuView:
                 value = self.update_contract(id, role)
                 return 5, value
             elif answer == "6":
-                self.display_filtered_events()
                 return 6, None
             elif answer == "7":
                 value = self.update_events(id, role)
@@ -73,7 +72,7 @@ class GestionMenuView:
             username = input('Nom du nouveau collaborateur: ')
             password = str(input('Password: '))
             email = input("collaborator email : ")
-            role = input('A quel departement est affecte le nouveau collaborateur ?: ')
+            role = input('Departement (Role:[GESTION : 1, COMMERCIAL : 2, or SUPPORT: 3.]): ')
             return username, password, email, role
         else:
             print("Operation only allowed for Gestion departement !")
@@ -102,8 +101,7 @@ class GestionMenuView:
         else:
             print('user_role2:', user_role)
             print("Operation only allowed for Gestion departement !")
-            
-        self.gestion_menu_view(user_id, user_role)
+            self.gestion_menu_view(user_id, user_role)
 
 
     def delete_user_account(self, user_id, user_role):
@@ -121,7 +119,6 @@ class GestionMenuView:
         for elt in users:
             print('N°',i, '. User:', elt.username, elt.email, elt.role.value)
             i = i + 1
-    
 
 
     def display_customers(self):
@@ -130,12 +127,15 @@ class GestionMenuView:
         print('############# Customers ##############')
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
-            print('N°',i,'. Customer_id:',elt.id, "\n", "full_name:", elt.full_name,\
+            print('N°', i, '. Customer_id:', elt.id, "\n", "full_name:", elt.full_name,\
             "\n", "customer_email:", elt.customer_email, "\n",
             "tel:", elt.tel, "\n", "company_name:", elt.company_name,\
             "\n",  "first_date:", elt.first_date, "\n"
             "last_date:", elt.last_date, "\n", "contact:", user.username)
             i = i + 1
+        choix = input("Choisir un N° customer:")
+        customer = customers[int(choix)]
+        return customer.id
 
 
     def display_ordered_contracts(self):
@@ -159,18 +159,23 @@ class GestionMenuView:
 
     def create_contract(self, user_id, user_role):
         if self.get_permission(user_role, ADD_CONTRACT):
-            customer_info = input('N° du client (id): ')
+            customer_info = self.display_customers()
+            print('customer_info:', customer_info)
+            # customer_info = input('N° du client (id): ')
             # commercial_contact = input('Email contact commercial associé au client: ')
             total_amount = input('Montant total du contrat: ')
             balance_payable = input('Montant restant à payer: ')
-            start_date = input('Date de création du contrat: ')
-            contract_status = input('Contrat values: SIGNED or UNSIGNED: ')
+            start_date = input('Date de création du contrat: (format: year-month-day xxxx-xx-xx)')
+            contract_status = input('Contrat status: (1: SIGNED or 2: UNSIGNED)')
             # return id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status
             return customer_info, total_amount, balance_payable, start_date, contract_status
         else:
             print("Operation only allowed for Gestion departement !")
             self.gestion_menu_view(user_id, user_role)
         self.display_ordered_contracts()
+
+    
+        
 
     
     def display_ordered_update_contracts(self):
@@ -187,7 +192,7 @@ class GestionMenuView:
                     "\n", 'total_amount:', elt.total_amount,\
                     "\n", 'balance_payable:', elt.balance_payable,\
                     "\n", 'start_date:', elt.start_date,\
-                    "\n", 'commercial_status:', elt.contract_status.value)
+                    "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
         choix = input("Choisir un id contrat:")
         contract = contracts[int(choix)]

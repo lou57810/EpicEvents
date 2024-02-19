@@ -1,5 +1,3 @@
-# import os
-# import datetime
 import bcrypt
 # import requests
 # import jwt
@@ -9,7 +7,7 @@ from .gestion_controller import GestionController
 # from .main_controller import MainController
 from .commercial_controller import CommercialController
 from .support_controller import SupportController
-from mysql.connector import connect, Error
+# from mysql.connector import connect, Error
 # from view.user_menu_view import UserMenuView
 # from view.start_menu_view import StartMenuView
 # import sqlalchemy 
@@ -19,11 +17,10 @@ from mysql.connector import connect, Error
 # from mysql.connector import connect, Error
 from model.users_model import User  # , Customer, Base, 
 # from sqlalchemy.orm import Session, sessionmaker
-import pymysql.cursors
+# import pymysql.cursors
 # import pymysql
 from .engine_controller import session   # engine,
 from view.start_menu_view import StartMenuView
-
 
 
 class UserController:
@@ -32,13 +29,9 @@ class UserController:
 
 
     def sign_in(self):
-        # user_app = UserMenuView()
         start_app = StartMenuView()
         input_email, input_password = start_app.user_sign_in()
-        # all_users = session.query(User).all()
-
         user_row = session.query(User).filter_by(email=input_email).one_or_none()
-        # print('user_row:', user_row)
         if user_row == None:
             print('Bad email!')
             self.sign_in()
@@ -64,12 +57,12 @@ class UserController:
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self, id, role):
-        if role == 'gestion':
+        if role == '1':
             gestion_app = GestionController()
             gestion_app.gestion_menu_controller(id, role)
-        elif role == 'support':
-            support_app = SupportController()
-            support_app.support_menu_controller(id, role)
-        elif role == 'commercial':
+        elif role == '2':
             commercial_app = CommercialController()
             commercial_app.commercial_menu_controller(id, role)
+        elif role == '3':
+            support_app = SupportController()
+            support_app.support_menu_controller(id, role)

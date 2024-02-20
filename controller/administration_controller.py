@@ -3,7 +3,7 @@ import bcrypt
 # import mysql.connector
 from sqlalchemy_utils import create_database, database_exists   # , drop_database
 from sqlalchemy import text # , inspecttext
-# from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker # Session,
 from model.users_model import Base, User
 from view.administration_menu_view import AdministrationMenuView
 from .engine_controller import EngineController

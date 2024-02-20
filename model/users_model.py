@@ -46,6 +46,8 @@ class SignEnum(PyEnum):
     SIGNED = "1"
     UNSIGNED = "2"
 
+#  Changer Signed True or False
+
 
 
 Permissions_roles = {"1": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
@@ -87,7 +89,8 @@ class User(Base):
 
 
     def __repr__(self) -> str:
-        return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role.value})"
+        # return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role.value})"
+        return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
 
 
 

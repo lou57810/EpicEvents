@@ -11,8 +11,8 @@ from .engine_controller import EngineController
 
 
 class AdministrationController:
-    def __init__(self):
-        pass
+    def __init__(self, start_controller):
+        self.start_controller = start_controller
 
     def start_administration(self):
             dbApp = AdministrationMenuView()
@@ -28,9 +28,7 @@ class AdministrationController:
             elif choice == 4:
                 self.return_menu()
             elif choice == 5:
-                from .start_menu_controller import StartMenuController
-                menu_app = StartMenuController
-                menu_app.run_db(self)
+                self.start_controller.run_db(self)
 
 
     def add_database(self, dbName):

@@ -20,7 +20,7 @@ class CommercialMenuView:
                 print('elt')
                 return True
 
-    def commercial_menu_view(self, id, role):
+    def commercial_menu_view(self):
         print("Choose options")
         answer = True
         while answer:
@@ -34,30 +34,11 @@ class CommercialMenuView:
             """)
 
             answer = input("Faites votre choix ! \n")
-            if answer == "1":
-                value = self.create_customer_account(id, role)
-                return 1, value
-            elif answer == "2":
-                value = self.update_own_customer(id, role)
-                return 2, value
-            elif answer == "3":
-                value = self.update_own_contract(id, role)
-                return 3, value
-            elif answer == "4":
-                value = self.display_filtered_contracts(id, role)
-                return 4, None
-            elif answer == "5":
-                # self.display_ordered_contracts()
-                value = self.create_validated_contract_event(id, role)
-                return 5, value
-            elif answer == "6":
-                # print("\n Bye!")
-                # raise SystemExit
-                return 6, None
+            return answer
 
 
     # Création client
-    def create_customer_account(self, user_id, user_role):
+    def create_customer_account(self, user_role):
         self.display_customers()
         if self.get_permission(user_role, ADD_CUSTOMER):
             full_name = input('Nom du Client: ')
@@ -70,11 +51,11 @@ class CommercialMenuView:
             return full_name, customer_email, tel, company_name, first_date, last_date
         else:
             print("Operation only allowed for Commercial departement !")
-            self.commercial_menu_view(user_id, user_role)
+            self.commercial_menu_view()
 
 
     # Maj client
-    def update_own_customer(self, user_id, user_role):
+    def update_own_customer(self, user_role):
         customer_to_update = self.display_ordered_id_customers()
         # print('customer to update:' , customer_to_update, customer_to_update.id)
         customer = session.query(Customer).filter_by(id=customer_to_update.id).one_or_none()
@@ -123,7 +104,7 @@ class CommercialMenuView:
             i = i + 1
 
 
-    def update_own_contract(self, user_id, user_role):
+    def update_own_contract(self, user_role):
         contract_to_update = self.display_ordered_update_own_contracts()
         # print('Contract_to_update:', contract_to_update, contract_to_update.id)
         contract = session.query(Contract).filter_by(id=contract_to_update.id).one_or_none()
@@ -164,7 +145,7 @@ class CommercialMenuView:
         return contract
 
 
-    def display_filtered_contracts(self, user_id, user_role):
+    def display_filtered_contracts(self, user_role):
         contracts = session.query(Contract).filter((Contract.balance_payable > '0') | (Contract.contract_status == 'UNSIGNED')).all()
         i = 0
         for elt in contracts:
@@ -191,7 +172,7 @@ class CommercialMenuView:
                     "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
 
-    def create_validated_contract_event(self, user_id, user_role):
+    def create_validated_contract_event(self, user_role):
         contract = self.display_ordered_update_own_contracts()
 
         print('elt1:', contract)

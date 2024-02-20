@@ -3,38 +3,40 @@ from sqlalchemy import text # , update
 from view.commercial_menu_view import CommercialMenuView
 # from .engine_controller import EngineController
 from .engine_controller import engine, session
-from model.users_model import Customer, Event, Contract
+from model.users_model import User, Customer, Event, Contract
 
 
 class CommercialController:
-    def __init__(self):
-        pass
+    def __init__(self, user_controller):
+        self.user_controller = user_controller
+        self.commercial_views = CommercialMenuView()
 
-    def commercial_menu_controller(self, id, role):   # Récupération de l'id du commercial
-        menu_app = CommercialMenuView()
-        choice, values = menu_app.commercial_menu_view(id, role)
+    def commercial_menu_controller(self):   # Récupération de l'id du commercial
+        
+        choice = self.commercial_views.commercial_menu_view()
+        
+        role = self.user_controller.current_user.role.value
 
-        if choice == 1:
-            self.create_customer(values, id, role)
-        elif choice == 2:
-            self.update_customer(values, id, role)
-        elif choice == 3:
-            self.update_own_contract(values, id, role)
-        elif choice == 4:
-            menu_app.display_filtered_contracts(id, role)
-        elif choice == 5:
-            menu_app.display_events()
-            self.create_event(values, id, role)
-            menu_app.display_events()
-        elif choice == 6:
-            from .start_menu_controller import StartMenuController
-            menu_app = StartMenuController
-            menu_app.run_db(self)
 
-    def create_customer(self, values, contact_id, role):   # Récupération valeurs renseignée, et foreign key: contact_id
-        full_name, customer_email, tel, company_name, first_date, last_date = values
+        if choice == "1":
+            self.create_customer(role)
+        elif choice == "2":
+            self.update_customer(role)
+        elif choice == "3":
+            self.update_own_contract(role)
+        elif choice == "4":
+            self.commercial_views.display_filtered_contracts(role)
+        elif choice == "5":
+            self.commercial_views.display_events()
+            self.create_event(role)
+            self.commercial_views.display_events()
+        elif choice == "6":
+            self.user_controller.start_controller.run_db(self)
+
+    def create_customer(self, role):   # Récupération valeurs renseignée, et foreign key: contact_id
+        full_name, customer_email, tel, company_name, first_date, last_date = self.commercial_views.create_customer_account(role)
         # Association automatique du commercial
-        customer = Customer(full_name, customer_email, tel, company_name, first_date, last_date, contact_id)
+        customer = Customer(full_name, customer_email, tel, company_name, first_date, last_date, self.user_controller.current_user.id)
         print('customer:', customer)
         session.add(customer)   # stage
         session.commit()    # push
@@ -43,10 +45,10 @@ class CommercialController:
             result = conn.execute(text("select * from customers"))
             for rows in result:
                 print("Customers:", rows)
-        self.commercial_menu_controller(contact_id, role)     # Retour menu
+        self.commercial_menu_controller()     # Retour menu
 
 
-    def update_customer(self, values, contact_id, role):
+    def update_customer(self, role):
         # print('values:', values)
         if values:
             id, key_to_update, value_to_update = values
@@ -80,7 +82,7 @@ class CommercialController:
         self.commercial_menu_controller(contact_id, role)
 
 
-    def update_own_contract(self, values, contact_id, role):
+    def update_own_contract(self, role):
         if values:
             contract_to_update, key_to_update, value_to_update = values
             contract = session.query(Contract).filter_by(id=contract_to_update).one_or_none()
@@ -107,15 +109,15 @@ class CommercialController:
                         contract.contract_status = value_to_update
 
             session.commit()    # push
-            menu_app = CommercialMenuView()
-            menu_app.display_ordered_contracts()
+            
+            self.commercial_views.display_ordered_contracts()
 
         else:
             print('no values!')
         self.commercial_menu_controller(contact_id, role)
 
 
-    def create_event(self, values, contact_id, role):
+    def create_event(self, role):
         if values:
             event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = values
             print('values:', values)

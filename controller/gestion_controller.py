@@ -12,17 +12,16 @@ from .engine_controller import session  # engine,
 
 
 class GestionController:
-    def __init__(self):
-        self.menu_app = GestionMenuView()
-        # self.start_controller = StartMenuController
+    def __init__(self, user_controller):
+        self.user_controller = user_controller
+        self.gestion_views = GestionMenuView()
 
 
     def gestion_menu_controller(self):           # Administration, Sign in
-        from .user_controller import UserController
+        
         # choice = self.menu_app.gestion_menu_view()
-        choice = self.menu_app.gestion_menu_view()
-        id = UserController.current_user.id # .value
-        role = UserController.current_user.role.value
+        choice = self.gestion_views.gestion_menu_view()        
+        role = self.user_controller.current_user.role.value
 
         if choice == "1":
             self.create_user(role)
@@ -35,14 +34,12 @@ class GestionController:
         elif choice == "5":
             self.update_contract(role)
         elif choice == "6":
-            self.menu_app.display_filtered_events()
+            self.gestion_views.display_filtered_events()
             self.gestion_menu_controller()
         elif choice == "7":
             self.update_events(role)
         elif choice == "8":
-            from .start_menu_controller import StartMenuController
-            menu_app = StartMenuController
-            menu_app.run_db(self)
+            self.user_controller.start_controller.run_db(self)
             # self.start_controller()
 
 
@@ -50,7 +47,7 @@ class GestionController:
         print('create_user')
         # username, password, email, role = self.menu_app.create_user(UserController.current_user.role.value)
         print('role:', role)
-        username, password, email, role = self.menu_app.create_user_account(role)
+        username, password, email, role = self.gestion_views.create_user_account(role)
 
         bytes = password.encode('utf-8')
         hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())
@@ -70,7 +67,7 @@ class GestionController:
 
 
     def update_user(self, role):
-        id, key_to_update, value_to_update = self.menu_app.update_user_account(role)
+        id, key_to_update, value_to_update = self.gestion_views.update_user_account(role)
         user = session.query(User).filter_by(id=id).one_or_none()
 
         query = session.query(User)
@@ -99,14 +96,13 @@ class GestionController:
 
 
     def delete_user(self, role):
-        id = self.menu_app.delete_user_account(role)
+        id = self.gestion_views.delete_user_account(role)
         if id:
             user = session.query(User).filter_by(id=id).one_or_none()
             session.delete(user)
             session.commit()
-            print('After update:')
-            menu_app = GestionMenuView()
-            menu_app.display_users()
+            print('After update:')            
+            self.gestion_views.display_users()
         else:
             print('no_values!')
             self.gestion_menu_controller()
@@ -114,7 +110,7 @@ class GestionController:
 
 
     def create_contract(self, role):
-        customer_info, total_amount, balance_payable, start_date, contract_status = self.menu_app.create_contract(role)
+        customer_info, total_amount, balance_payable, start_date, contract_status = self.gestion_views.create_contract(role)
         id_commercial = session.query(Customer).where(Customer.id == customer_info).all()
         print('id_commercial:')
         commercial_contact = id_commercial[0].contact
@@ -126,7 +122,7 @@ class GestionController:
 
 
     def update_contract(self, role):
-        contract_id, key_to_update, value_to_update = self.menu_app.update_contract(role)
+        contract_id, key_to_update, value_to_update = self.gestion_views.update_contract(role)
         contract = session.query(Contract).filter_by(id=contract_id).one_or_none()
         query = session.query(Contract)
         column_names = query.statement.columns.keys()
@@ -155,7 +151,7 @@ class GestionController:
 
 
     def update_events(self, role):
-        event_id, key_to_update, new_attribut_value = self.menu_app.update_events(role)
+        event_id, key_to_update, new_attribut_value = self.gestion_views.update_events(role)
         event = session.query(Event).filter_by(id=event_id).one_or_none()
         query = session.query(Event)
         column_names = query.statement.columns.keys()
@@ -177,5 +173,5 @@ class GestionController:
                 elif key_to_update == 'notes':
                     event.notes = new_attribut_value
         session.commit()
-        self.menu_app.display_events()
+        self.gestion_views.display_events()
         self.gestion_menu_controller()      # Retour au menu

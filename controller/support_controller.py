@@ -5,24 +5,23 @@ from .engine_controller import session # engine,
 
 class SupportController:
 
-    def __init__(self):
-        pass
+    def __init__(self, user_controller):
+        self.user_controller = user_controller
+        self.support_views = SupportMenuView()
 
 
     def support_menu_controller(self, id, role):
-        menu_app = SupportMenuView()
-        choice, values = menu_app.support_menu_view(id, role)
+        choice, values = self.support_views.support_menu_view(id, role)
 
         if choice == 1:
             print('Departement Support')
-            menu_app.display_filtered_events(id, role)
+            self.support_views.display_filtered_events(id, role)
         elif choice == 2:
             print('Departement Support')
             self.update_own_events(values, id, role)
         elif choice == 3:
-            from .start_menu_controller import StartMenuController
-            menu_app = StartMenuController
-            menu_app.run_db(self)
+            
+            self.user_controller.start_controller.run_db(self)
 
 
     def update_own_events(self, values, id, role):

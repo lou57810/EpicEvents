@@ -26,8 +26,12 @@ from view.start_menu_view import StartMenuView
 class UserController:
 
     current_user = None
-    def __init__(self):
-        pass
+    def __init__(self, start_controller):
+        self.start_controller = start_controller
+        self.gestion_controller = GestionController(self)
+        self.commercial_controller = CommercialController(self)
+        self.support_controller = SupportController(self)
+
 
 
     def sign_in(self):
@@ -51,7 +55,7 @@ class UserController:
 
                 # Redirection en fonction du rôle
                 # self.department_redirect(user_row.id, user_row.role.value)
-                UserController.current_user = user_row  # A substituer as id
+                self.current_user = user_row  # A substituer as id
                 self.department_redirect()
             else:
                 print('Pass incorrect ! retry.')
@@ -60,12 +64,9 @@ class UserController:
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self):
-        if UserController.current_user.role.value == "1":     # user_controller
-            gestion_app = GestionController()
-            gestion_app.gestion_menu_controller()
-        elif UserController.current_user.role.value == "2":
-            commercial_app = CommercialController()
-            commercial_app.commercial_menu_controller()
-        elif UserController.current_user.role.value == "3":
-            support_app = SupportController()
-            support_app.support_menu_controller()
+        if self.current_user.role.value == "1":     # user_controller
+            self.gestion_controller.gestion_menu_controller()
+        elif self.current_user.role.value == "2":
+            self.commercial_controller.commercial_menu_controller()
+        elif self.current_user.role.value == "3":
+            self.support_controller.support_menu_controller()

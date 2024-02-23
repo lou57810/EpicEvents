@@ -1,5 +1,3 @@
-# import os
-
 from view.start_menu_view import StartMenuView
 # from view.user_menu_view import UserMenuView
 # from view.administration_menu_view import AdministrationMenuView
@@ -24,25 +22,21 @@ from .user_controller import UserController
 
 class StartMenuController:
     def __init__(self):
-        pass
+        self.user_controller = UserController(self)
+        self.admin_controller = AdministrationController(self)
 
 
-    def run_db(self):           # Administration, Sign in
+    def run_db(self):           # Administration, Sign in  run_application
         main_app = StartMenuView()
         choice = main_app.start_menu_view()
 
         if choice == "1":
-            admin_app = AdministrationController()
-            admin_app.start_administration()
-
+            self.admin_controller.start_administration()
         if choice == "2":
             main_app.display_tables()
             print('\n')
             print('Enter Email and then, password: ')
-            user_app = UserController()
-            user_app.sign_in()
-
-
+            self.user_controller.sign_in()
         elif choice == "3":
             print("\n Bye!")
             raise SystemExit

@@ -27,10 +27,11 @@ class CommercialMenuView:
             print("""
             1. Create customer.
             2. Update customer.
-            3. Update own contract.
-            4. Display filtered contract.
-            5. Create event for contract.
-            6. Quit.
+            3. Display customers.
+            4. Update own contract.
+            5. Display filtered contract.
+            6. Create event for contract.
+            7. Quit.
             """)
 
             answer = input("Faites votre choix ! \n")
@@ -55,13 +56,16 @@ class CommercialMenuView:
 
 
     # Maj client
-    def update_own_customer(self, user_role):
+    def update_own_customer(self, user_role, current_user):
         customer_to_update = self.display_ordered_id_customers()
-        # print('customer to update:' , customer_to_update, customer_to_update.id)
+        print('current_user:', current_user, customer_to_update.id)
+        
         customer = session.query(Customer).filter_by(id=customer_to_update.id).one_or_none()
-
+        print('customer:', customer)
+         
         if self.get_permission(user_role, UPDATE_OWN_CUSTOMER):
-            if customer.contact != user_id:
+            print('current_user, customer.contact:', current_user, customer.contact)
+            if customer.contact != current_user:
                 print('Forbidden, this customer is not one of your own customers!')
             else:
                 query = session.query(Customer)
@@ -72,7 +76,7 @@ class CommercialMenuView:
                 return customer_to_update.id, key_to_update, value_to_update
         else:
             print("Operation only allowed for Commercial departement !")
-        self.commercial_menu_view(user_id, user_role)
+        self.commercial_menu_view(current_user, user_role)
 
 
     def display_ordered_id_customers(self):
@@ -104,12 +108,12 @@ class CommercialMenuView:
             i = i + 1
 
 
-    def update_own_contract(self, user_role):
+    def update_own_contract(self, user_role, current_user):
         contract_to_update = self.display_ordered_update_own_contracts()
         # print('Contract_to_update:', contract_to_update, contract_to_update.id)
         contract = session.query(Contract).filter_by(id=contract_to_update.id).one_or_none()
         if self.get_permission(user_role, UPDATE_OWN_CONTRACT):
-            if contract.commercial_contact != user_id:
+            if contract.commercial_contact != current_user:
                 print('Forbidden, this contract is not one of your own contracts!')
             else:
                 query = session.query(Contract)
@@ -120,7 +124,7 @@ class CommercialMenuView:
                 return contract_to_update.id, key_to_update, value_to_update
         else:
             print("Operation only allowed for Commercial departement !")
-        self.commercial_menu_view(user_id, user_role)
+        self.commercial_menu_view(user_)
 
     def display_ordered_update_own_contracts(self):
         contracts = session.query(Contract).all()
@@ -152,7 +156,7 @@ class CommercialMenuView:
             print('N°', i,'. Balance_payable:', elt.balance_payable,
                     "\n", 'status:', elt.contract_status.value)
             i = i + 1
-        self.commercial_menu_view(user_id, user_role)
+        self.commercial_menu_view()
 
     def display_ordered_contracts(self):
         contracts = session.query(Contract).all()
@@ -172,7 +176,7 @@ class CommercialMenuView:
                     "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
 
-    def create_validated_contract_event(self, user_role):
+    def create_validated_contract_event(self, user_role, current_user):
         contract = self.display_ordered_update_own_contracts()
 
         print('elt1:', contract)
@@ -188,12 +192,12 @@ class CommercialMenuView:
             # contract = session.query(Contract).filter_by(id=contract_id).one_or_none()
             # print('contract:', contract)
             # print('contract_id', contract.commercial_contact, user_id)
-            if contract.commercial_contact != user_id:
+            if contract.commercial_contact != current_user:
                 print('Forbidden, this contract is not one of your own contracts!')
             else:
                 if contract.contract_status.value != '1':
                     print('contract_status not signed!')
-                    self.commercial_menu_view(user_id, user_role)
+                    self.commercial_menu_view()
                 else:
                     for val in customers:
                         val = session.query(Customer).filter(Customer.id == contract.customer_info).first()
@@ -210,7 +214,7 @@ class CommercialMenuView:
                 return event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
         else:
             print("Operation only allowed for Commercial departement !")
-        self.commercial_menu_view(user_id, user_role)
+        self.commercial_menu_view()
 
 
 

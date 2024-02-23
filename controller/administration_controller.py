@@ -15,20 +15,20 @@ class AdministrationController:
         self.start_controller = start_controller
 
     def start_administration(self):
-            dbApp = AdministrationMenuView()
-            dbApp.display_databases()
-            choice, dbName = dbApp.administration_menu_view()  # From admin_menu_view
+        dbApp = AdministrationMenuView()
+        dbApp.display_databases()
+        choice, dbName = dbApp.administration_menu_view()  # From admin_menu_view
             
-            if choice == 1:
-                self.add_database(dbName)
-            elif choice == 2:
-                self.create_admin_user(dbName)
-            elif choice == 3:
-                self.delete_db(dbName)
-            elif choice == 4:
-                self.return_menu()
-            elif choice == 5:
-                self.start_controller.run_db(self)
+        if choice == 1:
+            self.add_database(dbName)
+        elif choice == 2:
+            self.create_admin_user(dbName)
+        elif choice == 3:
+            self.delete_db(dbName)
+        elif choice == 4:
+            self.return_menu()
+        elif choice == 5:
+            self.start_controller.run_db()
 
 
     def add_database(self, dbName):
@@ -86,9 +86,6 @@ class AdministrationController:
 
             print('Email:', email, 'Password:', password)
             self.start_administration()
-
-
-
 
     def return_menu(self):
         self.start_administration()

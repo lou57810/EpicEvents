@@ -1,5 +1,3 @@
-# import os
-
 from view.start_menu_view import StartMenuView
 # from view.user_menu_view import UserMenuView
 # from view.administration_menu_view import AdministrationMenuView
@@ -34,14 +32,11 @@ class StartMenuController:
 
         if choice == "1":
             self.admin_controller.start_administration()
-
         if choice == "2":
             main_app.display_tables()
             print('\n')
             print('Enter Email and then, password: ')
             self.user_controller.sign_in()
-
-
         elif choice == "3":
             print("\n Bye!")
             raise SystemExit

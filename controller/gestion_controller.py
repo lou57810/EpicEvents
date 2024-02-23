@@ -20,7 +20,7 @@ class GestionController:
     def gestion_menu_controller(self):           # Administration, Sign in
         
         # choice = self.menu_app.gestion_menu_view()
-        choice = self.gestion_views.gestion_menu_view()        
+        choice = self.gestion_views.gestion_menu_view()
         role = self.user_controller.current_user.role.value
 
         if choice == "1":
@@ -39,7 +39,7 @@ class GestionController:
         elif choice == "7":
             self.update_events(role)
         elif choice == "8":
-            self.user_controller.start_controller.run_db(self)
+            self.user_controller.start_controller.run_db()
             # self.start_controller()
 
 
@@ -146,7 +146,7 @@ class GestionController:
 
         print('new session:', session.commit())
         session.commit()
-        self.menu_app.display_ordered_contracts()
+        self.gestion_views.display_ordered_contracts()
         self.gestion_menu_controller()      # Retour au menu
 
 

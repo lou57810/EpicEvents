@@ -17,7 +17,7 @@ class SupportMenuView:
                 print('elt')
                 return True
 
-    def support_menu_view(self, id, role):
+    def support_menu_view(self):
         print("Choose options")
         answer = True
         while answer:
@@ -28,7 +28,8 @@ class SupportMenuView:
             """)
 
             answer = input("Faites votre choix ! \n")
-            if answer == "1":
+            return answer
+            """if answer == "1":
                 # self.display_filtered_events(id, role)
                 return 1, None
             elif answer == "2":
@@ -37,28 +38,32 @@ class SupportMenuView:
             elif answer == "3":
                 return 3, None
                 # print("\n Bye!")
-                # raise SystemExit
+                # raise SystemExit"""
 
 
-    def display_filtered_events(self, id, role):
-        print('id', id)
+    def display_filtered_events(self, role, current_user):
+        print('current_user:', current_user)
         i = 0
-        event = session.query(Event).filter(Event.support_contact == id).all()
+        event = session.query(Event).filter(Event.support_contact == current_user).all()
+        print('event:', event)
+        print('support_contact, current_user:', Event.support_contact, current_user)
         print('Your own events:\n')
         for elt in event:
             print(i,'.', elt)
             i = i + 1
         # Retour au menu
-        self.support_menu_view(id, role)
+        self.support_menu_view()
 
 
-    def display_own_events(self, id, role):
+    def display_own_events(self, role, current_user):
         # events = session.query(Event).all()
-        events = session.query(Event).filter(Event.support_contact == id).all()
+        events = session.query(Event).filter(Event.support_contact == current_user).all()
         i = 0
         print('Your events:\n')
         for elt in events:
-            print('N°', i,'.', elt)
+            print('N°', i,'.', 'Event_id:',elt.id,\
+                 "\n", 'Event', 
+                  )
             i = i + 1
 
         choix = input("Choisir un N° event:")
@@ -68,8 +73,9 @@ class SupportMenuView:
         # self.support_menu_view(id, role)
 
 
-    def update_owner_events(self, id, role):
-        event_to_update = self.display_own_events(id, role)
+    def update_owner_events(self, role, current_user):
+        event_to_update = self.display_own_events(role, current_user)
+        event = session.query(Event).filter_by(id=event_to_update.id).one_or_none()
         
         if self.get_permission(role, UPDATE_OWN_EVENT):
             query = session.query(Event)
@@ -78,6 +84,7 @@ class SupportMenuView:
             #  = input("N° de l\'evenement :")
             attribut_to_update = input("Attribut à modifier :")
             new_attribut_value = input("Nouvelle valeur :")
+            print('att, new_att, event_id', event_to_update.id, attribut_to_update, new_attribut_value)
             return event_to_update.id, attribut_to_update, new_attribut_value
             
         else:

@@ -1,14 +1,7 @@
 import bcrypt
-# from sqlalchemy import text, update, select
-# from sqlalchemy.orm import Session, sessionmaker
 from view.gestion_menu_view import GestionMenuView
-# from view.start_menu_view import StartMenuView
-# from .engine_controller import EngineController
 from model.users_model import User, Contract, Event, Customer
-from .engine_controller import session  # engine,
-#  cannot import name 'StartMenuController'(most likely due to a circular import)
-# from .start_menu_controller import StartMenuController
-
+from .engine_controller import session
 
 
 class GestionController:
@@ -44,9 +37,6 @@ class GestionController:
 
 
     def create_user(self, role):
-        print('create_user')
-        # username, password, email, role = self.menu_app.create_user(UserController.current_user.role.value)
-        print('role:', role)
         username, password, email, role = self.gestion_views.create_user_account(role)
 
         bytes = password.encode('utf-8')
@@ -129,8 +119,6 @@ class GestionController:
         
         for elt in column_names:
             if elt == key_to_update:
-                # if key_to_update == 'id':
-                    # contract.id = value_to_update
                 if key_to_update == 'customer_info':
                     contract.customer_info = value_to_update
                 elif key_to_update == 'commercial_contact':

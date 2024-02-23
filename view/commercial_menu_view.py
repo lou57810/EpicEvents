@@ -130,7 +130,6 @@ class CommercialMenuView:
         contracts = session.query(Contract).all()
         i = 0
         for elt in contracts:
-            
             # Get username from id: (elt.contact)
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             # Get info customer from customer_id: (elt.customer_id)

@@ -143,7 +143,7 @@ class CommercialMenuView:
             "\n", 'start_date:', elt.start_date,\
             "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
-        choix = input("Choisir un id contrat:")
+        choix = input("Choisir un N° de contrat:")
         contract = contracts[int(choix)]
         return contract
 
@@ -176,14 +176,15 @@ class CommercialMenuView:
             i = i + 1
 
     def create_validated_contract_event(self, user_role, current_user):
+        print('####### Contrats #######\n')
         contract = self.display_ordered_update_own_contracts()
 
-        print('elt1:', contract)
+        # print('elt1:', contract)
         contract_id = contract.id
-        status = contract.contract_status
-        com = contract.commercial_contact
-        customer_info = contract.customer_info
-        print('status:', contract_id, status, com, customer_info)
+        # status = contract.contract_status
+        # com = contract.commercial_contact
+        #  = contract.customer_info
+        # print('status:', contract_id, status, com, customer_info)
         customers = session.query(Customer).all()
 
         if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
@@ -206,11 +207,11 @@ class CommercialMenuView:
                         end_date = val.last_date
                         print('vals:', customer_name, customer_contact, start_date, end_date)
                     
-                    support_contact = input("Support Contact: id departement support")
+                    # support_contact = input("Support Contact: id departement support")
                     location = input("Lieu de l'évenement: ")
                     attendees = input("Nombre de participants: ")
                     notes = input("Précisions sur le déroulement de l'évenement: ")
-                return event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
+                return event_name, contract_id, customer_name, customer_contact, start_date, end_date, None, location, attendees, notes
         else:
             print("Operation only allowed for Commercial departement !")
         self.commercial_menu_view()
@@ -225,6 +226,7 @@ class CommercialMenuView:
             user = session.query(User).filter(User.id == elt.support_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
             customer = session.query(Customer).filter(Customer.id == elt.customer_contact).first()
+            print('########## Events #########\n')
             print('N°',i,'. Event_id:', elt.id,\
                         "\n", 'Event name:', elt.event_name,\
                         "\n", 'Customer contact:', customer.full_name, customer.customer_email,\

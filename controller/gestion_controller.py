@@ -65,15 +65,12 @@ class GestionController:
         
         for elt in column_names:
             if elt == key_to_update:
-                # if key_to_update == 'id': # clé non modifiable
-                    # user.id = value_to_update
                 if key_to_update == 'username':
                     user.username = value_to_update
                 elif key_to_update == 'password':
                     bytes = value_to_update.encode('utf-8')
                     salt = bcrypt.gensalt()
                     hashed_password = bcrypt.hashpw(bytes, salt)
-                    # print('hashed_password:', bcrypt.hashpw(bytes, salt))
                     user.password = value_to_update
                     user.hashed_pass = hashed_password
                 elif key_to_update == 'email':
@@ -81,7 +78,7 @@ class GestionController:
                 elif key_to_update == 'role':
                     user.role = value_to_update
         session.commit()
-        print('Updated:', user.username, user.email, user.role.value)
+        print('Updated:', user.username, user.email, user.role) # => RoleEnum.COMMERCIAL  user.role.value => 2
         self.gestion_menu_controller()
 
 
@@ -131,10 +128,8 @@ class GestionController:
                     contract.start_date = value_to_update
                 elif key_to_update == 'contract_status':
                     contract.contract_status = value_to_update
-
-        print('new session:', session.commit())
         session.commit()
-        self.gestion_views.display_ordered_contracts()
+        print('New values:', key_to_update, '::', value_to_update)
         self.gestion_menu_controller()      # Retour au menu
 
 

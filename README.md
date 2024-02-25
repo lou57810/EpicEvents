@@ -31,7 +31,7 @@
 ## Affichage:
 	1. Administration. (Permet de créer ou de supprimer une base de données, et de créer un administrateur.)
 		1. Création de la base de donnée.
-		2. Création de l'administrateur:	(email: admin@localhost password: admin_)
+		2. Création de l'administrateur:	(email: admin@localhost password: admin)
 		3. Suppression de la base de données.
 		4. Affichage des bases de données.
 		5. Quit
@@ -43,10 +43,10 @@
 		sera orienté vers les menus lui étant reservés.
 	3. Quit. (Quitte le programme.)
 
-	###      EMAIL				PASSWORD			ROLE
+	###      EMAIL				PASSWORD				ROLE
 	-------------------------------------------------------
 	### Exemle:
-	### admin1@localhost			admin1			GESTION
+	### gestion1@localhost			gestion1			GESTION
 	
 
 ### 1. Un gestionnaire crée des collaborateurs departement gestion, commercial, et support.

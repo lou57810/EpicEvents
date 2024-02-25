@@ -49,8 +49,9 @@ class UserController:
             db_hash = db_hash.encode('utf-8')
 
             if bcrypt.checkpw(check, db_hash):
-                print('You are logged in dbepic as id :', user_row.id,\
-                        'email: ', user_row.email,\
+                print('You are logged in dbepic as id :', user_row.id,
+                        'username:', user_row.username,
+                        'email: ', user_row.email,
                         'departement: ', user_row.role.value)
 
                 # Redirection en fonction du rôle

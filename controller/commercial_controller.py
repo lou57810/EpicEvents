@@ -14,7 +14,7 @@ class CommercialController:
 
     def commercial_menu_controller(self):
         current_user = self.user_controller.current_user.id
-        print('user_logged:', current_user)
+        # print('user_logged:', self.user_controller.current_user.username)
         choice = self.commercial_views.commercial_menu_view()
         role = self.user_controller.current_user.role.value
  
@@ -33,7 +33,7 @@ class CommercialController:
             self.create_event(role, current_user)
             self.commercial_views.display_events()
         elif choice == "7":
-            self.user_controller.start_controller.run_db(self)
+            self.user_controller.start_controller.run_db()
 
     def create_customer(self, role):   # Récupération valeurs renseignée, et foreign key: contact_id
         full_name, customer_email, tel, company_name, first_date, last_date = self.commercial_views.create_customer_account(role)
@@ -112,7 +112,16 @@ class CommercialController:
 
 
     def create_event(self, role, current_user):
-        event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = self.commercial_views.create_validated_contract_event(role)
+        event_name,\
+        contract_id,\
+        customer_name,\
+        customer_contact,\
+        start_date,\
+        end_date,\
+        support_contact,\
+        location,\
+        attendees,\
+        notes = self.commercial_views.create_validated_contract_event(role, current_user)
  
         event = Event(event_name, contract_id, customer_name,\
         customer_contact, start_date, end_date, support_contact,\

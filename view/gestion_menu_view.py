@@ -71,10 +71,28 @@ class GestionMenuView:
 
     def update_user_account(self, user_role):
         user_to_update = self.display_ordered_update_users()
+        query = session.query(User)
+        column_names = query.statement.columns.keys()
+        # print('Choose one key :', column_names[1], column_names[2], column_names[4], column_names[5])
 
         if self.get_permission(user_role, UPDATE_USER):
-            key_to_update = input('Clé à modifier: ')
-            value_to_update = input('Nouvelle valeur:' )
+            i = 0
+            for elt in column_names:
+                if i != 0 and i != 3:
+                    print('N°', i, elt)
+                i = i + 1
+            # key_to_update = input('Clé à modifier: ')
+            num_key = input('Clé à modifier: ')
+            print('num_key1:', num_key)
+            # key_to_update = column_names[int(key_to_update)]
+            key_to_update = column_names[int(num_key)]
+            print('key_to_update:', key_to_update)
+
+            if num_key == "5":
+                print('Choisir le departement:')
+                value_to_update = input('Nouvelle valeur: (If role to update: [GESTION : 1, COMMERCIAL : 2, or SUPPORT: 3.]')
+            else:
+                value_to_update = input('Nouvelle valeur:')
             return user_to_update.id, key_to_update, value_to_update
 
         else:
@@ -106,11 +124,14 @@ class GestionMenuView:
         print('############# Customers ##############')
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
-            print('N°', i, '. Customer_id:', elt.id, "\n", "full_name:", elt.full_name,\
-            "\n", "customer_email:", elt.customer_email, "\n",
-            "tel:", elt.tel, "\n", "company_name:", elt.company_name,\
-            "\n",  "first_date:", elt.first_date, "\n"
-            "last_date:", elt.last_date, "\n", "contact:", user.username)
+            print('N°', i,
+            "\n", "full_name:", elt.full_name,
+            "\n", "customer_email:", elt.customer_email,
+            "\n", "tel:", elt.tel,
+            "\n", "company_name:", elt.company_name,
+            "\n", "first_date:", elt.first_date,
+            "\n" "last_date:", elt.last_date,
+            "\n", "contact:", user.username)
             i = i + 1
         choix = input("Choisir un N° customer:")
         customer = customers[int(choix)]
@@ -125,13 +146,13 @@ class GestionMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
             
-            print('N°',i,'. Contract_id:', customer.id,\
-                    "\n", 'customer_info:', customer.full_name, customer.customer_email,\
-                    "\n", 'tel:',customer.tel,\
-                    "\n", 'commercial_contact:', user.username,\
-                    "\n", 'total_amount:', elt.total_amount,\
-                    "\n", 'balance_payable:', elt.balance_payable,\
-                    "\n", 'start_date:', elt.start_date,\
+            print('N°',i,'. Contract_id:', customer.id,
+                    "\n", 'customer_info:', customer.full_name, customer.customer_email,
+                    "\n", 'tel:',customer.tel,
+                    "\n", 'commercial_contact:', user.username,
+                    "\n", 'total_amount:', elt.total_amount,
+                    "\n", 'balance_payable:', elt.balance_payable,
+                    "\n", 'start_date:', elt.start_date,
                     "\n", 'commercial_status:', elt.contract_status.value, "\n")
             i = i + 1
 
@@ -139,14 +160,21 @@ class GestionMenuView:
     def create_contract(self, user_role):
         if self.get_permission(user_role, ADD_CONTRACT):
             customer_info = self.display_customers()
-            print('customer_info:', customer_info)
-            # customer_info = input('N° du client (id): ')
-            # commercial_contact = input('Email contact commercial associé au client: ')
+            customer = session.get(Customer, customer_info)
+            user = session.get(User, customer.contact)
+            
+            print('#### customer_info ####:\n')
+            print('Name:', customer.full_name,
+                "\n", 'email:', customer.customer_email,
+                "\n", 'Tel:', customer.tel,
+                "\n", 'First date:', customer.first_date,
+                "\n", 'Last date:', customer.last_date,
+                "\n", 'Contact:', user.username)
+            
             total_amount = input('Montant total du contrat: ')
             balance_payable = input('Montant restant à payer: ')
             start_date = input('Date de création du contrat: (format: year-month-day xxxx-xx-xx)')
             contract_status = input('Contrat status: (1: SIGNED or 2: UNSIGNED)')
-            # return id, customer_info, commercial_contact, total_amount, balance_payable, start_date, contract_status
             return customer_info, total_amount, balance_payable, start_date, contract_status
         else:
             print("Operation only allowed for Gestion departement !")
@@ -162,24 +190,37 @@ class GestionMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
             
-            print('N°',i,'. Contract_id:', elt.id,\
-                    "\n", 'customer_info:', customer.full_name, customer.customer_email,\
-                    "\n", 'tel:',customer.tel, "\n", 'commercial_contact:', user.username,\
-                    "\n", 'total_amount:', elt.total_amount,\
-                    "\n", 'balance_payable:', elt.balance_payable,\
-                    "\n", 'start_date:', elt.start_date,\
+            print('N°', i,
+                    "\n", 'customer_info:', customer.full_name, customer.customer_email,
+                    "\n", 'tel:',customer.tel, "\n", 'commercial_contact:', user.username,
+                    "\n", 'total_amount:', elt.total_amount,
+                    "\n", 'balance_payable:', elt.balance_payable,
+                    "\n", 'start_date:', elt.start_date,
                     "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
-        choix = input("Choisir un id contrat:")
+        print('\n')
+        choix = input("Choisir un id contrat:\n")
         contract = contracts[int(choix)]
         return contract
 
     def update_contract(self, user_role):
         contract_to_update = self.display_ordered_update_contracts()
+        contract = session.get(Contract, contract_to_update.id)
+        
+        customer = session.get(Customer, contract.customer_info)
+        user = session.get(User, contract.commercial_contact)
+        print('\n')
+        print('##### Contract selected #####\n')
+        print('customer_info:', customer.full_name, customer.customer_email,
+                    "\n", 'tel:',customer.tel, "\n", 'commercial_contact:', user.username,
+                    "\n", 'total_amount:', contract.total_amount,
+                    "\n", 'balance_payable:', contract.balance_payable,
+                    "\n", 'start_date:', contract.start_date,
+                    "\n", 'contract_status:', contract.contract_status, '\n')
         query = session.query(Contract)
         column_names = query.statement.columns.keys()
-        print('Choose one key :', column_names[3], column_names[4], column_names[5], column_names[6])
-        # print('contract_to_update:', contract_to_update, contract_to_update.id)
+        print('Choose one key :', column_names[3], column_names[4], column_names[5], column_names[6], "\n")
+        
         if self.get_permission(user_role, UPDATE_CONTRACT):
             key_to_update = input('Attribut à modifier: ')
             value_to_update = input('Nouvelle valeur: ')
@@ -192,9 +233,12 @@ class GestionMenuView:
 
     def display_filtered_events(self):   # affiche tous les événements qui n’ont pas de « support » associé.
         event = session.query(Event).filter_by(support_contact="").all()
-        print('event with no contact support:', event)
-        print('event with support contact:')
-        self.display_events()
+        if event:
+            print('event with no contact support:', event)
+        else:
+            print('No event without support_contact.')
+        # print('event with support contact:')
+        # self.display_events()
 
 
     def update_events(self,user_role):

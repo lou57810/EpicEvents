@@ -41,7 +41,7 @@ class AdministrationMenuView:
             if answer == "1":
                 db_name = input('Entrer le nom de la base de donnees à créer: ')
                 return 1, db_name   # Renvoi 
-            # Admin creation 
+            # Admin user creation 
             if answer == "2":
                 db_name = input('Entrer la base de données à utiliser:')
                 return 2, db_name

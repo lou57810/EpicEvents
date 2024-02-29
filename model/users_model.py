@@ -1,6 +1,7 @@
 # import os
-import enum
-from enum import Enum as PyEnum 
+# import enum
+from enum import Enum as PyEnum
+# from enum import Enum
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import ForeignKey # LargeBinary, 
 from sqlalchemy.dialects.mysql import LONGTEXT
@@ -34,6 +35,12 @@ CREATE_SIGNED_OWN_EVENT = "CREATE_SIGNED_OWN_EVENT"
 ###################################################
 UPDATE_OWN_EVENT = "UPDATE_OWN_EVENT"
 ###################################################
+
+# Department role.
+"""class Role(Enum):
+    GESTION = 1
+    COMMERCIAL = 2
+    SUPPORT = 3"""
 
 
 class RoleEnum(PyEnum):
@@ -70,6 +77,8 @@ class User(Base):
     password : Mapped[str] = mapped_column(String(120))
     hashed_pass: Mapped[str] = mapped_column(String(120))
     email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
+    # role = Column(types.Enum(RoleEnum, values_callable=lambda obj: [e.value for e in obj]))
+    # role = Mapped[Role] = mapped_column()
     role = Column(types.Enum(RoleEnum, values_callable=lambda obj: [e.value for e in obj]))
 
     # Relation: customer, contract, event

@@ -17,7 +17,7 @@ class CommercialMenuView:
                 result = Permissions_roles[role]
         for elt in result:
             if elt == role_fct:
-                print('elt')
+                # print('elt')
                 return True
 
     def commercial_menu_view(self):
@@ -58,10 +58,8 @@ class CommercialMenuView:
     # Maj client
     def update_own_customer(self, user_role, current_user):
         customer_to_update = self.display_ordered_id_customers()
-        print('current_user:', current_user, customer_to_update.id)
-        
         customer = session.query(Customer).filter_by(id=customer_to_update.id).one_or_none()
-        print('customer:', customer)
+        print('#### customer to update ####\n\n', customer)
          
         if self.get_permission(user_role, UPDATE_OWN_CUSTOMER):
             print('current_user, customer.contact:', current_user, customer.contact)
@@ -220,21 +218,23 @@ class CommercialMenuView:
 
     def display_events(self):
         events = session.query(Event).all()
+        # customer = session.query(Customer).all()
         i = 0
         for elt in events:
-            customer = session.query(Customer).all()
-            user = session.query(User).filter(User.id == elt.support_contact).first()
+            user = session.get(User, elt.support_contact)
+            customer = session.get(Customer, elt.customer_contact)
+            # user = session.query(User).filter(User.id == elt.support_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
-            customer = session.query(Customer).filter(Customer.id == elt.customer_contact).first()
+            # customer = session.query(Customer).filter(Customer.id == elt.customer_contact).first()
             print('########## Events #########\n')
-            print('N°',i,'. Event_id:', elt.id,\
-                        "\n", 'Event name:', elt.event_name,\
-                        "\n", 'Customer contact:', customer.full_name, customer.customer_email,\
-                        "\n", 'Tel:', customer.tel,\
-                        "\n", 'start_date:', elt.start_date,\
-                        "\n", 'end_date:', elt.end_date,\
-                        "\n", 'support contact:', user.username,\
-                        "\n", 'location:', elt.location,\
-                        "\n", 'attendees:', elt.attendees,\
+            print('N°',i,'. Event_id:', elt.id,
+                        "\n", 'Event name:', elt.event_name,
+                        "\n", 'Customer contact:', customer.full_name, customer.customer_email,
+                        "\n", 'Tel:', customer.tel,
+                        "\n", 'start_date:', elt.start_date,
+                        "\n", 'end_date:', elt.end_date,
+                        "\n", 'support contact:', user.username,
+                        "\n", 'location:', elt.location,
+                        "\n", 'attendees:', elt.attendees,
                         "\n",  'notes:', elt.notes)
             i = i + 1

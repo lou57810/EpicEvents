@@ -15,7 +15,7 @@ from .support_controller import SupportController
 # from sqlalchemy_utils import database_exists, create_database, drop_database
 # import mysql.connector
 # from mysql.connector import connect, Error
-from model.users_model import User  # , Customer, Base, 
+from model.users_model import User # , Customer, Base, 
 # from sqlalchemy.orm import Session, sessionmaker
 # import pymysql.cursors
 # import pymysql
@@ -37,22 +37,19 @@ class UserController:
     def sign_in(self):
         start_app = StartMenuView()
         input_email, input_password = start_app.user_sign_in()
-        user_row = session.query(User).filter_by(email=input_email).one_or_none() 
+        user_row = session.query(User).filter_by(email=input_email).one_or_none()
+        
         if user_row == None:
             print('Bad email!')
             self.sign_in()
-
         else:
             check = input_password.encode('utf-8')
-
             db_hash = user_row.hashed_pass  # valeur hashed & salted dans la base de données
             db_hash = db_hash.encode('utf-8')
 
             if bcrypt.checkpw(check, db_hash):
-                print('You are logged in dbepic as id :', user_row.id,
-                        'username:', user_row.username,
-                        'email: ', user_row.email,
-                        'departement: ', user_row.role.value)
+                print('\n')
+                print('Signed in dbepic as user:', user_row.username, ', email:', user_row.email, '\n')
 
                 # Redirection en fonction du rôle
                 # self.department_redirect(user_row.id, user_row.role.value)
@@ -65,9 +62,13 @@ class UserController:
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self):
+        print('#### DEPARTMENT', self.current_user.role.name, '####\n')
         if self.current_user.role.value == "1":     # user_controller
+        # if self.current_user.role == "1":     # user_controller
             self.gestion_controller.gestion_menu_controller()
         elif self.current_user.role.value == "2":
+        # elif self.current_user.role == "2":
             self.commercial_controller.commercial_menu_controller()
         elif self.current_user.role.value == "3":
+        # elif self.current_user.role == "3":
             self.support_controller.support_menu_controller()

@@ -23,15 +23,18 @@ class GestionController:
         elif choice == "3":
             self.delete_user(role)
         elif choice == "4":
-            self.create_contract(role)
+            self.gestion_views.display_ordered_users()
+            self.gestion_menu_controller()
         elif choice == "5":
-            self.update_contract(role)
+            self.create_contract(role)
         elif choice == "6":
+            self.update_contract(role)
+        elif choice == "7":
             self.gestion_views.display_filtered_events()
             self.gestion_menu_controller()
-        elif choice == "7":
-            self.update_events(role)
         elif choice == "8":
+            self.update_events(role)
+        elif choice == "9":
             self.user_controller.start_controller.run_db()
             # self.start_controller()
 
@@ -42,17 +45,13 @@ class GestionController:
         bytes = password.encode('utf-8')
         hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())
 
-        user = User(username, password, hashed_password, email, role)
-        print('user:', user)
+        user = User(username, password, hashed_password, email, role)        
         session.add(user)   # stage
         session.commit()    # push
 
         users = session.query(User).all()
-        for user in users:
-            print(f"id: {user.id}, username: {user.username}," "\n",\
-                    "password: {user.password}," "\n",\
-                    "email: {user.email}," "\n",\
-                    "role: {user.role}")
+        print('\n')
+        print('Created:', user.username, user.email, user.role.name)
         self.gestion_menu_controller()     # Retour menu gestion
 
 
@@ -78,7 +77,10 @@ class GestionController:
                 elif key_to_update == 'role':
                     user.role = value_to_update
         session.commit()
-        print('Updated:', user.username, user.email, user.role) # => RoleEnum.COMMERCIAL  user.role.value => 2
+        print('\n')
+        print('Updated - user:', user.username,
+        'pass:', user.password, 'email:', user.email,
+        'role:', user.role.name) 
         self.gestion_menu_controller()
 
 
@@ -88,7 +90,7 @@ class GestionController:
             user = session.query(User).filter_by(id=id).one_or_none()
             session.delete(user)
             session.commit()
-            print('After update:')            
+            print('After update:')
             self.gestion_views.display_users()
         else:
             print('no_values!')

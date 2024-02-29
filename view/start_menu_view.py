@@ -1,4 +1,5 @@
 # import os
+import maskpass
 from controller.engine_controller import engine
 from sqlalchemy import inspect
 
@@ -14,15 +15,14 @@ class StartMenuView:
                 print("""
                 1. Administration.
                 2. Sign in.
-                3. Quit.
+                0. Quit.
                 """)
                 answer = input("Choix:")
                 return answer
 
     def user_sign_in(self):
         email = input('Email: ')
-        password = str(input('Password: '))
-        
+        password = maskpass.askpass(prompt="Password:", mask="#")
         return email, password
 
 

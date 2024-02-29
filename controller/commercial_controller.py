@@ -24,16 +24,18 @@ class CommercialController:
             self.update_customer(role, current_user)
         elif choice == "3":
             self.commercial_views.display_customers()
+            self.commercial_menu_controller()
         elif choice == "4":
             self.update_own_contract(role, current_user)
         elif choice == "5":
             self.commercial_views.display_filtered_contracts(role)
         elif choice == "6":
-            self.commercial_views.display_events()
+            # self.commercial_views.display_events() Pas d'events arret du programme ?
+            print('role', role, 'current_user', current_user)
             self.create_event(role, current_user)
             self.commercial_views.display_events()
-        elif choice == "7":
-            self.user_controller.start_controller.run_db()
+        elif choice == "0":
+            self.user_controller.start_controller.start_dbepic_app()
 
     def create_customer(self, role):   # Récupération valeurs renseignée, et foreign key: contact_id
         full_name, customer_email, tel, company_name, first_date, last_date = self.commercial_views.create_customer_account(role)

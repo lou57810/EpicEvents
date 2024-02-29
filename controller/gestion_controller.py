@@ -11,8 +11,6 @@ class GestionController:
 
 
     def gestion_menu_controller(self):           # Administration, Sign in
-        
-        # choice = self.menu_app.gestion_menu_view()
         choice = self.gestion_views.gestion_menu_view()
         role = self.user_controller.current_user.role.value
 
@@ -30,12 +28,15 @@ class GestionController:
         elif choice == "6":
             self.update_contract(role)
         elif choice == "7":
-            self.gestion_views.display_filtered_events()
+            self.gestion_views.display_ordered_contracts()
             self.gestion_menu_controller()
         elif choice == "8":
-            self.update_events(role)
+            self.gestion_views.display_filtered_events()
+            self.gestion_menu_controller()
         elif choice == "9":
-            self.user_controller.start_controller.run_db()
+            self.update_events(role)
+        elif choice == "0":
+            self.user_controller.start_controller.start_dbepic_app()
             # self.start_controller()
 
 
@@ -45,7 +46,7 @@ class GestionController:
         bytes = password.encode('utf-8')
         hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())
 
-        user = User(username, password, hashed_password, email, role)        
+        user = User(username, password, hashed_password, email, role)
         session.add(user)   # stage
         session.commit()    # push
 
@@ -107,6 +108,7 @@ class GestionController:
 
         session.add(contract)   # stage
         session.commit()    # push
+        # print('Contract:')
         self.gestion_menu_controller()     # Retour menu gestion
 
 

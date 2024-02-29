@@ -15,7 +15,7 @@ from .support_controller import SupportController
 # from sqlalchemy_utils import database_exists, create_database, drop_database
 # import mysql.connector
 # from mysql.connector import connect, Error
-from model.users_model import User # , Customer, Base, 
+from model.users_model import User, RoleEnum # , Customer, Base, 
 # from sqlalchemy.orm import Session, sessionmaker
 # import pymysql.cursors
 # import pymysql
@@ -63,12 +63,9 @@ class UserController:
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self):
         print('#### DEPARTMENT', self.current_user.role.name, '####\n')
-        if self.current_user.role.value == "1":     # user_controller
-        # if self.current_user.role == "1":     # user_controller
+        if self.current_user.role.value == RoleEnum.GESTION.value:
             self.gestion_controller.gestion_menu_controller()
-        elif self.current_user.role.value == "2":
-        # elif self.current_user.role == "2":
+        elif self.current_user.role.value == RoleEnum.COMMERCIAL.value:
             self.commercial_controller.commercial_menu_controller()
-        elif self.current_user.role.value == "3":
-        # elif self.current_user.role == "3":
+        elif self.current_user.role.value == RoleEnum.SUPPORT.value:
             self.support_controller.support_menu_controller()

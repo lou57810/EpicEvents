@@ -13,7 +13,7 @@ def main():
     print('Repertoire de base: ', os.getcwd(),'\n')
 
     main_app = StartMenuController()
-    main_app.run_db()
+    main_app.start_dbepic_app()
 
 
 if __name__ == "__main__":

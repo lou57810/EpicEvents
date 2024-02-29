@@ -1,5 +1,3 @@
-# import mysql.connector
-
 
 
 
@@ -28,8 +26,10 @@ class UserMenuView:
         # from controller.gestion_controller import GestionController
         # gestion_app = GestionController()
         email = input('Email: ')
+        # pwd = maskpass.askpass(prompt="Password:", mask="#")
+        # print('pwd:', pwd)
         password = str(input('Password: '))
-        
+        # password = pwd
         return email, password
 
 

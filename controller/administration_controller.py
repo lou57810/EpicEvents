@@ -28,8 +28,8 @@ class AdministrationController:
             self.delete_db(dbName)
         elif choice == 4:
             self.return_menu()
-        elif choice == 5:
-            self.start_controller.run_db()
+        elif choice == 0:
+            self.start_controller.start_dbepic_app()
 
 
     def add_database(self, dbName):

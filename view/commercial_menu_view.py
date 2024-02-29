@@ -31,7 +31,7 @@ class CommercialMenuView:
             4. Update own contract.
             5. Display filtered contract.
             6. Create event for contract.
-            7. Quit.
+            0. Deconnection.
             """)
 
             answer = input("Faites votre choix ! \n")
@@ -83,12 +83,12 @@ class CommercialMenuView:
         for elt in customers:
             # Get username from id: (elt.contact)
             user = session.query(User).filter(User.id == elt.contact).first()
-            print('N°',i,'. full_name:', elt.full_name,\
-            "\n", 'email:', elt.customer_email,\
-            "\n", 'tel:', elt.tel,\
-            "\n", 'company_name:', elt.company_name,\
-            "\n", 'first_date:', elt.first_date,\
-            "\n", 'last_date:', elt.last_date,\
+            print('N°',i,'. full_name:', elt.full_name,
+            "\n", 'email:', elt.customer_email,
+            "\n", 'tel:', elt.tel,
+            "\n", 'company_name:', elt.company_name,
+            "\n", 'first_date:', elt.first_date,
+            "\n", 'last_date:', elt.last_date,
             "\n", 'contact:', user.username)
             i = i + 1
         choix = input("Choisir un id customer:")
@@ -132,13 +132,13 @@ class CommercialMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
-            print('N°',i,'. Contract_id:', elt.id,\
-            "\n", 'customer_info:', customer.full_name, customer.customer_email,\
-            "\n", 'tel:',customer.tel,\
-            "\n", 'commercial_contact:', user.username,\
-            "\n", 'total_amount:', elt.total_amount,\
-            "\n", 'balance_payable:', elt.balance_payable,\
-            "\n", 'start_date:', elt.start_date,\
+            print('N°', i,
+            "\n", 'customer_info:', customer.full_name, customer.customer_email,
+            "\n", 'tel:',customer.tel,
+            "\n", 'commercial_contact:', user.username,
+            "\n", 'total_amount:', elt.total_amount,
+            "\n", 'balance_payable:', elt.balance_payable,
+            "\n", 'start_date:', elt.start_date,
             "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
         choix = input("Choisir un N° de contrat:")
@@ -163,13 +163,13 @@ class CommercialMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             # Get info customer from customer_id: (elt.customer_id)
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
-            print('N°',i,'. Contract_id:', elt.id,\
-                    "\n", 'customer_info:', customer.full_name, customer.customer_email,\
-                    "\n", 'tel:',customer.tel,\
-                    "\n", 'commercial_contact:', user.username,\
-                    "\n", 'total_amount:', elt.total_amount,\
-                    "\n", 'balance_payable:', elt.balance_payable,\
-                    "\n", 'start_date:', elt.start_date,\
+            print('N°',i,'. Contract_id:', elt.id,
+                    "\n", 'customer_info:', customer.full_name, customer.customer_email,
+                    "\n", 'tel:',customer.tel,
+                    "\n", 'commercial_contact:', user.username,
+                    "\n", 'total_amount:', elt.total_amount,
+                    "\n", 'balance_payable:', elt.balance_payable,
+                    "\n", 'start_date:', elt.start_date,
                     "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
 
@@ -184,8 +184,9 @@ class CommercialMenuView:
         #  = contract.customer_info
         # print('status:', contract_id, status, com, customer_info)
         customers = session.query(Customer).all()
-
-        if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
+        if not self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
+            print("Contract not signed!")
+        elif self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
             event_name = input("Nom de l'evenement: ")
             # contract = session.query(Contract).filter_by(id=contract_id).one_or_none()
             # print('contract:', contract)
@@ -206,9 +207,9 @@ class CommercialMenuView:
                         print('vals:', customer_name, customer_contact, start_date, end_date)
                     
                     # support_contact = input("Support Contact: id departement support")
-                    location = input("Lieu de l'évenement: ")
+                    location = input("Lieu de l'evenement: ")
                     attendees = input("Nombre de participants: ")
-                    notes = input("Précisions sur le déroulement de l'évenement: ")
+                    notes = input("Precisions sur le deroulement de l'evenement: ")
                 return event_name, contract_id, customer_name, customer_contact, start_date, end_date, None, location, attendees, notes
         else:
             print("Operation only allowed for Commercial departement !")

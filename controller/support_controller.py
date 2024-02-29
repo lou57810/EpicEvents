@@ -24,7 +24,7 @@ class SupportController:
             print('Departement Support')
             self.update_own_events(role, current_user)
         elif choice == "3":
-            self.user_controller.start_controller.run_db()
+            self.user_controller.start_controller.start_dbepic_app()
 
 
     def update_own_events(self, role, current_user):

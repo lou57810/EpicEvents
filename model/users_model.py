@@ -37,29 +37,23 @@ UPDATE_OWN_EVENT = "UPDATE_OWN_EVENT"
 ###################################################
 
 # Department role.
-"""class Role(Enum):
-    GESTION = 1
-    COMMERCIAL = 2
-    SUPPORT = 3"""
-
-
 class RoleEnum(PyEnum):
-    GESTION = "1"
-    COMMERCIAL = "2"
-    SUPPORT = "3"
+    GESTION = "GESTION"
+    COMMERCIAL = "COMMERCIAL"
+    SUPPORT = "SUPPORT"
 
 
 class SignEnum(PyEnum):
-    SIGNED = "1"
-    UNSIGNED = "2"
+    SIGNED = "SIGNED"
+    UNSIGNED = "UNSIGNED"
 
 #  Changer Signed True or False
 
 
 
-Permissions_roles = {"1": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
-                    "2": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
-                    "3": [UPDATE_OWN_EVENT]
+Permissions_roles = {"GESTION": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
+                    "COMMERCIAL": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
+                    "SUPPORT": [UPDATE_OWN_EVENT]
                     }
 
 

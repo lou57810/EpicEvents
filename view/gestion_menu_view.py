@@ -1,4 +1,4 @@
-
+import maskpass
 # from sqlalchemy import text
 # from sqlalchemy.orm import Session, sessionmaker
 from model.users_model import User, Event, Contract, Customer # , RoleEnum
@@ -36,23 +36,26 @@ class GestionMenuView:
             4. Display users.
             5. Create contract.
             6. Update contract.
-            7. Display filtered events.
-            8. Update events.
-            9. Quit.
+            7. Display contracts.
+            8. Display filtered events.
+            9. Update events.
+            0. Deconnection.
             """)
-
             answer = input("Faites votre choix ! \n")
             return answer
 
 
     def get_role(self):
         print("Role list : ")
+        i = 1
+        val = list()
         for role in RoleEnum:
-            print(f"{role.name} : {role.value}")
+            print(f"{i} : {role.value}")
+            val.append(role.value)
+            i = i + 1
         role_num = input("N° of role : ")
-        role = RoleEnum(role_num)
-        print('Departement:', role.name, 'Enum:', role.value)
-        return role.value
+        role = val[int(role_num) - 1]
+        return role
 
 
     def create_user_account(self, user_role):
@@ -90,7 +93,7 @@ class GestionMenuView:
         i = 0
         for elt in users:
             print('N°',i, '. username:', elt.username, 'password:', elt.password,
-            'email:', elt.email, 'role:', elt.role.name)
+            'email:', elt.email, 'role:', elt.role)
             i = i + 1
         choix = input("Choisir un id user:")
         user = users[int(choix)]
@@ -136,20 +139,7 @@ class GestionMenuView:
                 value_to_update = self.get_role()
             
             return user_to_update.id, key_to_update, value_to_update
-            """key_to_update = input('Attribut à modifier: ')
-            #num_key = input('N° de Clé à modifier: ')
-            # print('num_key:', num_key)
-            # key_to_update = column_names[int(key_to_update)]
-            key_to_update = column_names[int(num_key)]
-            print('key_to_update:', key_to_update)
-
-            if num_key == "5":
-                print('Choisir le departement:')
-                value_to_update = input('Nouvelle valeur: (If role to update: [GESTION : 1, COMMERCIAL : 2, or SUPPORT: 3.]')
-            else:
-                value_to_update = input('Nouvelle valeur:')
-            return user_to_update.id, key_to_update, value_to_update"""
-
+            
         else:
             print('user_role:', user_role)
             print("Operation only allowed for Gestion departement !")
@@ -169,7 +159,7 @@ class GestionMenuView:
         users = session.query(User).all()
         i = 0
         for elt in users:
-            print('N°',i, '. User:', elt.username, elt.email, elt.role.value)
+            print('N°',i, '. User:', elt.username, elt.email, elt.role)
             i = i + 1
 
 

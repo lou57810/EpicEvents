@@ -28,9 +28,10 @@ class CommercialMenuView:
             1. Create customer.
             2. Update customer.
             3. Display customers.
-            4. Update own contract.
-            5. Display filtered contract.
-            6. Create event for contract.
+            4. Display contracts.
+            5. Update own contract.
+            6. Display filtered contract.
+            7. Create event for contract.
             0. Deconnection.
             """)
 
@@ -59,22 +60,27 @@ class CommercialMenuView:
     def update_own_customer(self, user_role, current_user):
         customer_to_update = self.display_ordered_id_customers()
         customer = session.query(Customer).filter_by(id=customer_to_update.id).one_or_none()
-        print('#### customer to update ####\n\n', customer)
+        print('#### customer to update ####\n\n', customer.full_name)
          
         if self.get_permission(user_role, UPDATE_OWN_CUSTOMER):
-            print('current_user, customer.contact:', current_user, customer.contact)
+            # print('current_user, customer.contact:', current_user, customer.contact)
             if customer.contact != current_user:
-                print('Forbidden, this customer is not one of your own customers!')
+                print('\n')
+                print('#### Forbidden', customer.full_name, 'is not your customer. Retry! ####\n')
+                self.update_own_customer(user_role, current_user)
+                
             else:
                 query = session.query(Customer)
                 column_names = query.statement.columns.keys()
+                print('\n')
                 print('Choose one key :', column_names[1], column_names[2], column_names[3], column_names[4], column_names[5], column_names[6])
                 key_to_update = input('Clé à modifier: ')
                 value_to_update = input('Nouvelle valeur:' )
+                print('VALUES:', customer_to_update.id, key_to_update, value_to_update)
                 return customer_to_update.id, key_to_update, value_to_update
         else:
             print("Operation only allowed for Commercial departement !")
-        self.commercial_menu_view(current_user, user_role)
+            self.commercial_menu_view()
 
 
     def display_ordered_id_customers(self):
@@ -153,7 +159,7 @@ class CommercialMenuView:
             print('N°', i,'. Balance_payable:', elt.balance_payable,
                     "\n", 'status:', elt.contract_status.value)
             i = i + 1
-        self.commercial_menu_view()
+        # self.commercial_menu_view()
 
     def display_ordered_contracts(self):
         contracts = session.query(Contract).all()
@@ -173,10 +179,28 @@ class CommercialMenuView:
                     "\n", 'contract_status:', elt.contract_status.value)
             i = i + 1
 
+
+    def get_user(self):
+        users = session.query(User).filter(User.role == "SUPPORT")
+        i = 0
+        num_list = []
+        for elt in users:
+            num_list.append(elt.id)
+            print('N°', i,
+            '\n', 'username:', elt.username,
+            '\n', 'role:', elt.role.name)
+            i = i + 1
+        support_contact = input("N° Support Contact:")
+        return num_list[int(support_contact)]
+
+
+    # Contract must be signed and belong to commercial connected collaborator.
     def create_validated_contract_event(self, user_role, current_user):
         print('####### Contrats #######\n')
+        
+        
         contract = self.display_ordered_update_own_contracts()
-
+        print('user_role:', user_role)
         # print('elt1:', contract)
         contract_id = contract.id
         # status = contract.contract_status
@@ -184,36 +208,44 @@ class CommercialMenuView:
         #  = contract.customer_info
         # print('status:', contract_id, status, com, customer_info)
         customers = session.query(Customer).all()
-        if not self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
-            print("Contract not signed!")
-        elif self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
-            event_name = input("Nom de l'evenement: ")
+        # if not self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
+            # print("Contract not signed!")
+        if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):     # Must be commercial.
+            user = session.query(User).filter(User.id == current_user).first()
+            print(user.username, 'Collaborator from Commercial Department.')
+            # event_name = input("Nom de l'evenement: ")
             # contract = session.query(Contract).filter_by(id=contract_id).one_or_none()
             # print('contract:', contract)
             # print('contract_id', contract.commercial_contact, user_id)
-            if contract.commercial_contact != current_user:
+            if contract.commercial_contact != current_user:             # Owner must be current user.
                 print('Forbidden, this contract is not one of your own contracts!')
+                self.return_start_menu()
+                # self.commercial_menu_view()
             else:
-                if contract.contract_status.value != '1':
-                    print('contract_status not signed!')
-                    self.commercial_menu_view()
-                else:
-                    for val in customers:
+                print('contract_status:', contract.contract_status.value)
+                if contract.contract_status.value != 'SIGNED':          # Contract must be signed. 
+                    print('Operation not allowed because contract_status is not signed!')
+                    self.return_start_menu()
+                    # self.commercial_menu_view()
+                else:                                                   # All conditions verified.
+                    for val in customers:                               # Coords customer.
                         val = session.query(Customer).filter(Customer.id == contract.customer_info).first()
                         customer_name = val.full_name
                         customer_contact = val.id
-                        start_date = val.first_date
-                        end_date = val.last_date
-                        print('vals:', customer_name, customer_contact, start_date, end_date)
-                    
-                    # support_contact = input("Support Contact: id departement support")
+                    event_name = input("Nom de l'evenement: ")
+                    print('Choose N° Support contact collaborator:')
+                    support_contact = self.get_user()
+                    start_date = input("Début de l'évènement:")
+                    end_date = input("Fin de l'évènement'")
                     location = input("Lieu de l'evenement: ")
                     attendees = input("Nombre de participants: ")
                     notes = input("Precisions sur le deroulement de l'evenement: ")
-                return event_name, contract_id, customer_name, customer_contact, start_date, end_date, None, location, attendees, notes
+                    print('event:', event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes)
+                    return event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes
+                
         else:
             print("Operation only allowed for Commercial departement !")
-        self.commercial_menu_view()
+            # self.commercial_menu_view()
 
 
 
@@ -239,3 +271,9 @@ class CommercialMenuView:
                         "\n", 'attendees:', elt.attendees,
                         "\n",  'notes:', elt.notes)
             i = i + 1
+
+
+    def return_start_menu(self):
+        from controller.start_menu_controller import StartMenuController
+        start_app = StartMenuController()
+        start_app.start_dbepic_app()

@@ -18,8 +18,9 @@ class SupportController:
 
         if choice == "1":
             print('Departement Support')
-            print('current_user:', current_user)
             self.support_views.display_filtered_events(role, current_user)
+            print('current_user:', current_user)
+            self.support_menu_controller()
         elif choice == "2":
             print('Departement Support')
             self.update_own_events(role, current_user)

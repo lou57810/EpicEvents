@@ -22,18 +22,24 @@ class CommercialController:
             self.create_customer(role)
         elif choice == "2":
             self.update_customer(role, current_user)
+            self.commercial_menu_controller()
         elif choice == "3":
             self.commercial_views.display_customers()
             self.commercial_menu_controller()
         elif choice == "4":
-            self.update_own_contract(role, current_user)
+            self.commercial_views.display_ordered_contracts()
+            self.commercial_menu_controller()
         elif choice == "5":
-            self.commercial_views.display_filtered_contracts(role)
+            self.update_own_contract(role, current_user)
         elif choice == "6":
+            self.commercial_views.display_filtered_contracts(role)
+            self.commercial_menu_controller()
+        elif choice == "7":
             # self.commercial_views.display_events() Pas d'events arret du programme ?
-            print('role', role, 'current_user', current_user)
+            # print('role', role, 'current_user', current_user)
             self.create_event(role, current_user)
-            self.commercial_views.display_events()
+            # self.commercial_views.display_events()
+            # self.commercial_menu_controller()
         elif choice == "0":
             self.user_controller.start_controller.start_dbepic_app()
 
@@ -54,6 +60,7 @@ class CommercialController:
 
     def update_customer(self, role, current_user):
         id, key_to_update, value_to_update = self.commercial_views.update_own_customer(role, current_user)
+        print('Values_get:', id, key_to_update, value_to_update)
         customer = session.query(Customer).filter_by(id=id).one_or_none()
         query = session.query(Customer)
         column_names = query.statement.columns.keys()
@@ -114,22 +121,11 @@ class CommercialController:
 
 
     def create_event(self, role, current_user):
-        event_name,\
-        contract_id,\
-        customer_name,\
-        customer_contact,\
-        start_date,\
-        end_date,\
-        support_contact,\
-        location,\
-        attendees,\
-        notes = self.commercial_views.create_validated_contract_event(role, current_user)
- 
-        event = Event(event_name, contract_id, customer_name,\
-        customer_contact, start_date, end_date, support_contact,\
-        location, attendees, notes)
+        event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = self.commercial_views.create_validated_contract_event(role, current_user)
+        event = Event(event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes)
         print('event:', event)
         session.add(event)   # stage
         session.commit()    # push
-
-        self.commercial_menu_controller()     # Retour menu gestion
+        
+            
+        # self.commercial_menu_controller()     # Retour menu gestion

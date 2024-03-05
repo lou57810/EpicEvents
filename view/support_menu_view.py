@@ -26,19 +26,8 @@ class SupportMenuView:
             2. Update own events.
             3. Quit.
             """)
-
             answer = input("Faites votre choix ! \n")
             return answer
-            """if answer == "1":
-                # self.display_filtered_events(id, role)
-                return 1, None
-            elif answer == "2":
-                value = self.update_owner_events(id, role)
-                return 2, value
-            elif answer == "3":
-                return 3, None
-                # print("\n Bye!")
-                # raise SystemExit"""
 
 
     def display_filtered_events(self, role, current_user):
@@ -51,11 +40,10 @@ class SupportMenuView:
         for elt in event:
             print(i,'.', elt)
             i = i + 1
-        # Retour au menu
-        self.support_menu_view()
 
 
     def display_own_events(self, role, current_user):
+        print('own_events:')
         # events = session.query(Event).all()
         events = session.query(Event).filter(Event.support_contact == current_user).all()
         i = 0
@@ -73,8 +61,8 @@ class SupportMenuView:
         # self.support_menu_view(id, role)
 
 
-    def update_owner_events(self, role, current_user):
-        event_to_update = self.display_own_events(role, current_user)
+    def update_own_events(self, role, current_user):
+        # event_to_update = self.display_own_events(role, current_user)
         event = session.query(Event).filter_by(id=event_to_update.id).one_or_none()
         
         if self.get_permission(role, UPDATE_OWN_EVENT):

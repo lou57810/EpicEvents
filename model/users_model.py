@@ -81,7 +81,8 @@ class User(Base):
     events_map: Mapped[List["Event"]] = relationship(back_populates='user', cascade="all, delete-orphan")
 
 
-    def __init__(self, username, password, hashed_pass, email, role):
+    def __init__(self, id, username, password, hashed_pass, email, role):
+        self.id = id
         self.username = username
         self.password = password
         self.hashed_pass = hashed_pass
@@ -91,7 +92,7 @@ class User(Base):
 
     def __repr__(self) -> str:
         # return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role.value})"
-        return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
+        return f"({self.id} {self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
 
 
 

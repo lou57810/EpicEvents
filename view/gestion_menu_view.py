@@ -41,7 +41,7 @@ class GestionMenuView:
             9. Update events.
             0. Deconnection.
             """)
-            answer = input("Faites votre choix ! \n")
+            answer = input("Make your choice ! \n")
             return answer
 
 
@@ -92,8 +92,11 @@ class GestionMenuView:
         users = session.query(User).all()
         i = 0
         for elt in users:
-            print('N°',i, '. username:', elt.username, 'password:', elt.password,
-            'email:', elt.email, 'role:', elt.role)
+            print('N°', i,
+            '\n', 'username:', elt.username,
+            '\n', 'password:', elt.password,
+            '\n', 'email:', elt.email,
+            '\n', 'role:', elt.role.name)
             i = i + 1
         choix = input("Choisir un id user:")
         user = users[int(choix)]
@@ -113,7 +116,7 @@ class GestionMenuView:
         print('user:', user.username,
                 "\n", 'password:',user.password,
                 "\n", 'email:', user.email,
-                "\n", 'Role:', user.role,
+                "\n", 'Role:', user.role.name,
                 '\n')
         query = session.query(User)
         column_names = query.statement.columns.keys()
@@ -159,7 +162,7 @@ class GestionMenuView:
         users = session.query(User).all()
         i = 0
         for elt in users:
-            print('N°',i, '. User:', elt.username, elt.email, elt.role)
+            print('N°',i, '. User:', elt.username, elt.email, elt.role.name)
             i = i + 1
 
 

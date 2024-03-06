@@ -1,6 +1,7 @@
 # import os
-import enum
-from enum import Enum as PyEnum 
+# import enum
+from enum import Enum as PyEnum
+# from enum import Enum
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import ForeignKey # LargeBinary, 
 from sqlalchemy.dialects.mysql import LONGTEXT
@@ -35,24 +36,24 @@ CREATE_SIGNED_OWN_EVENT = "CREATE_SIGNED_OWN_EVENT"
 UPDATE_OWN_EVENT = "UPDATE_OWN_EVENT"
 ###################################################
 
-
+# Department role.
 class RoleEnum(PyEnum):
-    GESTION = "1"
-    COMMERCIAL = "2"
-    SUPPORT = "3"
+    GESTION = "GESTION"
+    COMMERCIAL = "COMMERCIAL"
+    SUPPORT = "SUPPORT"
 
 
 class SignEnum(PyEnum):
-    SIGNED = "1"
-    UNSIGNED = "2"
+    SIGNED = "SIGNED"
+    UNSIGNED = "UNSIGNED"
 
 #  Changer Signed True or False
 
 
 
-Permissions_roles = {"1": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
-                    "2": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
-                    "3": [UPDATE_OWN_EVENT]
+Permissions_roles = {"GESTION": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
+                    "COMMERCIAL": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
+                    "SUPPORT": [UPDATE_OWN_EVENT]
                     }
 
 
@@ -63,15 +64,15 @@ class Base(DeclarativeBase):
 
 class User(Base):
 
-
     __tablename__ = "users"
-
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(120))
     password : Mapped[str] = mapped_column(String(120))
     hashed_pass: Mapped[str] = mapped_column(String(120))
     email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
+    # role = Column(types.Enum(RoleEnum, values_callable=lambda obj: [e.value for e in obj]))
+    # role = Mapped[Role] = mapped_column()
     role = Column(types.Enum(RoleEnum, values_callable=lambda obj: [e.value for e in obj]))
 
     # Relation: customer, contract, event
@@ -80,7 +81,8 @@ class User(Base):
     events_map: Mapped[List["Event"]] = relationship(back_populates='user', cascade="all, delete-orphan")
 
 
-    def __init__(self, username, password, hashed_pass, email, role):
+    def __init__(self, id, username, password, hashed_pass, email, role):
+        self.id = id
         self.username = username
         self.password = password
         self.hashed_pass = hashed_pass
@@ -90,7 +92,7 @@ class User(Base):
 
     def __repr__(self) -> str:
         # return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role.value})"
-        return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
+        return f"({self.id} {self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
 
 
 

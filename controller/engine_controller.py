@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv # , dotenv_values
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import create_engine
-# import bcrypt
+
 
 load_dotenv()
 username = os.getenv('DB_USER')

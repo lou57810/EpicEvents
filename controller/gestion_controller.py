@@ -1,14 +1,7 @@
 import bcrypt
-# from sqlalchemy import text, update, select
-# from sqlalchemy.orm import Session, sessionmaker
 from view.gestion_menu_view import GestionMenuView
-# from view.start_menu_view import StartMenuView
-# from .engine_controller import EngineController
 from model.users_model import User, Contract, Event, Customer
-from .engine_controller import session  # engine,
-#  cannot import name 'StartMenuController'(most likely due to a circular import)
-# from .start_menu_controller import StartMenuController
-
+from .engine_controller import session
 
 
 class GestionController:
@@ -18,8 +11,6 @@ class GestionController:
 
 
     def gestion_menu_controller(self):           # Administration, Sign in
-        
-        # choice = self.menu_app.gestion_menu_view()
         choice = self.gestion_views.gestion_menu_view()
         role = self.user_controller.current_user.role.value
 
@@ -30,39 +21,38 @@ class GestionController:
         elif choice == "3":
             self.delete_user(role)
         elif choice == "4":
-            self.create_contract(role)
+            self.gestion_views.display_ordered_users()
+            self.gestion_menu_controller()
         elif choice == "5":
-            self.update_contract(role)
+            self.create_contract(role)
         elif choice == "6":
+            self.update_contract(role)
+        elif choice == "7":
+            self.gestion_views.display_ordered_contracts()
+            self.gestion_menu_controller()
+        elif choice == "8":
             self.gestion_views.display_filtered_events()
             self.gestion_menu_controller()
-        elif choice == "7":
+        elif choice == "9":
             self.update_events(role)
-        elif choice == "8":
-            self.user_controller.start_controller.run_db()
+        elif choice == "0":
+            self.user_controller.start_controller.start_dbepic_app()
             # self.start_controller()
 
 
     def create_user(self, role):
-        print('create_user')
-        # username, password, email, role = self.menu_app.create_user(UserController.current_user.role.value)
-        print('role:', role)
         username, password, email, role = self.gestion_views.create_user_account(role)
 
         bytes = password.encode('utf-8')
         hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())
 
         user = User(username, password, hashed_password, email, role)
-        print('user:', user)
         session.add(user)   # stage
         session.commit()    # push
 
         users = session.query(User).all()
-        for user in users:
-            print(f"id: {user.id}, username: {user.username}," "\n",\
-                    "password: {user.password}," "\n",\
-                    "email: {user.email}," "\n",\
-                    "role: {user.role}")
+        print('\n')
+        print('Created:', user.username, user.email, user.role.name)
         self.gestion_menu_controller()     # Retour menu gestion
 
 
@@ -75,15 +65,12 @@ class GestionController:
         
         for elt in column_names:
             if elt == key_to_update:
-                # if key_to_update == 'id': # clé non modifiable
-                    # user.id = value_to_update
                 if key_to_update == 'username':
                     user.username = value_to_update
                 elif key_to_update == 'password':
                     bytes = value_to_update.encode('utf-8')
                     salt = bcrypt.gensalt()
                     hashed_password = bcrypt.hashpw(bytes, salt)
-                    # print('hashed_password:', bcrypt.hashpw(bytes, salt))
                     user.password = value_to_update
                     user.hashed_pass = hashed_password
                 elif key_to_update == 'email':
@@ -91,7 +78,10 @@ class GestionController:
                 elif key_to_update == 'role':
                     user.role = value_to_update
         session.commit()
-        print('Updated:', user.username, user.email, user.role.value)
+        print('\n')
+        print('Updated - user:', user.username,
+        'pass:', user.password, 'email:', user.email,
+        'role:', user.role.name) 
         self.gestion_menu_controller()
 
 
@@ -101,7 +91,7 @@ class GestionController:
             user = session.query(User).filter_by(id=id).one_or_none()
             session.delete(user)
             session.commit()
-            print('After update:')            
+            print('After update:')
             self.gestion_views.display_users()
         else:
             print('no_values!')
@@ -118,6 +108,7 @@ class GestionController:
 
         session.add(contract)   # stage
         session.commit()    # push
+        # print('Contract:')
         self.gestion_menu_controller()     # Retour menu gestion
 
 
@@ -129,8 +120,6 @@ class GestionController:
         
         for elt in column_names:
             if elt == key_to_update:
-                # if key_to_update == 'id':
-                    # contract.id = value_to_update
                 if key_to_update == 'customer_info':
                     contract.customer_info = value_to_update
                 elif key_to_update == 'commercial_contact':
@@ -143,10 +132,8 @@ class GestionController:
                     contract.start_date = value_to_update
                 elif key_to_update == 'contract_status':
                     contract.contract_status = value_to_update
-
-        print('new session:', session.commit())
         session.commit()
-        self.gestion_views.display_ordered_contracts()
+        print('New values:', key_to_update, '::', value_to_update)
         self.gestion_menu_controller()      # Retour au menu
 
 

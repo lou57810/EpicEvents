@@ -13,6 +13,7 @@ from .engine_controller import EngineController
 class AdministrationController:
     def __init__(self, start_controller):
         self.start_controller = start_controller
+         
 
     def start_administration(self):
         dbApp = AdministrationMenuView()
@@ -27,8 +28,8 @@ class AdministrationController:
             self.delete_db(dbName)
         elif choice == 4:
             self.return_menu()
-        elif choice == 5:
-            self.start_controller.run_db()
+        elif choice == 0:
+            self.start_controller.start_dbepic_app()
 
 
     def add_database(self, dbName):
@@ -69,7 +70,7 @@ class AdministrationController:
         if user_id:
             print('\n')
             print('SuperUser déjà créé:')
-            print('email:', user_id.email, 'password:', user_id.password, '\n')
+            print('email:', user_id.email, 'password:', user_id.password, 'role:', user_id.role, '\n')
             self.start_administration()
         else:
             # Values from .env
@@ -84,7 +85,7 @@ class AdministrationController:
             Session.add(user)   # stage
             Session.commit()    # push
 
-            print('Email:', email, 'Password:', password)
+            print('Email:', email, 'Password:', password, 'Role:', role)
             self.start_administration()
 
     def return_menu(self):

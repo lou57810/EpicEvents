@@ -33,7 +33,7 @@ class AdministrationMenuView:
             2. Create admin startuser.
             3. Delete database.
             4. Display databases.
-            5. Quit.
+            0. Start Menu.
             """)
 
             answer = input("Choix: ")
@@ -41,7 +41,7 @@ class AdministrationMenuView:
             if answer == "1":
                 db_name = input('Entrer le nom de la base de donnees à créer: ')
                 return 1, db_name   # Renvoi 
-            # Admin creation 
+            # Admin user creation 
             if answer == "2":
                 db_name = input('Entrer la base de données à utiliser:')
                 return 2, db_name
@@ -56,8 +56,8 @@ class AdministrationMenuView:
             elif answer == "":
                 print("\n Choice are 1, 2, 3, 4 : Retry !")
             # Return start_menu
-            elif answer == "5":
-                return 5, None
+            elif answer == "0":
+                return 0, None
 
 
     def display_databases(self):

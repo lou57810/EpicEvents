@@ -1,8 +1,7 @@
 .idea
 .venv
+.env
 __pycache__
 __init__.py
 .vs
-requirements_sauv.txt
 flake-report
-.env

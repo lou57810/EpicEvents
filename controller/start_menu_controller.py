@@ -26,7 +26,7 @@ class StartMenuController:
         self.admin_controller = AdministrationController(self)
 
 
-    def run_db(self):           # Administration, Sign in  run_application
+    def start_dbepic_app(self):           # Administration, Sign in  run_application
         main_app = StartMenuView()
         choice = main_app.start_menu_view()
 
@@ -37,6 +37,6 @@ class StartMenuController:
             print('\n')
             print('Enter Email and then, password: ')
             self.user_controller.sign_in()
-        elif choice == "3":
+        elif choice == "0":
             print("\n Bye!")
             raise SystemExit

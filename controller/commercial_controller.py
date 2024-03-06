@@ -14,7 +14,7 @@ class CommercialController:
 
     def commercial_menu_controller(self):
         current_user = self.user_controller.current_user.id
-        print('user_logged:', current_user)
+        # print('user_logged:', self.user_controller.current_user.username)
         choice = self.commercial_views.commercial_menu_view()
         role = self.user_controller.current_user.role.value
  
@@ -22,18 +22,23 @@ class CommercialController:
             self.create_customer(role)
         elif choice == "2":
             self.update_customer(role, current_user)
+            self.commercial_menu_controller()
         elif choice == "3":
             self.commercial_views.display_customers()
+            self.commercial_menu_controller()
         elif choice == "4":
-            self.update_own_contract(role, current_user)
+            self.commercial_views.display_contracts()
+            print('\n')
+            self.commercial_menu_controller()
         elif choice == "5":
-            self.commercial_views.display_filtered_contracts(role)
+            self.update_own_contract(role, current_user)
         elif choice == "6":
-            self.commercial_views.display_events()
-            self.create_event(role, current_user)
-            self.commercial_views.display_events()
+            self.commercial_views.display_filtered_contracts(role)
+            self.commercial_menu_controller()
         elif choice == "7":
-            self.user_controller.start_controller.run_db(self)
+            self.create_event(role, current_user)
+        elif choice == "0":
+            self.user_controller.start_controller.start_dbepic_app()
 
     def create_customer(self, role):   # Récupération valeurs renseignée, et foreign key: contact_id
         full_name, customer_email, tel, company_name, first_date, last_date = self.commercial_views.create_customer_account(role)
@@ -52,6 +57,7 @@ class CommercialController:
 
     def update_customer(self, role, current_user):
         id, key_to_update, value_to_update = self.commercial_views.update_own_customer(role, current_user)
+        print('Values_get:', id, key_to_update, value_to_update)
         customer = session.query(Customer).filter_by(id=id).one_or_none()
         query = session.query(Customer)
         column_names = query.statement.columns.keys()
@@ -72,12 +78,12 @@ class CommercialController:
                     customer.first_date = value_to_update
                 elif key_to_update == 'last_date':
                     customer.last_date = value_to_update
-                # contact est associé au commercial donc chgt interdit.
+                elif key_to_update == 'contact':    # contact modifiable en cas de suppression d'un collaborator.??
+                    customer.contact = value_to_update
+                
         session.commit()    # push
 
-        print('Customers_after_update:', customer.full_name,\
-                "Key:", key_to_update, "Value", value_to_update)
-        
+        print('Customer_after_update:', customer.full_name, key_to_update, ':', value_to_update)
         self.commercial_menu_controller()
 
 
@@ -107,18 +113,16 @@ class CommercialController:
                     contract.contract_status = value_to_update
 
         session.commit()    # push
-        self.commercial_views.display_ordered_contracts()
+        self.commercial_views.display_contracts()
         self.commercial_menu_controller()
 
 
     def create_event(self, role, current_user):
-        event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = self.commercial_views.create_validated_contract_event(role)
- 
-        event = Event(event_name, contract_id, customer_name,\
-        customer_contact, start_date, end_date, support_contact,\
-        location, attendees, notes)
+        event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes = self.commercial_views.create_validated_contract_event(role, current_user)
+        event = Event(event_name, contract_id, customer_name, customer_contact, start_date, end_date, support_contact, location, attendees, notes)
         print('event:', event)
         session.add(event)   # stage
         session.commit()    # push
-
-        self.commercial_menu_controller()     # Retour menu gestion
+        
+            
+        # self.commercial_menu_controller()     # Retour menu gestion

@@ -27,7 +27,8 @@ class CommercialController:
             self.commercial_views.display_customers()
             self.commercial_menu_controller()
         elif choice == "4":
-            self.commercial_views.display_ordered_contracts()
+            self.commercial_views.display_contracts()
+            print('\n')
             self.commercial_menu_controller()
         elif choice == "5":
             self.update_own_contract(role, current_user)
@@ -35,11 +36,7 @@ class CommercialController:
             self.commercial_views.display_filtered_contracts(role)
             self.commercial_menu_controller()
         elif choice == "7":
-            # self.commercial_views.display_events() Pas d'events arret du programme ?
-            # print('role', role, 'current_user', current_user)
             self.create_event(role, current_user)
-            # self.commercial_views.display_events()
-            # self.commercial_menu_controller()
         elif choice == "0":
             self.user_controller.start_controller.start_dbepic_app()
 
@@ -81,12 +78,12 @@ class CommercialController:
                     customer.first_date = value_to_update
                 elif key_to_update == 'last_date':
                     customer.last_date = value_to_update
-                # contact est associé au commercial donc chgt interdit.
+                elif key_to_update == 'contact':    # contact modifiable en cas de suppression d'un collaborator.??
+                    customer.contact = value_to_update
+                
         session.commit()    # push
 
-        print('Customers_after_update:', customer.full_name,\
-                "Key:", key_to_update, "Value", value_to_update)
-        
+        print('Customer_after_update:', customer.full_name, key_to_update, ':', value_to_update)
         self.commercial_menu_controller()
 
 
@@ -116,7 +113,7 @@ class CommercialController:
                     contract.contract_status = value_to_update
 
         session.commit()    # push
-        self.commercial_views.display_ordered_contracts()
+        self.commercial_views.display_contracts()
         self.commercial_menu_controller()
 
 

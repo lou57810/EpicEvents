@@ -1,6 +1,6 @@
 from model.users_model import Event
 from controller.engine_controller import session
-from model.users_model import Permissions_roles, UPDATE_OWN_EVENT
+from model.users_model import User, Customer, Permissions_roles, UPDATE_OWN_EVENT
 
 
 class SupportMenuView:
@@ -31,50 +31,81 @@ class SupportMenuView:
 
 
     def display_filtered_events(self, role, current_user):
-        print('current_user:', current_user)
-        i = 0
-        event = session.query(Event).filter(Event.support_contact == current_user).all()
-        print('event:', event)
-        print('support_contact, current_user:', Event.support_contact, current_user)
-        print('Your own events:\n')
-        for elt in event:
-            print(i,'.', elt)
-            i = i + 1
-
-
-    def display_own_events(self, role, current_user):
-        print('own_events:')
-        # events = session.query(Event).all()
+        user = session.get(User, current_user)
         events = session.query(Event).filter(Event.support_contact == current_user).all()
-        i = 0
-        print('Your events:\n')
-        for elt in events:
-            print('N°', i,'.', 'Event_id:',elt.id,\
-                 "\n", 'Event', 
-                  )
-            i = i + 1
+        print('Current_user:', user.username)
+        if events:
+            i = 0
+            z = len(events)
+ 
+            while i < z:
+                print('\n')
+                print('N°:', i,
+                '\n', 'Event name:', events[i].event_name,
+                '\n', 'Contract id:', events[i].contract_id,
+                '\n', 'Customer name:', events[i].customer_name,
+                '\n', 'Customer contact:', events[i].customer_contact,
+                '\n', 'Start date:', events[i].start_date,
+                '\n', 'End date:', events[i].end_date,
+                '\n', 'Location:', events[i].location,
+                '\n', 'Support contact:', events[i].support_contact,
+                '\n', 'Attendees:', events[i].attendees,
+                '\n', 'Notes:', events[i].notes,
+                )
+                i = i + 1
+            return events
+        else:
+            print('Any Events to display!')
+
+
+    def display_filtered_events_to_update(self, role, current_user):
+        events = self.display_filtered_events(role, current_user)
+        print('\n')
 
         choix = input("Choisir un N° event:")
         event = events[int(choix)]
         return event
-        # Retour au menu
-        # self.support_menu_view(id, role)
-
 
     def update_own_events(self, role, current_user):
-        # event_to_update = self.display_own_events(role, current_user)
-        event = session.query(Event).filter_by(id=event_to_update.id).one_or_none()
-        
+        event_filtered = self.display_filtered_events_to_update(role, current_user)
+        customer = session.get(Customer, event_filtered.customer_contact)
+
+        query = session.query(Event)
+        column_names = query.statement.columns.keys()
+
+        print('Choose one key :',
+        '\n', '1:', column_names[1],
+        '\n', '2:', column_names[5],
+        '\n', '3:', column_names[6],
+        '\n', '4:', column_names[7],
+        '\n', '5:', column_names[9],
+        '\n', '6:', column_names[10],
+        '\n')
+
         if self.get_permission(role, UPDATE_OWN_EVENT):
-            query = session.query(Event)
-            column_names = query.statement.columns.keys()
-            print('Choose one key :', column_names[1], column_names[5], column_names[6], column_names[7], column_names[8], column_names[9], column_names[10])
-            #  = input("N° de l\'evenement :")
-            attribut_to_update = input("Attribut à modifier :")
-            new_attribut_value = input("Nouvelle valeur :")
-            print('att, new_att, event_id', event_to_update.id, attribut_to_update, new_attribut_value)
-            return event_to_update.id, attribut_to_update, new_attribut_value
-            
+            key_to_update = input('N° Clé à modifier: ')
+            if key_to_update == "1":
+                key_to_update = column_names[1]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "2":
+                key_to_update = column_names[5]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "3":
+                key_to_update = column_names[6]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "4":
+                key_to_update = column_names[7]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "5":
+                key_to_update = column_names[9]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "6":
+                key_to_update = column_names[10]
+                value_to_update = input('Nouvelle valeur: ')
+            print('test:', event_filtered.id, key_to_update, value_to_update)
+            return event_filtered.id, key_to_update, value_to_update
+
+
         else:
             print('You are not allowed to update events!')
         self.support_menu_view(id, role)

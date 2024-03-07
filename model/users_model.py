@@ -38,6 +38,7 @@ UPDATE_OWN_EVENT = "UPDATE_OWN_EVENT"
 
 # Department role.
 class RoleEnum(PyEnum):
+    ADMIN = "ADMIN"
     GESTION = "GESTION"
     COMMERCIAL = "COMMERCIAL"
     SUPPORT = "SUPPORT"

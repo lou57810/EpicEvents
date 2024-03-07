@@ -138,27 +138,29 @@ class GestionController:
 
 
     def update_events(self, role):
-        event_id, key_to_update, new_attribut_value = self.gestion_views.update_events(role)
+        event_id, key_to_update, value_to_update = self.gestion_views.update_events(role)
         event = session.query(Event).filter_by(id=event_id).one_or_none()
         query = session.query(Event)
         column_names = query.statement.columns.keys()
-        print('attribut: ', key_to_update)
+        
         for elt in column_names:
             if elt == key_to_update:
                 if key_to_update == 'event_name':
-                    event.event_name = new_attribut_value
+                    event.event_name = value_to_update
                 elif key_to_update == 'start_date':
-                    event.start_date = new_attribut_value
+                    event.start_date = value_to_update
                 elif key_to_update == 'end_date':
-                    event.end_date = new_attribut_value
+                    event.end_date = value_to_update
                 elif key_to_update == 'support_contact':
-                    event.support_contact = new_attribut_value
+                    event.support_contact = value_to_update
                 elif key_to_update == 'location':
-                    event.location = new_attribut_value
+                    event.location = value_to_update
                 elif key_to_update == 'attendees':
-                    event.attendees = new_attribut_value
+                    event.attendees = value_to_update
                 elif key_to_update == 'notes':
-                    event.notes = new_attribut_value
+                    event.notes = value_to_update
         session.commit()
-        self.gestion_views.display_events()
-        self.gestion_menu_controller()      # Retour au menu
+        print('\n')
+        print('Event updated: ', event.event_name, key_to_update, ':', value_to_update)
+        # self.gestion_views.display_events()
+        # self.gestion_menu_controller()      # Retour au menu

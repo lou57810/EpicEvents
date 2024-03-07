@@ -194,7 +194,8 @@ class GestionMenuView:
             user = session.query(User).filter(User.id == elt.commercial_contact).first()
             customer = session.query(Customer).filter(Customer.id == elt.customer_info).first()
             
-            print('N°',i,'. Contract_id:', customer.id,
+            print('N°',i,
+                    "\n", 'Contract_id:', customer.id,
                     "\n", 'customer_info:', customer.full_name, customer.customer_email,
                     "\n", 'tel:',customer.tel,
                     "\n", 'commercial_contact:', user.username,
@@ -299,37 +300,48 @@ class GestionMenuView:
 
 
     def update_events(self,user_role):
-        event_to_update = self.display_update_events()
+        event_to_update = self.display_events_to_update()
         query = session.query(Event)
         column_names = query.statement.columns.keys()
-        print('col:', column_names[1], column_names[5], column_names[6],
-                column_names[7], column_names[8], column_names[9], column_names[10])
+
+        print('Choose one key :',
+        '\n', '1:', column_names[1],
+        '\n', '2:', column_names[5],
+        '\n', '3:', column_names[6],
+        '\n', '4:', column_names[7],
+        '\n', '5:', column_names[9],
+        '\n', '6:', column_names[10],
+        '\n')
 
         if self.get_permission(user_role, UPDATE_EVENT):
-            key_to_update = input('Clé à modifier: ')
-            value_to_update = input('Nouvelle valeur:' )
+            key_to_update = input('N° Clé à modifier: ')
+            if key_to_update == "1":
+                key_to_update = column_names[1]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "2":
+                key_to_update = column_names[5]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "3":
+                key_to_update = column_names[6]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "4":
+                key_to_update = column_names[7]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "5":
+                key_to_update = column_names[9]
+                value_to_update = input('Nouvelle valeur: ')
+            elif key_to_update == "6":
+                key_to_update = column_names[10]
+                value_to_update = input('Nouvelle valeur: ')
             return event_to_update.id, key_to_update, value_to_update
         else:
             print("Operation only allowed for Gestion departement !")
         self.gestion_menu_view()
 
 
-    def display_update_events(self):
-        events = session.query(Event).all()
-        i = 0
-        for event in events:
-            print('N°',i,'event_name:', event.event_name,
-                    # "\n", 'id:', event.id,
-                    "\n", 'contract_id:', event.contract_id,
-                    "\n", 'customer_name:', event.customer_name,
-                    "\n", 'customer_contact:', event.customer_contact,
-                    "\n", 'start_date:', event.start_date,
-                    "\n", 'end_date:', event.end_date,
-                    "\n", 'support_contact:', event.support_contact,
-                    "\n", 'location:', event.location,
-                    "\n", 'attendees:', event.attendees,
-                    "\n", 'notes:', event.notes)
-            i = i + 1
+    def display_events_to_update(self):
+        events = self.display_events()
+
         choix = input("Choisir un id Event:")
         event = events[int(choix)]
         return event
@@ -339,8 +351,8 @@ class GestionMenuView:
         events = session.query(Event).all()
         i = 0
         for event in events:
-            print('N°',i,'event_name:', event.event_name,
-                # "\n", 'id:', event.id,
+            print('N°',i,
+                "\n", 'event_name:', event.event_name,
                 "\n", 'contract_id:', event.contract_id,
                 "\n", 'customer_name:', event.customer_name,
                 "\n", 'customer_contact:', event.customer_contact,
@@ -351,6 +363,7 @@ class GestionMenuView:
                 "\n", 'attendees:', event.attendees,
                 "\n", 'notes:', event.notes)
             i = i + 1
+        return events
 
 
 

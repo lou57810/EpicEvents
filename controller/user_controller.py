@@ -1,24 +1,8 @@
 import bcrypt
-# import requests
-# import jwt
-
-# from .engine_controller import EngineController
 from .gestion_controller import GestionController
-# from .main_controller import MainController
 from .commercial_controller import CommercialController
 from .support_controller import SupportController
-# from mysql.connector import connect, Error
-# from view.user_menu_view import UserMenuView
-# from view.start_menu_view import StartMenuView
-# import sqlalchemy 
-# from sqlalchemy import text, inspect, select        # ForeignKey, URL, create_engine, insert, 
-# from sqlalchemy_utils import database_exists, create_database, drop_database
-# import mysql.connector
-# from mysql.connector import connect, Error
-from model.users_model import User, RoleEnum # , Customer, Base, 
-# from sqlalchemy.orm import Session, sessionmaker
-# import pymysql.cursors
-# import pymysql
+from model.users_model import User, RoleEnum # , Customer, Base
 from .engine_controller import session   # engine,
 from view.start_menu_view import StartMenuView
 

@@ -10,6 +10,11 @@ password = os.getenv('DB_PASS')
 db_name = os.getenv('DB_NAME')
 
 engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
+"""statement = text("SELECT 'Welcome in EpicEvents'")
+with engine.connect() as conn:
+    with sentry_sdk.start_transaction(name="Testing_sqlalchemy"):
+        result = conn.execute(statement)"""
+
 Session = sessionmaker(bind=engine)
 session = Session()
 

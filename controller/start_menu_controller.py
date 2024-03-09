@@ -35,7 +35,8 @@ class StartMenuController:
         if choice == "2":
             main_app.display_tables()
             print('\n')
-            print('Enter Email and then, password: ')
+            # print('Enter Email and then, password: ')
+            # email, password = main_app.user_sign_in()
             self.user_controller.sign_in()
         elif choice == "0":
             print("\n Bye!")

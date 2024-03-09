@@ -232,7 +232,8 @@ class CommercialMenuView:
     # Contract must be signed and belong to commercial connected collaborator.
     def create_validated_contract_event(self, user_role, current_user):
         print('####### Contrats #######\n')
-        contract = self.display_ordered_update_own_contracts()
+        # contract = self.display_ordered_update_own_contracts()
+        contract = self.display_contracts_to_update()
         contract_id = contract.id
         customers = session.query(Customer).all()
         if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):     # Must be commercial.
@@ -253,7 +254,7 @@ class CommercialMenuView:
                         customer_contact = val.id
                     event_name = input("Nom de l'evenement: ")
                     print('Choose N° Support contact collaborator:')
-                    support_contact = self.get_user()
+                    support_contact = None
                     start_date = input("Début de l'évènement:")
                     end_date = input("Fin de l'évènement'")
                     location = input("Lieu de l'evenement: ")

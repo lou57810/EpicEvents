@@ -21,6 +21,7 @@ class StartMenuView:
                 return answer
 
     def user_sign_in(self):
+        print('Enter Email and then, password: ')
         email = input('Email: ')
         password = maskpass.askpass(prompt="Password:", mask="#")
         return email, password
@@ -31,4 +32,4 @@ class StartMenuView:
         print('TABLES:')
         insp = inspect(engine)
         print(insp.get_table_names())
-    
+

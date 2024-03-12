@@ -77,7 +77,8 @@ class AdministrationController:
             username = os.getenv("DB_ADMIN")
             password = os.getenv("DB_ADMIN_PASS")
             email = os.getenv("DB_ADMIN_MAIL")
-            role = os.getenv("DB_DEPARTMENT")
+            # role = os.getenv("DB_DEPARTMENT")
+            role = "GESTION"
 
             bytes = password.encode('utf-8')
             hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())

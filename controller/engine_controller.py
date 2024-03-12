@@ -26,4 +26,7 @@ class EngineController:
 
     def start_engine(self, db_name):
         Engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
+        Session = sessionmaker(bind=engine)
+        session = Session()
         return Engine
+        # return session

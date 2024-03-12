@@ -43,7 +43,7 @@ class AdministrationMenuView:
                 return 1, db_name   # Renvoi 
             # Admin user creation 
             if answer == "2":
-                db_name = input('Entrer la base de données à utiliser:')
+                db_name = input('Entrer la base de données à utiliser(dbepic):')
                 return 2, db_name
             # Db deletion
             elif answer == "3":

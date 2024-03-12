@@ -6,7 +6,7 @@
 #### CRM: Customer Relationship Management.
 
 ## Cr�ation d'un environnement virtuel:
-`python -m venv env`
+`python -m venv .venv` (.venv pour différencier du fichier .env à créer et définir selon le fichier modèle env_template)
 ## Puis activation avec Windows, depuis git bash:
 `source env/scripts/activate`
 ## Ou sur Linux:
@@ -31,14 +31,25 @@
 ## Affichage:
 	1. Administration. (Permet de créer ou de supprimer une base de données, et de créer un administrateur.)
 		1. Création de la base de donnée.
-		2. Création de l'administrateur:	(email: admin@localhost password: admin)
+		2. Création de l'administrateur:	(Créer au préalable un fichier .env à définir selon le fichier modèle env_template:
+			Ex: DB_PASS = "****"
+				DB_USER = "root"
+				DB_ADMIN = "****"
+				DB_ADMIN_PASS = "****"
+				DB_ADMIN_MAIL = "****@localhost"
+				DB_DEPARTMENT = "1"
+				DB_NAME = "****"
+				DB_HOST = "localhost" )
 		3. Suppression de la base de données.
 		4. Affichage des bases de données.
 		5. Quit
+		)
 		
-		La connection avec Workbench se fera avec root et "edwood" comme password.
+		La connection avec Workbench se fera avec en principe "root" et le password défini lors de l'utilisation de mysql.
+		Workbench permet d'interagir avec la base de donnée, les tables, et les clés valeurs.
 		
-	2. Sign in. Permet de se logger en tant que collaborateur. (1ere connection avec admin@localhost et admin) 
+	2. Sign in. Permet de se logger en tant que collaborateur. (1ere connection avec par exemple admin@localhost et admin,
+		valeurs à définir dans un fichier .env) 
 		En fonction de son rôle l'utilisateur,
 		sera orienté vers les menus lui étant reservés.
 	3. Quit. (Quitte le programme.)

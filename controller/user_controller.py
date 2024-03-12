@@ -17,12 +17,11 @@ class UserController:
         self.support_controller = SupportController(self)
 
 
-
     def sign_in(self):
         start_app = StartMenuView()
         input_email, input_password = start_app.user_sign_in()
         user_row = session.query(User).filter_by(email=input_email).one_or_none()
-        
+
         if user_row == None:
             print('Bad email!')
             self.sign_in()

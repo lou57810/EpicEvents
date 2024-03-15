@@ -24,7 +24,7 @@ class SupportMenuView:
             print("""
             1. Display own events.
             2. Update own events.
-            3. Quit.
+            0. Quit.
             """)
             answer = input("Faites votre choix ! \n")
             return answer

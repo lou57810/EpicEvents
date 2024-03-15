@@ -1,12 +1,8 @@
 import os
+
 from mysql import connector
-# import mysql.connector
-# from mysql.connector import errorcode
-# import bcrypt
-# from model.users_model import User
 from controller.engine_controller import engine  # EngineController,
 from dotenv import load_dotenv  # , dotenv_values
-# from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import inspect  # text, 
 
 
@@ -39,6 +35,7 @@ class AdministrationMenuView:
             answer = input("Choix: ")
             # Db creation:
             if answer == "1":
+                self.display_databases()
                 db_name = input('Entrer le nom de la base de donnees à créer: ')
                 return 1, db_name   # Renvoi 
             # Admin user creation 
@@ -47,6 +44,7 @@ class AdministrationMenuView:
                 return 2, db_name
             # Db deletion
             elif answer == "3":
+                self.display_databases()
                 db_name = input('Entrer le nom de la base de donnees a supprimer : ')
                 return 3, db_name   # Renvoi tuple
             # Return Menu and Db display
@@ -63,6 +61,7 @@ class AdministrationMenuView:
     def display_databases(self):
         print('DATABASES:')
         show_existing_db = "SHOW DATABASES"
+        db_list = []
         try:
             with connector.connect(
                 host = DB_HOST,
@@ -73,13 +72,16 @@ class AdministrationMenuView:
                 with database.cursor() as cursor: 
                     cursor.execute(show_existing_db)
                     for db in cursor:
+                        db_list.append(db)
                         print(db)
 
         except connector.Error as e:
             print(e)
+        return db_list
 
 
     def display_tables(self):
+        print('\n')
         print('Connexion à dbepic ! \n')
         print('TABLES:')
         insp = inspect(engine)

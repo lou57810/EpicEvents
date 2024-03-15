@@ -38,6 +38,9 @@ class CommercialController:
         elif choice == "7":
             self.create_event(role, current_user)
         elif choice == "0":
+            current_user = self.user_controller.current_user.username
+            print('current_user:', current_user)
+            self.user_controller.report_user_logout(current_user)
             self.user_controller.start_controller.start_dbepic_app()
 
     def create_customer(self, role):   # Récupération valeurs renseignée, et foreign key: contact_id

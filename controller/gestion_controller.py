@@ -10,6 +10,7 @@ class GestionController:
         self.gestion_views = GestionMenuView()
 
 
+
     def gestion_menu_controller(self):           # Administration, Sign in
         choice = self.gestion_views.gestion_menu_view()
         role = self.user_controller.current_user.role.value
@@ -36,11 +37,15 @@ class GestionController:
         elif choice == "9":
             self.update_events(role)
         elif choice == "0":
+            current_user = self.user_controller.current_user.username
+            print('current_user:', current_user)
+            self.user_controller.report_user_logout(current_user)
             self.user_controller.start_controller.start_dbepic_app()
             # self.start_controller()
 
 
     def create_user(self, role):
+        logging.info("This is a creation test message")
         username, password, email, role = self.gestion_views.create_user_account(role)
 
         bytes = password.encode('utf-8')

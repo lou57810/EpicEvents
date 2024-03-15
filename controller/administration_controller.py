@@ -13,13 +13,13 @@ from .engine_controller import EngineController
 class AdministrationController:
     def __init__(self, start_controller):
         self.start_controller = start_controller
+        self.admin_menu = AdministrationMenuView()
          
 
     def start_administration(self):
-        dbApp = AdministrationMenuView()
-        dbApp.display_databases()
-        choice, dbName = dbApp.administration_menu_view()  # From admin_menu_view
-            
+        # self.admin_menu.display_databases()
+        choice, dbName = self.admin_menu.administration_menu_view()
+
         if choice == 1:
             self.add_database(dbName)
         elif choice == 2:
@@ -27,7 +27,7 @@ class AdministrationController:
         elif choice == 3:
             self.delete_db(dbName)
         elif choice == 4:
-            self.return_menu()
+            self.start_administration()
         elif choice == 0:
             self.start_controller.start_dbepic_app()
 
@@ -36,24 +36,31 @@ class AdministrationController:
         engine_app = EngineController()
         Engine = engine_app.start_engine(dbName)
         if database_exists(Engine.url):
-            print('Database exist:', dbName)
+            print('Database existing, choose another name !')
         else:
-            create_database(Engine.url)
+            create_database(Engine.url)     # from alchemy_utils
             Base.metadata.create_all(bind=Engine)
-            dbApp = AdministrationMenuView()
-            dbApp.display_tables()
+            # test_list = list()
+            test_list = self.admin_menu.display_databases()
+            print('test:', test_list)
+            for elt in test_list:
+                if elt[0] == dbName:
+                    print('Database is created')
+                    return True
+        self.admin_menu.display_databases()
         self.start_administration()
 
 
     def delete_db(self, dbName):
-        
         engine_app = EngineController()
         Engine = engine_app.start_engine(dbName)
-        print('engine_url:', Engine.url)
+        # print('engine_url:', Engine.url)
         if database_exists(Engine.url):
             with Engine.connect() as connection:
                 connection.execute(text('DROP DATABASE' + ' ' + dbName))
                 connection.close()
+            print('Database is suppressed.')
+            self.admin_menu.display_databases()
             self.start_administration()
         else:
             print("This database doesn't exist !")
@@ -65,12 +72,12 @@ class AdministrationController:
         Engine = app.start_engine(dbName)
         Session = sessionmaker(bind=Engine)
         Session = Session()
-        user_id = Session.query(User).filter_by(id=1).one_or_none()
-        # print('user_id:', user_id)
-        if user_id:
+        # user_id = Session.query(User).filter_by(id=1).one_or_none()
+        user_name = Session.query(User).filter(User.username == "admin").one_or_none
+        
+        if user_name:
             print('\n')
-            print('SuperUser déjà créé:')
-            print('email:', user_id.email, 'password:', user_id.password, 'role:', user_id.role, '\n')
+            print('SuperUser déjà créé:\n')
             self.start_administration()
         else:
             # Values from .env
@@ -88,6 +95,3 @@ class AdministrationController:
 
             print('Email:', email, 'Password:', password, 'Role:', role)
             self.start_administration()
-
-    def return_menu(self):
-        self.start_administration()

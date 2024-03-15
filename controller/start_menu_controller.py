@@ -18,7 +18,7 @@ class StartMenuController:
 
     def start_dbepic_app(self):           # Administration, Sign in  run_application
         main_app = StartMenuView()
-        main_control = EngineController()
+        # main_control = EngineController()
         choice = main_app.start_menu_view()
 
         if choice == "1":

@@ -1,20 +1,16 @@
-# import os
-# import enum
 from enum import Enum as PyEnum
-# from enum import Enum
-# from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import ForeignKey # LargeBinary, 
+
+from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.mysql import LONGTEXT
 import datetime
 
-from typing import List  # Optional    , Literal
+from typing import List
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Column, String, types  # Date, Text,Integer, create_engine, 
+from sqlalchemy import Column, String, types
 
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
-# from sqlalchemy_utils.types.choice import ChoiceType
-# import jwt
+
 
 from typing import List
 # GESTION
@@ -38,7 +34,7 @@ UPDATE_OWN_EVENT = "UPDATE_OWN_EVENT"
 
 # Department role.
 class RoleEnum(PyEnum):
-    ADMIN = "ADMIN"
+    # ADMIN = "ADMIN"
     GESTION = "GESTION"
     COMMERCIAL = "COMMERCIAL"
     SUPPORT = "SUPPORT"
@@ -48,15 +44,11 @@ class SignEnum(PyEnum):
     SIGNED = "SIGNED"
     UNSIGNED = "UNSIGNED"
 
-#  Changer Signed True or False
-
-
 
 Permissions_roles = {"GESTION": [ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT],
                     "COMMERCIAL": [ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT],
                     "SUPPORT": [UPDATE_OWN_EVENT]
                     }
-
 
 
 class Base(DeclarativeBase):
@@ -71,9 +63,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(120))
     password : Mapped[str] = mapped_column(String(120))
     hashed_pass: Mapped[str] = mapped_column(String(120))
-    email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
-    # role = Column(types.Enum(RoleEnum, values_callable=lambda obj: [e.value for e in obj]))
-    # role = Mapped[Role] = mapped_column()
+    email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)    
     role = Column(types.Enum(RoleEnum, values_callable=lambda obj: [e.value for e in obj]))
 
     # Relation: customer, contract, event
@@ -82,7 +72,6 @@ class User(Base):
     events_map: Mapped[List["Event"]] = relationship(back_populates='user', cascade="all, delete-orphan")
 
 
-    # def __init__(self, id, username, password, hashed_pass, email, role):
     def __init__(self, username, password, hashed_pass, email, role):
         # self.id = id
         self.username = username
@@ -93,13 +82,12 @@ class User(Base):
 
 
     def __repr__(self) -> str:
-        # return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role.value})"
         return f"({self.username} {self.password} {self.hashed_pass} {self.email} {self.role})"
 
 
 
 class Customer(Base):
-    
+
     __tablename__ = "customers"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -115,7 +103,6 @@ class Customer(Base):
     user: Mapped["User"] = relationship(back_populates="customers_map")
 
     # Relation contract
-    # contrats_maps: Mapped[List["Customer"]] = relationship(back_populates='customer', cascade="all, delete-orphan")
     contrats_maps: Mapped[List["Contract"]] = relationship(back_populates='customer', cascade="all, delete-orphan")
 
 
@@ -151,11 +138,7 @@ class Contract(Base):
     # Relation with customer:
     customer: Mapped["Customer"] = relationship(back_populates="contrats_maps")
     # Relation with event:
-    # event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
-    # event: Mapped["Event"] = relationship(back_populates="contrat")
     event_map: Mapped[List["Event"]] = relationship(back_populates='contract')
-    # events_map: Mapped[List["Event"]] = relationship(back_populates='user', cascade="all, delete-orphan")
-
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False)
     balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)
     start_date: Mapped[datetime.date] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -184,8 +167,6 @@ class Event(Base):
     event_name: Mapped[str] = mapped_column(String(150))
 
     # Relation with contracts:
-    # contract_id: Mapped[int] = mapped_column(ForeignKey("contracts.id"), nullable=False)
-    
     contract_id: Mapped[int] = mapped_column(ForeignKey("contracts.id"))
     contract: Mapped["Contract"] = relationship(back_populates="event_map")
     customer_name: Mapped[str] = mapped_column(String(150))
@@ -219,5 +200,3 @@ class Event(Base):
 
     def __repr__(self):
         return f"({self.event_name} {self.contract_id}\n" + f" {self.customer_name} {self.customer_contact} {self.start_date}\n" + f"{self.end_date} {self.support_contact} {self.location}\n" + f"{self.attendees} {self.notes} )"
-
-

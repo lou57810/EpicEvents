@@ -48,3 +48,4 @@ SQLAlchemy-Utils==0.41.1
 typing_extensions==4.8.0
 urllib3==2.1.0
 wheel==0.41.2
+pytest==8.1.1

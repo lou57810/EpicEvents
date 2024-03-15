@@ -10,7 +10,6 @@ class StartMenuView:
         pass
 
     def start_menu_view(self):
-            print("Choose options:")
             answer = True
             while answer:
                 print("""
@@ -18,7 +17,7 @@ class StartMenuView:
                 2. Sign in.
                 0. Quit.
                 """)
-                answer = input("Choix:")
+                answer = input("Choice:")
                 return answer
 
 

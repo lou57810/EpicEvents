@@ -23,7 +23,10 @@ class SupportController:
         elif choice == "2":
             print('Departement Support')
             self.update_own_events(role, current_user)
-        elif choice == "3":
+        elif choice == "0":
+            current_user = self.user_controller.current_user.username
+            print('current_user:', current_user)
+            self.user_controller.report_user_logout(current_user)
             self.user_controller.start_controller.start_dbepic_app()
 
 

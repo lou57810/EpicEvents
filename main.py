@@ -15,7 +15,7 @@ load_dotenv()
 def main():
 
     ###### SENTRY ######
-    sentry_sdk.init(
+    """sentry_sdk.init(
     dsn="https://1f514c6dc8b9839a67a308611eb041fe@o4506869492940800.ingest.us.sentry.io/4506869497069568",
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
@@ -24,7 +24,7 @@ def main():
     # of sampled transactions.
     # We recommend adjusting this value in production.
     profiles_sample_rate=1.0,
-    )
+    )"""
     ##### END SENTRY #####
     
     # logging.error("I am an event", extra=dict(bar=43))

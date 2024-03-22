@@ -1,6 +1,6 @@
-from model.users_model import Event
+from model.event import Event
 from controller.engine_controller import session
-from model.users_model import User, Customer, Permissions_roles, UPDATE_OWN_EVENT
+from model.user import User # , Customer, Permissions_roles, UPDATE_OWN_EVENT
 
 
 class SupportMenuView:

@@ -1,8 +1,11 @@
 from controller.engine_controller import session
 
-from model.users_model import Contract, Customer, User, Event
-from model.users_model import Permissions_roles
-from model.users_model import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT
+from model.user import User
+from model.contract import Contract
+from model.customer import Customer
+from model.event import Event
+from model.user import Permissions_roles
+from model.user import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT
 
 
 

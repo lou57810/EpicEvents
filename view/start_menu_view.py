@@ -32,21 +32,3 @@ class StartMenuView:
         print('TABLES:')
         insp = inspect(engine)
         print(insp.get_table_names())
-
-
-    """def select_database(self):
-        conn = mysql.connector.connect (user='root', password='edwood',
-            host='localhost',buffered=True)
-        cursor = conn.cursor()
-        databases = ("show databases")
-        cursor.execute(databases)
-        print('#### DATABASES ####')
-        i = 0
-        db = []
-        for (databases) in cursor:
-             print(i, ':', databases[0])
-             db.append(databases[0])
-             i = i + 1
-        
-        choice = input("Choisir un N° Database:")
-        return db[int(choice)]"""

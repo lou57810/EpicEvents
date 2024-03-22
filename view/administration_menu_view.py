@@ -11,8 +11,6 @@ load_dotenv()
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_HOST = os.getenv("DB_HOST")
-# db_name = os.getenv('DB_NAME')
-
 
 
 

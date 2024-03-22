@@ -1,5 +1,5 @@
 from view.support_menu_view import SupportMenuView
-from model.users_model import Event
+from model.event import Event
 from .engine_controller import session
 
 

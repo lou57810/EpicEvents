@@ -5,7 +5,8 @@ import sentry_sdk
 from .gestion_controller import GestionController
 from .commercial_controller import CommercialController
 from .support_controller import SupportController
-from model.users_model import User, RoleEnum # , Customer, Base
+from model.user import User, RoleEnum # , Customer, Base
+from model.customer import Customer
 from .engine_controller import session   # engine,
 from view.start_menu_view import StartMenuView
 
@@ -19,14 +20,16 @@ class UserController:
         self.commercial_controller = CommercialController(self)
         self.support_controller = SupportController(self)
 
+    ############# Entree et sortie notifiee avec sentry #############
     def report_user_login(self, username):
         with sentry_sdk.push_scope() as scope:
             scope.set_user({"username": username})
             sentry_sdk.capture_message(f"User '{username}' logged in")
-
+    
 
     def report_user_logout(self, username):
         sentry_sdk.capture_message(f"User '{username}' logged out")
+    ##################################################################
 
 
     def check_email(self):
@@ -37,7 +40,7 @@ class UserController:
             print('Bad email, retry!')
             self.check_email()
         else:
-            print('Email correct!')
+            # print('Email correct!')
             self.check_password(input_password, user_row)
 
 
@@ -50,7 +53,7 @@ class UserController:
 
         if bcrypt.checkpw(check, db_hash):
             print('\n')
-            
+
             # print('You are logged!')
             print('Signed in dbepic as user:', user_row.username, ', email:', user_row.email, '\n')
             # Redirection en fonction du rôle

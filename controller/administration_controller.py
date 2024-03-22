@@ -4,7 +4,8 @@ import bcrypt
 from sqlalchemy_utils import create_database, database_exists   # , drop_database
 from sqlalchemy import text # , inspecttext
 from sqlalchemy.orm import sessionmaker # Session,
-from model.users_model import Base, User
+
+
 from view.administration_menu_view import AdministrationMenuView
 from .engine_controller import EngineController
 
@@ -27,6 +28,8 @@ class AdministrationController:
         elif choice == 3:
             self.delete_db(dbName)
         elif choice == 4:
+            # self.start_administration()
+            self.admin_menu.display_databases()
             self.start_administration()
         elif choice == 0:
             self.start_controller.start_dbepic_app()
@@ -46,9 +49,10 @@ class AdministrationController:
             for elt in test_list:
                 if elt[0] == dbName:
                     print('Database is created')
-                    return True
-        self.admin_menu.display_databases()
-        self.start_administration()
+                    self.admin_menu.display_databases()
+                    self.start_administration()
+                    # return True
+        
 
 
     def delete_db(self, dbName):

@@ -3,7 +3,7 @@ from sqlalchemy import text # , update
 from view.commercial_menu_view import CommercialMenuView
 # from .engine_controller import EngineController
 from .engine_controller import engine, session
-from model.users_model import User, Customer, Event, Contract
+from model.user import User # , Customer, Event, Contract
 
 
 class CommercialController:

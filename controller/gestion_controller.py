@@ -1,6 +1,7 @@
-import bcrypt
+import bcrypt, logging
+
 from view.gestion_menu_view import GestionMenuView
-from model.users_model import User, Contract, Event, Customer
+from model.user import User # , Contract, Event, Customer
 from .engine_controller import session
 
 
@@ -45,6 +46,7 @@ class GestionController:
 
 
     def create_user(self, role):
+        # print('role:', self.user_controller.current_user.role.value)
         logging.info("This is a creation test message")
         username, password, email, role = self.gestion_views.create_user_account(role)
 

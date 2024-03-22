@@ -1,11 +1,11 @@
 import maskpass
-# from sqlalchemy import text
-# from sqlalchemy.orm import Session, sessionmaker
-from model.users_model import User, Event, Contract, Customer # , RoleEnum
-from controller.engine_controller import session # engine, 
-# from .start_menu_view import StartMenuView
-from model.users_model import Permissions_roles, RoleEnum
-from model.users_model import ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT
+from model.user import User # , Event, Contract, Customer # , RoleEnum
+from model.event import Event
+from model.contract import Contract
+from model.customer import Customer
+from controller.engine_controller import session
+from model.user import Permissions_roles, RoleEnum
+from model.user import ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, DISPLAY_FILTERED_EVENTS, UPDATE_EVENT
 
 
 
@@ -45,12 +45,22 @@ class GestionMenuView:
             return answer
 
 
+    def menu_role(self):
+        """
+            Prints all menu items and the corresponding number.
+        """
+        print("\n=========== MENU ===========")
+        print("1 - GESTION")
+        print("2 - COMMERCIAL")
+        print("3 - SUPPORT")
+        print("============================\n")
+
+
     def get_role(self):
-        print("Role list : ")
+        self.menu_role()
         i = 1
         val = list()
         for role in RoleEnum:
-            print(f"{i} : {role.value}")
             val.append(role.value)
             i = i + 1
         role_num = input("N° of role : ")
@@ -113,7 +123,7 @@ class GestionMenuView:
         # print('Choose one key :', column_names[1], column_names[2], column_names[4], column_names[5])
         print('\n')
         print('##### User selected #####\n')
-        print('user:', user.username,
+        print('username:', user.username,
                 "\n", 'password:',user.password,
                 "\n", 'email:', user.email,
                 "\n", 'Role:', user.role.name,

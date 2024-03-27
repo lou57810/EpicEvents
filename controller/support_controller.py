@@ -9,7 +9,6 @@ class SupportController:
         self.user_controller = user_controller
         self.support_views = SupportMenuView()
 
-
     def support_menu_controller(self):
         choice = self.support_views.support_menu_view()
         role = self.user_controller.current_user.role.value
@@ -29,9 +28,10 @@ class SupportController:
             self.user_controller.report_user_logout(current_user)
             self.user_controller.start_controller.start_dbepic_app()
 
-
     def update_own_events(self, role, current_user):
-        event_id, key_to_update, value_to_update = self.support_views.update_own_events(role, current_user)
+        (event_id, key_to_update,
+            value_to_update) = self.support_views.update_own_events(
+                role, current_user)
         event = session.query(Event).filter_by(id=event_id).one_or_none()
 
         query = session.query(Event)
@@ -52,7 +52,8 @@ class SupportController:
                     event.notes = value_to_update
         session.commit()
         print('\n')
-        print('Event updated: ', event.event_name, key_to_update, ':', value_to_update)
+        print('Event updated: ', event.event_name,
+              key_to_update, ':', value_to_update)
 
         # Retour au menu
         self.support_menu_controller()

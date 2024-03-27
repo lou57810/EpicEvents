@@ -1,7 +1,7 @@
 import logging
 from enum import Enum as PyEnum
 
-from model.users_model import User, RoleEnum
+from model.user import User, RoleEnum
 from controller.administration_controller import AdministrationController
 from view.start_menu_view import StartMenuView
 from view.gestion_menu_view import GestionMenuView 

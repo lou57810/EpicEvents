@@ -24,16 +24,18 @@ def main():
     # of sampled transactions.
     # We recommend adjusting this value in production.
     profiles_sample_rate=1.0,
-    )"""
-    ##### END SENTRY #####
-    
+    )
+
+
     # logging.error("I am an event", extra=dict(bar=43))
     # logging.exception("An exception happened")
     logging.debug("Program is starting!")
+    # logging.info("Program end!")"""
+
     print('Repertoire de base: ', os.getcwd(),'\n')
     main_app = StartMenuController()
     main_app.start_dbepic_app()
-    # logging.info("Program end!")
+    ##### END SENTRY #####
 
 
 

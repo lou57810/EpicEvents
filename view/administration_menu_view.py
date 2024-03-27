@@ -1,9 +1,9 @@
 import os
 
 from mysql import connector
-from controller.engine_controller import engine  # EngineController,
+from controller.engine_controller import engine  # EngineController
 from dotenv import load_dotenv  # , dotenv_values
-from sqlalchemy import inspect  # text, 
+from sqlalchemy import inspect  # text
 
 
 # import depuis .env
@@ -13,11 +13,9 @@ DB_PASS = os.getenv("DB_PASS")
 DB_HOST = os.getenv("DB_HOST")
 
 
-
 class AdministrationMenuView:
     def __init__(self):
         pass
-
 
     def administration_menu_view(self):
         answer = True
@@ -34,16 +32,16 @@ class AdministrationMenuView:
             # Db creation:
             if answer == "1":
                 self.display_databases()
-                db_name = input('Entrer le nom de la base de donnees à créer: ')
-                return 1, db_name   # Renvoi 
-            # Admin user creation 
+                db_name = input('Entrer le nom de la bd à créer: ')
+                return 1, db_name   # Renvoi
+            # Admin user creation
             if answer == "2":
-                db_name = input('Entrer la base de données à utiliser(dbepic):')
+                db_name = input('Entrer la bd à utiliser(dbepic):')
                 return 2, db_name
             # Db deletion
             elif answer == "3":
                 self.display_databases()
-                db_name = input('Entrer le nom de la base de donnees a supprimer : ')
+                db_name = input('Entrer le nom de la bd a supprimer : ')
                 return 3, db_name   # Renvoi tuple
             # Return Menu and Db display
             elif answer == "4":
@@ -55,19 +53,18 @@ class AdministrationMenuView:
             elif answer == "0":
                 return 0, None
 
-
     def display_databases(self):
         print('DATABASES:')
         show_existing_db = "SHOW DATABASES"
         db_list = []
         try:
             with connector.connect(
-                host = DB_HOST,
-                user = DB_USER,
-                password = DB_PASS
+                host=DB_HOST,
+                user=DB_USER,
+                password=DB_PASS
             ) as database:
                 # print(database)
-                with database.cursor() as cursor: 
+                with database.cursor() as cursor:
                     cursor.execute(show_existing_db)
                     for db in cursor:
                         db_list.append(db)
@@ -76,7 +73,6 @@ class AdministrationMenuView:
         except connector.Error as e:
             print(e)
         return db_list
-
 
     def display_tables(self):
         print('\n')

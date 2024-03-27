@@ -66,9 +66,12 @@ class User(Base):
     # Relation: customer, contract, event
     # users_map: Mapped[List["User"]] =
     # relationship(back_populates='user', cascade="all, delete-orphan")
-    customers_map: Mapped[List["Customer"]] = relationship(back_populates='user', cascade="all, delete-orphan")
-    contracts_map: Mapped[List["Contract"]] = relationship(back_populates='user', cascade="all, delete-orphan")
-    events_map: Mapped[List["Event"]] = relationship(back_populates='user', cascade="all, delete-orphan")
+    customers_map: Mapped[List["Customer"]]\
+        = relationship(back_populates='user', cascade="all, delete-orphan")
+    contracts_map: Mapped[List["Contract"]]\
+        = relationship(back_populates='user', cascade="all, delete-orphan")
+    events_map: Mapped[List["Event"]]\
+        = relationship(back_populates='user', cascade="all, delete-orphan")
 
     def __init__(self, username, password, hashed_pass, email, role):
         self.username = username

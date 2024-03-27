@@ -72,37 +72,8 @@ class UserController:
         # if self.check_email() == True:
         # if self.check_email():
         self.check_password()
-            # if self.check_password(input_password, user_row) == True:
-            # logging.info("You are logged!")
-
-    """
-    def sign_in(self):
-        start_app = StartMenuView()
-        input_email, input_password = start_app.user_sign_in()
-
-        user_row = session.query(User).filter_by(
-            email=input_email).one_or_none()
-        if user_row == None:
-            print('Bad email!')
-            self.sign_in()
-        else:
-            check = input_password.encode('utf-8')
-            db_hash = user_row.hashed_pass
-            db_hash = db_hash.encode('utf-8')
-
-            if bcrypt.checkpw(check, db_hash):
-                print('\n')
-                print('You are logged!')
-                print('Signed in dbepic as user:',
-                       user_row.username, ', email:', user_row.email, '\n')
-
-                # Redirection en fonction du rôle
-                # self.department_redirect(user_row.id, user_row.role.value)
-                self.current_user = user_row  # A substituer as id
-                self.department_redirect()
-            else:
-                print('Pass incorrect ! retry.')
-                self.sign_in()"""
+        # if self.check_password(input_password, user_row) == True:
+        # logging.info("You are logged!")
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self):

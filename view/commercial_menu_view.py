@@ -11,8 +11,8 @@ from model.user import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, \
 
 class CommercialMenuView:
 
-    def __init__(self):
-        pass
+    def __init__(self, user_controller):
+        self.user_controller = user_controller
 
     def get_permission(self, role, role_fct):
         for elt in Permissions_roles:
@@ -157,7 +157,8 @@ class CommercialMenuView:
         if self.get_permission(user_role, UPDATE_OWN_CONTRACT):
             if contract.commercial_contact != current_user:
                 print('Forbidden, this contract is not one of your owns!')
-                self.update_own_contract(user_role, current_user)
+                self.user_controller.commercial_controller\
+                    .commercial_menu_controller()
             else:
                 query = session.query(Contract)
                 column_names = query.statement.columns.keys()
@@ -168,6 +169,8 @@ class CommercialMenuView:
                 return contract_to_update.id, key_to_update, value_to_update
         else:
             print("Operation only allowed for Commercial departement !")
+            self.user_controller.commercial_controller\
+                .commercial_menu_controller()
         self.commercial_menu_view()
 
     def display_contracts_to_update(self):
@@ -189,29 +192,35 @@ class CommercialMenuView:
                   'Balance_payable:', elt.balance_payable, "\n",
                   'status:', elt.contract_status.value)
             i = i + 1
-        # self.commercial_menu_view()
 
     def display_contracts(self):
         contracts = session.query(Contract).all()
-        i = 0
-        for elt in contracts:
-            # Get username from id: (elt.contact)
-            user = session.query(User).filter(
-                    User.id == elt.commercial_contact).first()
-            # Get info customer from customer_id: (elt.customer_id)
-            customer = session.query(Customer).filter(
-                    Customer.id == elt.customer_info).first()
+        if contracts:
+            i = 0
+            z = len(contracts)
+
+            # Get username from id: (contracts[i].contact)
+            # Get info customer from customer_id: (contracts[i].customer_id)
             print('\n')
-            print('N°', i, "\n",
-                  'customer_info:', customer.full_name,
-                  customer.customer_email, "\n",
-                  'tel:', customer.tel, "\n",
-                  'commercial_contact:', user.username, "\n",
-                  'total_amount:', elt.total_amount, "\n",
-                  'balance_payable:', elt.balance_payable, "\n",
-                  'start_date:', elt.start_date, "\n",
-                  'contract_status:', elt.contract_status.value)
-            i = i + 1
+            while i < z:
+                user = session.query(User).filter(
+                        User.id == contracts[i].commercial_contact).first()
+                customer = session.query(Customer).filter(
+                    Customer.id == contracts[i].customer_info).first()
+                print('N°', i, "\n",
+                      'customer_info:', customer.full_name,
+                      customer.customer_email, "\n",
+                      'tel:', customer.tel, "\n",
+                      'commercial_contact:', user.username, "\n",
+                      # 'total_amount:', elt.total_amount, "\n",
+                      'total_amount:', contracts[i].total_amount, "\n",
+                      # 'balance_payable:', elt.balance_payable, "\n",
+                      'balance_payable:', contracts[i].balance_payable, "\n",
+                      # 'start_date:', elt.start_date, "\n",
+                      'start_date:', contracts[i].start_date, "\n",
+                      # 'contract_status:', elt.contract_status.value)
+                      'contract_status:', contracts[i].contract_status.value)
+                i = i + 1
         return contracts
 
     def get_user(self):
@@ -229,7 +238,7 @@ class CommercialMenuView:
 
     # Contract must be signed and belong to commercial connected collaborator.
     def create_validated_contract_event(self, user_role, current_user):
-        print('####### Contrats #######\n')
+        print('#------- Contrats -------#\n')
         # contract = self.display_ordered_update_own_contracts()
         contract = self.display_contracts_to_update()
         contract_id = contract.id
@@ -242,14 +251,16 @@ class CommercialMenuView:
             # Owner must be current user.
             if contract.commercial_contact != current_user:
                 print('Forbidden, this contract is not one of yours!')
-                self.return_start_menu()
+                self.user_controller.commercial_controller.\
+                    commercial_menu_controller()
             else:
                 print('contract_status:', contract.contract_status.value)
                 # Contract must be signed.
                 if contract.contract_status.value != 'SIGNED':
                     print('Operation not allowed,\
                           because contract_status is not signed!')
-                    self.return_start_menu()
+                    self.user_controller.commercial_controller.\
+                        commercial_menu_controller()
                 # All conditions verified.
                 else:
                     for val in customers:  # Coords customer.
@@ -277,7 +288,8 @@ class CommercialMenuView:
                         attendees, notes
         else:
             print("Operation only allowed for Commercial departement !")
-            # self.commercial_menu_view()
+            self.user_controller.commercial_controller\
+                .commercial_menu_controller()
 
     def display_events(self):
         events = session.query(Event).all()
@@ -299,8 +311,3 @@ class CommercialMenuView:
                   'attendees:', elt.attendees, "\n",
                   'notes:', elt.notes)
             i = i + 1
-
-    def return_start_menu(self):
-        from controller.start_menu_controller import StartMenuController
-        start_app = StartMenuController()
-        start_app.start_dbepic_app()

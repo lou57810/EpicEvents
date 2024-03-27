@@ -1,8 +1,8 @@
 # from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text  # update
+# from sqlalchemy import text  # update
 from view.commercial_menu_view import CommercialMenuView
 # from .engine_controller import EngineController
-from .engine_controller import engine, session
+from .engine_controller import session  # engine
 # from model.user import User
 from model.customer import Customer
 from model.event import Event
@@ -12,7 +12,7 @@ from model.contract import Contract
 class CommercialController:
     def __init__(self, user_controller):
         self.user_controller = user_controller
-        self.commercial_views = CommercialMenuView()
+        self.commercial_views = CommercialMenuView(user_controller)
 
     def commercial_menu_controller(self):
         current_user = self.user_controller.current_user.id
@@ -83,23 +83,22 @@ class CommercialController:
                 elif key_to_update == 'first_date':
                     customer.first_date = value_to_update
                 elif key_to_update == 'last_date':
-                    # contact modif if cas de suppression d'un collaborator.??
                     customer.last_date = value_to_update
                 elif key_to_update == 'contact':
                     customer.contact = value_to_update
         session.commit()    # push
-        print('Sortie nouvelle valeur de', key_to_update, ':', value_to_update)
+        print('Sortie nouvelle val de', key_to_update, ':', value_to_update)
         self.commercial_menu_controller()
 
     def update_own_contract(self, role, current_user):
         print('current_user:', current_user)
         (user, contract_to_update, key_to_update,
             value_to_update) = self.commercial_views.update_own_contract(
-                role, current_user) #  Datas from view
+                role, current_user)  # Datas from view
         print('user++:', user, current_user)
         contract = session.query(
-            Contract).filter_by(id=contract_to_update).one_or_none()    #  id Contract
-        
+            Contract).filter_by(id=contract_to_update).one_or_none()
+
         query = session.query(Contract)
         column_names = query.statement.columns.keys()
 

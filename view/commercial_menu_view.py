@@ -63,70 +63,55 @@ class CommercialMenuView:
             self.commercial_menu_view()
 
     # Maj client
-    def update_own_customer(self, user_role, current_user):
-        customer_to_update = self.display_customers_to_update()
-        print('\n')
-        customer = session.query(Customer).filter_by(
-                   id=customer_to_update.id).one_or_none()
+    def update_own_customer(self, user_role, current_user, customer):
         user = session.get(User, current_user)
-        print('#### customer to update ####\n\n', customer.full_name)
+        print('#--- customer to update ---#\n\n', customer.full_name)
 
-        if self.get_permission(user_role, UPDATE_OWN_CUSTOMER):
-            if customer.contact != current_user:
-                print('\n')
-                print('#### Forbidden', customer.full_name,
-                      'is not your customer. Retry! ####\n')
-                self.update_own_customer(user_role, current_user)
+        print('#---- Customer selected ----#\n')
+        print('Customer full name:', customer.full_name, "\n",
+                'Email:', customer.customer_email, "\n",
+                'Tel:', customer.tel, "\n",
+                'Company name:', customer.company_name, "\n",
+                'First date contact:', customer.first_date, "\n",
+                'Last date contact:', customer.last_date, "\n")
+                # 'Contact:', user.username, "\n")
+        print('\n')
+        query = session.query(Customer)
+        column_names = query.statement.columns.keys()
 
-            else:
-                print('##### Customer selected #####\n')
-                print('Customer full name:', customer.full_name, "\n",
-                      'Email:', customer.customer_email, "\n",
-                      'Tel:', customer.tel, "\n",
-                      'Company name:', customer.company_name, "\n",
-                      'First date contact:', customer.first_date, "\n",
-                      'Last date contact:', customer.last_date, "\n",
-                      'Contact:', user.username, "\n")
-                print('\n')
-                query = session.query(Customer)
-                column_names = query.statement.columns.keys()
+        print('Choose one key :',
+                '\n', '1:', column_names[1],
+                '\n', '2:', column_names[2],
+                '\n', '3:', column_names[3],
+                '\n', '4:', column_names[4],
+                '\n', '5:', column_names[5],
+                '\n', '6:', column_names[6],
+                # '\n', '7:', column_names[7] Le contact reste
+                '\n')
 
-                print('Choose one key :',
-                      '\n', '1:', column_names[1],
-                      '\n', '2:', column_names[2],
-                      '\n', '3:', column_names[3],
-                      '\n', '4:', column_names[4],
-                      '\n', '5:', column_names[5],
-                      '\n', '6:', column_names[6],
-                      '\n', '7:', column_names[7],
-                      '\n')
-
-            key_to_update = input('N° Clé à modifier: ')
-            if key_to_update == "1":
-                key_to_update = column_names[1]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            elif key_to_update == "2":
-                key_to_update = column_names[2]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            elif key_to_update == "3":
-                key_to_update = column_names[3]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            elif key_to_update == "4":
-                key_to_update = column_names[4]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            elif key_to_update == "5":
-                key_to_update = column_names[5]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            elif key_to_update == "6":
-                key_to_update = column_names[6]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            elif key_to_update == "7":
-                key_to_update = column_names[7]
-                value_to_update = input('Nouvelle valeur entrée: ')
-            return user, customer_to_update.id, key_to_update, value_to_update
-        else:
-            print("Operation only allowed for Commercial departement !")
-            self.commercial_menu_view()
+        key_to_update = input('N° Clé à modifier: ')
+        if key_to_update == "1":
+            key_to_update = column_names[1]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "2":
+            key_to_update = column_names[2]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "3":
+            key_to_update = column_names[3]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "4":
+            key_to_update = column_names[4]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "5":
+            key_to_update = column_names[5]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "6":
+            key_to_update = column_names[6]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        """elif key_to_update == "7":
+            key_to_update = column_names[7]
+            value_to_update = input('Nouvelle valeur entrée: ')"""
+        return user, key_to_update, value_to_update
 
     def display_customers_to_update(self):
         customers = self.display_customers()
@@ -141,6 +126,7 @@ class CommercialMenuView:
             # Get username from id: (elt.contact)
             user = session.query(User).filter(User.id == elt.contact).first()
             print('N°:', i, "\n",
+                  'id:', elt.id, "\n",
                   'full_name:', elt.full_name, "\n",
                   'email:', elt.customer_email, "\n",
                   'tel:', elt.tel, "\n",
@@ -152,29 +138,41 @@ class CommercialMenuView:
         print('\n')
         return customers
 
-    def update_own_contract(self, user_role, current_user):
-        contract_to_update = self.display_contracts_to_update()
+    def update_own_contract(self, user_role, current_user, contract):
+        print('#--- id contract selected ---#', contract.id, '\n')
+        print('Contract_info:', contract.customer_info, "\n",
+                'Commercial contact:', contract.commercial_contact, "\n",
+                'Total amount:', contract.total_amount, "\n",
+                'Balance payable:', contract.balance_payable, "\n",
+                'Start Date:', contract.start_date, "\n",
+                'Status:', contract.contract_status, "\n")
         print('\n')
-        contract = session.query(Contract).filter_by(
-            id=contract_to_update.id).one_or_none()
-        if self.get_permission(user_role, UPDATE_OWN_CONTRACT):
-            if contract.commercial_contact != current_user:
-                print('Forbidden, this contract is not one of your owns!')
-                #self.user_controller.commercial_controller\
-                   #  .commercial_menu_controller()
-            else:
-                query = session.query(Contract)
-                column_names = query.statement.columns.keys()
-                print('Choose one key :', column_names[3],
-                      column_names[4], column_names[5], column_names[6])
-                key_to_update = input("Clé à modifier :")
-                value_to_update = input("Nouvelle valeur :")
-                return contract_to_update.id, key_to_update, value_to_update
-        else:
-            print("Operation only allowed for Commercial departement !")
-            # self.user_controller.commercial_controller\
-                # .commercial_menu_controller()
-        self.commercial_menu_view()
+        query = session.query(Contract)
+        column_names = query.statement.columns.keys()
+        
+
+        print('Choose one key :',
+                '\n', '1:', column_names[3],
+                '\n', '2:', column_names[4],
+                '\n', '3:', column_names[5],
+                '\n', '4:', column_names[6],
+                '\n')
+
+        key_to_update = input('N° Clé à modifier: \n')
+        if key_to_update == "1":
+            key_to_update = column_names[3]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "2":
+            key_to_update = column_names[4]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "3":
+            key_to_update = column_names[5]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        elif key_to_update == "4":
+            key_to_update = column_names[6]
+            value_to_update = input('Nouvelle valeur entrée: ')
+        return key_to_update, value_to_update
+
 
     def display_contracts_to_update(self):
         contracts = self.display_contracts()
@@ -254,8 +252,8 @@ class CommercialMenuView:
             # Owner must be current user.
             if contract.commercial_contact != current_user:
                 print('Forbidden, this contract is not one of yours!')
-                self.user_controller.commercial_controller.\
-                    commercial_menu_controller()
+                # self.user_controller.commercial_controller.\
+                    # commercial_menu_controller()
             else:
                 print('contract_status:', contract.contract_status.value)
                 # Contract must be signed.

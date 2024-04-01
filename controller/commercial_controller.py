@@ -3,16 +3,28 @@
 from view.commercial_menu_view import CommercialMenuView
 # from .engine_controller import EngineController
 from .engine_controller import session  # engine
-# from model.user import User
+from model.user import User
 from model.customer import Customer
 from model.event import Event
 from model.contract import Contract
+from model.user import Permissions_roles
+from model.user import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, \
+            UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT
 
 
 class CommercialController:
     def __init__(self, user_controller):
         self.user_controller = user_controller
         self.commercial_views = CommercialMenuView()
+
+    def get_permission(self, role, role_fct):
+        for elt in Permissions_roles:
+            if elt == role:
+                result = Permissions_roles[role]
+        for elt in result:
+            if elt == role_fct:
+                # print('elt')
+                return True
 
     def commercial_menu_controller(self):
         current_user = self.user_controller.current_user.id
@@ -61,68 +73,84 @@ class CommercialController:
         self.commercial_menu_controller()     # Retour menu
 
     def update_customer(self, role, current_user):
-        (id, key_to_update,
-            value_to_update) = self.commercial_views.update_own_customer(
-                role, current_user)
-        customer = session.query(Customer).filter_by(id=id).one_or_none()
-        query = session.query(Customer)
-        column_names = query.statement.columns.keys()
+        customer_to_update = self.commercial_views.display_customers_to_update()
+        print('\n')
+        customer = session.query(Customer).filter_by(
+                   id=customer_to_update.id).one_or_none()
+        user = session.get(User, current_user)
+        if self.get_permission(role, UPDATE_OWN_CUSTOMER):
+            if customer.contact != current_user:
+                print('\n')
+                print('#### Forbidden', customer.full_name,
+                      'is not your customer. Retry! ####\n')
+                self.commercial_menu_controller()
+            else:
+                (id, key_to_update,
+                    value_to_update) = self.commercial_views.update_own_customer(
+                        role, current_user, customer)
+                query = session.query(Customer)
+                column_names = query.statement.columns.keys()
 
-        for elt in column_names:
-            if elt == key_to_update:
-                if key_to_update == 'id':
-                    customer.id = value_to_update
-                elif key_to_update == 'full_name':
-                    customer.full_name = value_to_update
-                elif key_to_update == 'customer_email':
-                    customer.customer_email = value_to_update
-                elif key_to_update == 'tel':
-                    customer.tel = value_to_update
-                elif key_to_update == 'company_name':
-                    customer.company_name = value_to_update
-                elif key_to_update == 'first_date':
-                    customer.first_date = value_to_update
-                elif key_to_update == 'last_date':
-                    customer.last_date = value_to_update
-                elif key_to_update == 'contact':
-                    customer.contact = value_to_update
-        session.commit()    # push
-        print('Sortie nouvelle val de', key_to_update, ':', value_to_update)
-        self.commercial_menu_controller()
+                for elt in column_names:
+                    if elt == key_to_update:
+                        if key_to_update == 'id':
+                            customer.id = value_to_update
+                        elif key_to_update == 'full_name':
+                            customer.full_name = value_to_update
+                        elif key_to_update == 'customer_email':
+                            customer.customer_email = value_to_update
+                        elif key_to_update == 'tel':
+                            customer.tel = value_to_update
+                        elif key_to_update == 'company_name':
+                            customer.company_name = value_to_update
+                        elif key_to_update == 'first_date':
+                            customer.first_date = value_to_update
+                        elif key_to_update == 'last_date':
+                            customer.last_date = value_to_update
+                        elif key_to_update == 'contact':
+                            customer.contact = value_to_update
+                session.commit()    # push
+                print('Sortie nouvelle val de', key_to_update, ':', value_to_update)
+                self.commercial_menu_controller()
+        else:
+            print("Operation only allowed for Commercial departement !")
+            self.commercial_menu_controller()
 
     def update_own_contract(self, role, current_user):
-        print('current_user:', current_user)
-        (user, contract_to_update, key_to_update,
-            value_to_update) = self.commercial_views.update_own_contract(
-                role, current_user)  # Datas from view
-        print('user++:', user, current_user)
-        contract = session.query(
-            Contract).filter_by(id=contract_to_update).one_or_none()
+        print('verif current_user:', current_user, '\n')
+        contract_to_update = self.commercial_views.display_contracts_to_update()
+        if self.get_permission(role, UPDATE_OWN_CONTRACT):
+            contract = session.query(Contract).filter_by(
+                id=contract_to_update.id).one_or_none()
+            if contract.commercial_contact != current_user:
+                print('Forbidden, this contract is not one of your owns!')
+                self.commercial_menu_controller()
+            else:
+                key_to_update, value_to_update = self.commercial_views.update_own_contract(role, current_user, contract)
+                query = session.query(Contract)
+                column_names = query.statement.columns.keys()
 
-        query = session.query(Contract)
-        column_names = query.statement.columns.keys()
+                for elt in column_names:
+                    if elt == key_to_update:
+                        if key_to_update == 'id':
+                            contract.id = value_to_update
+                        elif key_to_update == 'customer_info':
+                            contract.customer_info = value_to_update
+                        elif key_to_update == 'total_amount':
+                            contract.total_amount = value_to_update
+                        elif key_to_update == 'balance_payable':
+                            contract.balance_payable = value_to_update
+                        elif key_to_update == 'start_date':
+                            contract.start_date = value_to_update
+                        elif key_to_update == 'contract_status':
+                            contract.contract_status = value_to_update
 
-        # value_to_update = Valeur de la clé selectionnée à modifier
-        for elt in column_names:
-            if elt == key_to_update:
-                if key_to_update == 'id':
-                    contract.id = value_to_update
-                elif key_to_update == 'customer_info':
-                    contract.customer_info = value_to_update
-                # elif key_to_update == 'commercial_contact': inmodifiable
-                    # contract.commercial_contact = value_to_update
-                elif key_to_update == 'total_amount':
-                    contract.total_amount = value_to_update
-                elif key_to_update == 'balance_payable':
-                    contract.balance_payable = value_to_update
-                elif key_to_update == 'start_date':
-                    contract.start_date = value_to_update
-                elif key_to_update == 'contract_status':
-                    contract.contract_status = value_to_update
-
-        session.commit()    # push
-        self.commercial_views.display_contracts()
-        self.commercial_menu_controller()
+                session.commit()    # push
+                self.commercial_views.display_contracts()
+                self.commercial_menu_controller()
+        else:
+            print("Operation only allowed for Commercial departement !")
+            self.commercial_menu_controller()
 
     def create_event(self, role, current_user):
         (event_name, contract_id, customer_name,

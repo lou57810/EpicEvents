@@ -29,8 +29,9 @@ class Customer(Base):
     user: Mapped["User"] = relationship(back_populates="customers_map")
 
     # Relation contract
-    contrats_maps: Mapped[List["Contract"]] = relationship(
+    contracts_maps: Mapped[List["Contract"]] = relationship(
         back_populates='customer', cascade="all, delete-orphan")
+    # customers = relationship("Contract", back_populates='customer', cascade="all, delete-orphan")
 
     def __init__(self, full_name,
                  customer_email, tel, company_name,

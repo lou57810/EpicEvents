@@ -19,7 +19,8 @@
 `pip install -r requirements.txt`
 
 ## Installer mysql depuis le site: https://dev.mysql.com/downloads/
-## Installer en même temps mysql Workbench.
+## Cette installation peut nécessiter l'install de Visual Studio C++ 2019.
+## Installer dans la foulée mysql Workbench.
 
 ## Exécuter la commande `mysql -u root -p` pour créer un mot de passe.
 ## Ce mot de passe pourra vous identifier en ligne de commande et également avec Workbench.

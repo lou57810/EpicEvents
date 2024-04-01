@@ -32,52 +32,46 @@ class UserController:
 
     def check_email(self):
         start_app = StartMenuView()
-        input_email, input_password = start_app.user_sign_in()
+        input_email = start_app.input_email()
         user_row = session.query(
             User).filter_by(email=input_email).one_or_none()  # fit email
-        # if user_row == None:
-        if not user_row:
-            print('Bad email, retry!')
-            self.check_email()
-        else:
-            print('Email correct!')
-            # self.check_password(input_password, user_row)
-            return user_row, input_password
 
-    # def check_password(self, input_password, user_row):
-    def check_password(self):
-        user_row, input_password = self.check_email()
-        # start_app = StartMenuView()
-        # input_email, input_password = start_app.user_sign_in()
+        if not user_row:
+            print('Wrong email, retry!')
+            self.sign_in()
+        else:
+            return user_row
+
+    def check_password(self, user_row):
+        start_app = StartMenuView()
+        input_password = start_app.input_password()
+
         check = input_password.encode('utf-8')
         db_hash = user_row.hashed_pass
         db_hash = db_hash.encode('utf-8')
 
         if bcrypt.checkpw(check, db_hash):
             print('\n')
-
-            # print('You are logged!')
             print('Signed in dbepic as user:',
                   user_row.username, ', email:', user_row.email, '\n')
-            # Redirection en fonction du rôle
-            # self.department_redirect(user_row.id, user_row.role.value)
             self.current_user = user_row  # A substituer as id
-            self.report_user_login(user_row.username)
+            self.report_user_login(user_row.username)  # Sentry
             self.department_redirect()
         else:
             print('Password incorrect ! retry.')
-            self.check_email()
+            self.sign_in()
 
     def sign_in(self):
-        # if self.check_email() == True:
-        # if self.check_email():
-        self.check_password()
-        # if self.check_password(input_password, user_row) == True:
-        # logging.info("You are logged!")
+        user_row = self.check_email()
+        if user_row:
+            self.check_password(user_row)
+        else:
+            user_row = None  #  Annul previous value
+            self.check_email()
 
     # Redirection en fonction de l'id collaborateur, et du rôle
     def department_redirect(self):
-        print('#### DEPARTMENT', self.current_user.role.name, '####\n')
+        print('#--- DEPARTMENT', self.current_user.role.name, '---#\n')
         if self.current_user.role.value == RoleEnum.GESTION.value:
             self.gestion_controller.gestion_menu_controller()
         elif self.current_user.role.value == RoleEnum.COMMERCIAL.value:

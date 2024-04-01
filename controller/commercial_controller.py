@@ -12,7 +12,7 @@ from model.contract import Contract
 class CommercialController:
     def __init__(self, user_controller):
         self.user_controller = user_controller
-        self.commercial_views = CommercialMenuView(user_controller)
+        self.commercial_views = CommercialMenuView()
 
     def commercial_menu_controller(self):
         current_user = self.user_controller.current_user.id

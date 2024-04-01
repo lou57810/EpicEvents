@@ -64,14 +64,21 @@ class User(Base):
                   values_callable=lambda obj: [e.value for e in obj]))
 
     # Relation: customer, contract, event
-    # users_map: Mapped[List["User"]] =
-    # relationship(back_populates='user', cascade="all, delete-orphan")
-    customers_map: Mapped[List["Customer"]]\
-        = relationship(back_populates='user', cascade="all, delete-orphan")
-    contracts_map: Mapped[List["Contract"]]\
-        = relationship(back_populates='user', cascade="all, delete-orphan")
-    events_map: Mapped[List["Event"]]\
-        = relationship(back_populates='user', cascade="all, delete-orphan")
+    # users_map: Mapped[List["User"]] = relationship(back_populates='user', cascade="all, delete-orphan")
+    """users = relationship("User",
+                         back_populates='user', cascade="all, delete-orphan")
+    customers = relationship("Customer",
+                             back_populates='user', cascade="all, delete-orphan")
+    contracts = relationship("Contract",
+                             back_populates='user', cascade="all, delete-orphan")
+    events = relationship("Event",
+                          back_populates='user', cascade="all, delete-orphan")
+
+    """
+    customers_map: Mapped[List["Customer"]] = relationship(back_populates='user', cascade="all, delete-orphan")
+    contracts_map: Mapped[List["Contract"]] = relationship(back_populates='user', cascade="all, delete-orphan")
+    events_map: Mapped[List["Event"]] = relationship(back_populates='user', cascade="all, delete-orphan")
+    
 
     def __init__(self, username, password, hashed_pass, email, role):
         self.username = username

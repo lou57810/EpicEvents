@@ -11,8 +11,11 @@ from model.user import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, \
 
 class CommercialMenuView:
 
-    def __init__(self, user_controller):
-        self.user_controller = user_controller
+    """def __init__(self, user_controller):
+        self.user_controller = user_controller"""
+    def __init__(self):
+        pass
+
 
     def get_permission(self, role, role_fct):
         for elt in Permissions_roles:
@@ -157,8 +160,8 @@ class CommercialMenuView:
         if self.get_permission(user_role, UPDATE_OWN_CONTRACT):
             if contract.commercial_contact != current_user:
                 print('Forbidden, this contract is not one of your owns!')
-                self.user_controller.commercial_controller\
-                    .commercial_menu_controller()
+                #self.user_controller.commercial_controller\
+                   #  .commercial_menu_controller()
             else:
                 query = session.query(Contract)
                 column_names = query.statement.columns.keys()
@@ -169,8 +172,8 @@ class CommercialMenuView:
                 return contract_to_update.id, key_to_update, value_to_update
         else:
             print("Operation only allowed for Commercial departement !")
-            self.user_controller.commercial_controller\
-                .commercial_menu_controller()
+            # self.user_controller.commercial_controller\
+                # .commercial_menu_controller()
         self.commercial_menu_view()
 
     def display_contracts_to_update(self):

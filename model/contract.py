@@ -29,9 +29,11 @@ class Contract(Base):
 
     # Relation with customer:
     customer: Mapped["Customer"] = relationship(
-        back_populates="contrats_maps")
+        back_populates="contracts_maps")
     # Relation with event:
     event_map: Mapped[List["Event"]] = relationship(back_populates='contract')
+    #events = relationship("Event",
+    #           back_populates='contract', cascade="all, delete-orphan")
 
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False)
     balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)

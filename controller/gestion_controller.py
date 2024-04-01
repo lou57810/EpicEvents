@@ -94,13 +94,21 @@ class GestionController:
         self.gestion_menu_controller()
 
     def delete_user(self, role):
+        
+        id_user_connected = self.user_controller.current_user.id
         id = self.gestion_views.delete_user_account(role)
         if id:
-            user = session.query(User).filter_by(id=id).one_or_none()
-            session.delete(user)
-            session.commit()
-            print('After update:')
-            self.gestion_views.display_users()
+            if id == id_user_connected:
+                # Si l'utilisateur se supprime, la session reste ouverte et
+                # les droits Gestion subsistent. Donc choix à exclure.
+                print('WARNING: You can\'t delete yourself! \n')
+                self.gestion_menu_controller()
+            else:
+                user = session.query(User).filter_by(id=id).one_or_none()
+                session.delete(user)
+                session.commit()
+                print('After update:')
+                self.gestion_views.display_users()
         else:
             print('no_values!')
             self.gestion_menu_controller()
@@ -112,7 +120,6 @@ class GestionController:
             contract_status) = self.gestion_views.create_contract(role)
         id_commercial = session.query(
             Customer).where(Customer.id == customer_info).all()
-        print('id_commercial:')
         commercial_contact = id_commercial[0].contact
         contract = Contract(customer_info, commercial_contact,
                             total_amount, balance_payable,
@@ -120,6 +127,8 @@ class GestionController:
 
         session.add(contract)   # stage
         session.commit()    # push
+        print('contract:', Customer.customer_info)
+        # self.gestion_views.display_one_contract(customer, user)
         self.gestion_menu_controller()     # Retour menu gestion
 
     def update_contract(self, role):

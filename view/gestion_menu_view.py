@@ -95,12 +95,13 @@ class GestionMenuView:
         i = 0
         for elt in users:
             print('N°', i, '\n',
+                  'id:', elt.id, '\n',
                   'username:', elt.username, '\n',
                   'password:', elt.password, '\n',
                   'email:', elt.email, '\n',
                   'role:', elt.role.name)
             i = i + 1
-        choix = input("Choisir un id user:")
+        choix = input("Choisir un N° user:")
         user = users[int(choix)]
         print('\n')
         return user
@@ -169,6 +170,7 @@ class GestionMenuView:
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
             print('N°', i, "\n",
+                  "id:", elt.id, "\n",
                   "full_name:", elt.full_name, "\n",
                   "customer_email:", elt.customer_email, "\n",
                   "tel:", elt.tel, "\n",
@@ -202,19 +204,22 @@ class GestionMenuView:
                   'commercial_status:', elt.contract_status.value)
             i = i + 1
 
+    def display_one_customer(self, customer, user):
+        print('#---- customer_info ----#\n')
+        print(' id:', customer.id, "\n",
+                'Name:', customer.full_name, "\n",
+                'email:', customer.customer_email, "\n",
+                'Tel:', customer.tel, "\n",
+                'First date:', customer.first_date, "\n",
+                'Last date:', customer.last_date, "\n",
+                'Contact:', user.username)
+
     def create_contract(self, user_role):
         if self.get_permission(user_role, ADD_CONTRACT):
             customer_info = self.display_customers()
             customer = session.get(Customer, customer_info)
             user = session.get(User, customer.contact)
-
-            print('#### customer_info ####:\n')
-            print('Name:', customer.full_name, "\n",
-                  'email:', customer.customer_email, "\n",
-                  'Tel:', customer.tel, "\n",
-                  'First date:', customer.first_date, "\n",
-                  'Last date:', customer.last_date, "\n",
-                  'Contact:', user.username)
+            self.display_one_customer(customer, user)
 
             total_amount = input('Montant total du contrat: ')
             balance_payable = input('Montant restant à payer: ')
@@ -226,12 +231,11 @@ class GestionMenuView:
         else:
             print("Operation only allowed for Gestion departement !")
             self.gestion_menu_view(user_role)
-        self.display_ordered_contracts()
 
     def display_ordered_update_contracts(self):
         contracts = session.query(Contract).all()
         i = 0
-        print('############# Contracts ##############\n')
+        print('#----------- Contracts -----------#\n')
         for elt in contracts:
             user = session.query(User).filter(
                    User.id == elt.commercial_contact).first()
@@ -297,7 +301,7 @@ class GestionMenuView:
     def display_filtered_events(self, user_role):
         if self.get_permission(user_role, DISPLAY_FILTERED_EVENTS):
             event_no_contact = session.query(Event).filter(
-                Event.support_contact == None).all()
+                Event.support_contact is None).all()
             if event_no_contact:
                 print('event with no contact support:', event_no_contact)
             else:

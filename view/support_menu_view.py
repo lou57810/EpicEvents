@@ -18,15 +18,16 @@ class SupportMenuView:
                 return True
 
     def support_menu_view(self):
-        print("Choose options")
         answer = True
         while answer:
             print("""
             1. Display own events.
             2. Update own events.
+            3. Display customers.
+            4. Display contracts.
             0. Quit.
             """)
-            answer = input("Faites votre choix ! \n")
+            answer = input("Select N° Fonction ! \n")
             return answer
 
     def display_filtered_events(self, role, current_user):
@@ -80,29 +81,26 @@ class SupportMenuView:
               '5:', column_names[9], '\n',
               '6:', column_names[10], '\n')
 
-        if self.get_permission(role, UPDATE_OWN_EVENT):
-            key_to_update = input('N° Clé à modifier: ')
-            if key_to_update == "1":
-                key_to_update = column_names[1]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "2":
-                key_to_update = column_names[5]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "3":
-                key_to_update = column_names[6]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "4":
-                key_to_update = column_names[7]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "5":
-                key_to_update = column_names[9]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "6":
-                key_to_update = column_names[10]
-                value_to_update = input('Nouvelle valeur: ')
-            print('test:', event_filtered.id, key_to_update, value_to_update)
-            return event_filtered.id, key_to_update, value_to_update
+        key_to_update = input('N° Clé à modifier: ')
+        if key_to_update == "1":
+            key_to_update = column_names[1]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "2":
+            key_to_update = column_names[5]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "3":
+            key_to_update = column_names[6]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "4":
+            key_to_update = column_names[7]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "5":
+            key_to_update = column_names[9]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "6":
+            key_to_update = column_names[10]
+            value_to_update = input('Nouvelle valeur: ')
+        print('test:', event_filtered.id, key_to_update, value_to_update)
+        return event_filtered.id, key_to_update, value_to_update
 
-        else:
-            print('You are not allowed to update events!')
         self.support_menu_view(id, role)

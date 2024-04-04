@@ -27,7 +27,6 @@ class CommercialMenuView:
                 return True
 
     def commercial_menu_view(self):
-        print("Choose options")
         answer = True
         while answer:
             print("""
@@ -38,10 +37,11 @@ class CommercialMenuView:
             5. Update own contract.
             6. Display filtered contract.
             7. Create event for contract.
+            8. Display events.
             0. Deconnection.
             """)
 
-            answer = input("Faites votre choix ! \n")
+            answer = input("Select N° Fonction ! \n")
             return answer
 
     # Création client
@@ -238,68 +238,48 @@ class CommercialMenuView:
         return num_list[int(support_contact)]
 
     # Contract must be signed and belong to commercial connected collaborator.
-    def create_validated_contract_event(self, user_role, current_user):
+    def create_validated_contract_event(self, user_role, current_user, contract):
         print('#------- Contrats -------#\n')
         # contract = self.display_ordered_update_own_contracts()
-        contract = self.display_contracts_to_update()
+        # contract = self.display_contracts_to_update()
         contract_id = contract.id
         customers = session.query(Customer).all()
 
-        # Must be commercial.
-        if self.get_permission(user_role, CREATE_SIGNED_OWN_EVENT):
-            user = session.query(User).filter(User.id == current_user).first()
-            print(user.username, 'Collaborator from Commercial Department.')
-            # Owner must be current user.
-            if contract.commercial_contact != current_user:
-                print('Forbidden, this contract is not one of yours!')
-                # self.user_controller.commercial_controller.\
-                    # commercial_menu_controller()
-            else:
-                print('contract_status:', contract.contract_status.value)
-                # Contract must be signed.
-                if contract.contract_status.value != 'SIGNED':
-                    print('Operation not allowed,\
-                          because contract_status is not signed!')
-                    self.user_controller.commercial_controller.\
-                        commercial_menu_controller()
-                # All conditions verified.
-                else:
-                    for val in customers:  # Coords customer.
-                        val = session.query(Customer).filter(
-                            Customer.id == contract.customer_info).first()
-                        customer_name = val.full_name
-                        customer_contact = val.id
-                    event_name = input("Nom de l'evenement: ")
-                    print('Choose N° Support contact collaborator:')
-                    support_contact = None
-                    start_date = input("Début de l'évènement:")
-                    end_date = input("Fin de l'évènement'")
-                    location = input("Lieu de l'evenement: ")
-                    attendees = input("Nombre de participants: ")
-                    notes = input("Notes/ deroulement de l'evenement: ")
-                    print('event:', event_name, contract_id,
-                          customer_name, customer_contact,
-                          start_date, end_date,
-                          support_contact, location,
-                          attendees, notes)
-                    return event_name, contract_id, \
-                        customer_name, customer_contact, \
-                        start_date, end_date, \
-                        support_contact, location, \
-                        attendees, notes
-        else:
-            print("Operation only allowed for Commercial departement !")
-            self.user_controller.commercial_controller\
-                .commercial_menu_controller()
+        for val in customers:  # Coords customer.
+            val = session.query(Customer).filter(
+                Customer.id == contract.customer_info).first()
+            customer_name = val.full_name
+            customer_contact = val.id
+        event_name = input("Nom de l'evenement: ")
+        print('Choose N° Support contact collaborator:')
+        support_contact = None
+        start_date = input("Début de l'évènement:")
+        end_date = input("Fin de l'évènement'")
+        location = input("Lieu de l'evenement: ")
+        attendees = input("Nombre de participants: ")
+        notes = input("Notes/ deroulement de l'evenement: ")
+        """print('event:', event_name, contract_id,
+                customer_name, customer_contact,
+                start_date, end_date,
+                support_contact, location,
+                attendees, notes)"""
+        return event_name, contract_id, \
+            customer_name, customer_contact, \
+            start_date, end_date, \
+            support_contact, location, \
+            attendees, notes
+       
 
     def display_events(self):
         events = session.query(Event).all()
         # customer = session.query(Customer).all()
+        
+        print('#----------Events ----------#\n')
         i = 0
         for elt in events:
-            user = session.get(User, elt.support_contact)
+            # user = session.get(User, elt.support_contact)
             customer = session.get(Customer, elt.customer_contact)
-            print('########## Events #########\n')
+            
             print('N°', i, '. Event_id:', elt.id, "\n",
                   'Event name:', elt.event_name, "\n",
                   'Customer contact:', customer.full_name,
@@ -307,8 +287,16 @@ class CommercialMenuView:
                   'Tel:', customer.tel, "\n",
                   'start_date:', elt.start_date, "\n",
                   'end_date:', elt.end_date, "\n",
-                  'support contact:', user.username, "\n",
+                  'support contact:', self.get_username_from_id(elt.support_contact), "\n",
                   'location:', elt.location, "\n",
                   'attendees:', elt.attendees, "\n",
-                  'notes:', elt.notes)
+                  'notes:', elt.notes, "\n")
             i = i + 1
+
+    # Fonction pour récupérer le username à partir de l'ID
+    def get_username_from_id(self, user_id):
+        user = session.query(User).filter(User.id == user_id).first()
+        if user:
+            return user.username
+        else:
+            return None

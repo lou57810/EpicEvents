@@ -17,7 +17,7 @@ class StartMenuController:
         if choice == "1":
             self.admin_controller.start_administration()
         if choice == "2":
-            main_app.display_tables()
+            # main_app.display_tables()
             print('\n')
             self.user_controller.sign_in()
         elif choice == "0":

@@ -23,7 +23,6 @@ class GestionMenuView:
                 return True
 
     def gestion_menu_view(self):
-        print("Choose options")
         answer = True
         while answer:
             print("""
@@ -36,9 +35,11 @@ class GestionMenuView:
             7. Display contracts.
             8. Display filtered events.
             9. Update events.
+            10. Display customers.
+            11. Display Events.
             0. Deconnection.
             """)
-            answer = input("Make your choice ! \n")
+            answer = input("Select N° Fonction ! \n")
             return answer
 
     def menu_role(self):
@@ -67,15 +68,12 @@ class GestionMenuView:
         print('#### Collaborators registered ####\n')
         self.display_users()
         print('\n')
-        if self.get_permission(user_role, ADD_USER):
-            username = input('Nom du nouveau collaborateur: ')
-            password = str(input('Password: '))
-            email = input("collaborator email : ")
-            role = self.get_role()
-            return username, password, email, role
-        else:
-            print("Operation only allowed for Gestion departement !")
-            self.gestion_menu_view()  # Retour menu
+        
+        username = input('Nom du nouveau collaborateur: ')
+        password = str(input('Password: '))
+        email = input("collaborator email : ")
+        role = self.get_role()
+        return username, password, email, role
 
     def display_ordered_users(self):
         users = session.query(User).all()
@@ -126,35 +124,25 @@ class GestionMenuView:
               '3:', column_names[4], '\n',
               '4:', column_names[5], '\n')
 
-        if self.get_permission(user_role, UPDATE_USER):
-            key_to_update = input('Attribut à modifier: ')
-            if key_to_update == "1":
-                key_to_update = column_names[1]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "2":
-                key_to_update = column_names[2]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "3":
-                key_to_update = column_names[4]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "4":
-                key_to_update = column_names[5]
-                value_to_update = self.get_role()
+        key_to_update = input('Attribut à modifier: ')
+        if key_to_update == "1":
+            key_to_update = column_names[1]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "2":
+            key_to_update = column_names[2]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "3":
+            key_to_update = column_names[4]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "4":
+            key_to_update = column_names[5]
+            value_to_update = self.get_role()
 
-            return user_to_update.id, key_to_update, value_to_update
-
-        else:
-            print('user_role:', user_role)
-            print("Operation only allowed for Gestion departement !")
-            self.gestion_menu_view()
+        return user_to_update.id, key_to_update, value_to_update
 
     def delete_user_account(self, user_role):
         user_to_delete = self.display_ordered_update_users()
-        if self.get_permission(user_role, DELETE_USER):
-            return user_to_delete.id    # key/value_to_delete
-        else:
-            print("Operation only allowed for Gestion departement !")
-            self.gestion_menu_view()
+        return user_to_delete.id    # key/value_to_delete
 
     def display_users(self):
         users = session.query(User).all()
@@ -166,7 +154,7 @@ class GestionMenuView:
     def display_customers(self):
         customers = session.query(Customer).all()
         i = 0
-        print('############# Customers ##############')
+        print('#-------------- Customers ---------------#')
         for elt in customers:
             user = session.query(User).filter(User.id == elt.contact).first()
             print('N°', i, "\n",
@@ -186,7 +174,7 @@ class GestionMenuView:
     def display_ordered_contracts(self):
         contracts = session.query(Contract).all()
         i = 0
-        print('############# Contracts ##############\n')
+        print('#------------- Contracts --------------#\n')
         for elt in contracts:
             user = session.query(User).filter(
                 User.id == elt.commercial_contact).first()
@@ -215,7 +203,6 @@ class GestionMenuView:
                 'Contact:', user.username)
 
     def create_contract(self, user_role):
-        if self.get_permission(user_role, ADD_CONTRACT):
             customer_info = self.display_customers()
             customer = session.get(Customer, customer_info)
             user = session.get(User, customer.contact)
@@ -228,9 +215,6 @@ class GestionMenuView:
                             'Contrat status: (1: SIGNED or 2: UNSIGNED)')
             return customer_info, total_amount, \
                 balance_payable, start_date, contract_status
-        else:
-            print("Operation only allowed for Gestion departement !")
-            self.gestion_menu_view(user_role)
 
     def display_ordered_update_contracts(self):
         contracts = session.query(Contract).all()
@@ -264,7 +248,7 @@ class GestionMenuView:
         customer = session.get(Customer, contract.customer_info)
         user = session.get(User, contract.commercial_contact)
         print('\n')
-        print('##### Contract selected #####\n')
+        print('#---- Contract selected ----#\n')
         print('customer_info:', customer.full_name,
               customer.customer_email, "\n",
               'tel:', customer.tel, "\n",
@@ -281,37 +265,49 @@ class GestionMenuView:
               '3:', column_names[5], '\n',
               '4:', column_names[6], '\n')
 
-        if self.get_permission(user_role, UPDATE_CONTRACT):
-            key_to_update = input('Attribut à modifier: ')
-            if key_to_update == "1":
-                key_to_update = column_names[3]
-            elif key_to_update == "2":
-                key_to_update = column_names[4]
-            elif key_to_update == "3":
-                key_to_update = column_names[5]
-            elif key_to_update == "4":
-                key_to_update = column_names[6]
-            value_to_update = input('Nouvelle valeur: ')
-            return contract_to_update.id, key_to_update, value_to_update
-        else:
-            print("Operation only allowed for Gestion departement !")
-            self.gestion_menu_view()
+        key_to_update = input('Attribut à modifier: ')
+        if key_to_update == "1":
+            key_to_update = column_names[3]
+        elif key_to_update == "2":
+            key_to_update = column_names[4]
+        elif key_to_update == "3":
+            key_to_update = column_names[5]
+        elif key_to_update == "4":
+            key_to_update = column_names[6]
+        value_to_update = input('Nouvelle valeur: ')
+        return contract_to_update.id, key_to_update, value_to_update
 
     # affiche tous les événements qui n’ont pas de « support » associé
     def display_filtered_events(self, user_role):
-        if self.get_permission(user_role, DISPLAY_FILTERED_EVENTS):
-            event_no_contact = session.query(Event).filter(
-                Event.support_contact is None).all()
-            if event_no_contact:
-                print('event with no contact support:', event_no_contact)
-            else:
-                print('No event without support_contact.')
+        event_no_contact = session.query(Event).filter(
+            Event.support_contact == None).all()
+        i = 0
+        if event_no_contact:
+            for elt in event_no_contact:
+                print('N°', i, "\n",
+                  'Id:', elt.id, '\n',
+                  'Event Name:', elt.event_name, '\n',
+                  'Start Date:', elt.start_date, '\n',
+                  'End Date:', elt.end_date, '\n',
+                  'Location:', elt.location, '\n',
+                  'Support Contact:', elt.support_contact, '\n',
+                  'Attendees:', elt.attendees, '\n',
+                  'Notes:', elt.notes, '\n')
+                i = i + 1
+            return event_no_contact
         else:
-            print("Operation only allowed for Gestion departement !")
-            self.gestion_menu_view()
+            print('No event without support_contact.')
+
+    def select_filtered_events(self, user_role):
+        events = self.display_filtered_events(user_role)
+        choix = input("Choisir un N° Event:")
+        event = events[int(choix)]
+        return event
 
     def update_events(self, user_role):
-        event_to_update = self.display_events_to_update()
+        event_to_update = self.select_filtered_events(user_role)
+        # choice = input('N° Evenement à modifier:')
+
         query = session.query(Event)
         column_names = query.statement.columns.keys()
 
@@ -320,40 +316,40 @@ class GestionMenuView:
               '2:', column_names[5], '\n',
               '3:', column_names[6], '\n',
               '4:', column_names[7], '\n',
-              '5:', column_names[9], '\n',
-              '6:', column_names[10], '\n')
+              '5:', column_names[8], '\n',
+              '6:', column_names[9], '\n',
+              '7:', column_names[10], '\n')
 
-        if self.get_permission(user_role, UPDATE_EVENT):
-            key_to_update = input('N° Clé à modifier: ')
-            if key_to_update == "1":
-                key_to_update = column_names[1]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "2":
-                key_to_update = column_names[5]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "3":
-                key_to_update = column_names[6]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "4":
-                key_to_update = column_names[7]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "5":
-                key_to_update = column_names[9]
-                value_to_update = input('Nouvelle valeur: ')
-            elif key_to_update == "6":
-                key_to_update = column_names[10]
-                value_to_update = input('Nouvelle valeur: ')
-            return event_to_update.id, key_to_update, value_to_update
-        else:
-            print("Operation only allowed for Gestion departement !")
-        self.gestion_menu_view()
-
-    def display_events_to_update(self):
-        events = self.display_events()
-
-        choix = input("Choisir un id Event:")
-        event = events[int(choix)]
-        return event
+        
+        key_to_update = input('N° Clé à modifier: ')
+        if key_to_update == "1":
+            key_to_update = column_names[1]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "2":
+            key_to_update = column_names[5]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "3":
+            key_to_update = column_names[6]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "4":
+            key_to_update = column_names[7]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "5":
+            # Requête pour récupérer les utilisateurs avec le rôle "support"
+            users_support = session.query(User).filter(User.role == RoleEnum.SUPPORT.value).all()
+            i = 0
+            while i < len(users_support):
+                print('Username:', users_support[i].username, ', Id:', users_support[i].id)
+                i = i + 1
+            key_to_update = column_names[8]
+            value_to_update = input('Nouvelle valeur (id): ')
+        elif key_to_update == "6":
+            key_to_update = column_names[9]
+            value_to_update = input('Nouvelle valeur: ')
+        elif key_to_update == "7":
+            key_to_update = column_names[10]
+            value_to_update = input('Nouvelle valeur: ')
+        return event_to_update.id, key_to_update, value_to_update
 
     def display_events(self):
         events = session.query(Event).all()
@@ -366,9 +362,17 @@ class GestionMenuView:
                   'customer_contact:', event.customer_contact, "\n",
                   'start_date:', event.start_date, "\n",
                   'end_date:', event.end_date, "\n",
-                  'support_contact:', event.support_contact, "\n",
+                  'support_contact:', self.get_username_from_id(event.support_contact), "\n",
                   'location:', event.location, "\n",
                   'attendees:', event.attendees, "\n",
                   'notes:', event.notes)
             i = i + 1
         return events
+
+    # Fonction pour récupérer le username à partir de l'ID
+    def get_username_from_id(self, user_id):
+        user = session.query(User).filter(User.id == user_id).first()
+        if user:
+            return user.username
+        else:
+            return None

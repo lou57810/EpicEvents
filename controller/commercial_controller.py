@@ -1,6 +1,7 @@
 # from sqlalchemy.orm import sessionmaker
 # from sqlalchemy import text  # update
 from view.commercial_menu_view import CommercialMenuView
+from view.gestion_menu_view import GestionMenuView
 # from .engine_controller import EngineController
 from .engine_controller import session  # engine
 from model.user import User
@@ -16,6 +17,7 @@ class CommercialController:
     def __init__(self, user_controller):
         self.user_controller = user_controller
         self.commercial_views = CommercialMenuView()
+        self.gestion_views = GestionMenuView()
 
     def get_permission(self, role, role_fct):
         for elt in Permissions_roles:
@@ -50,6 +52,9 @@ class CommercialController:
             self.commercial_menu_controller()
         elif choice == "7":
             self.create_event(role, current_user)
+        elif choice == "8":
+            self.gestion_views.display_events()
+            self.commercial_menu_controller()
         elif choice == "0":
             current_user = self.user_controller.current_user.username
             print('current_user:', current_user)
@@ -153,15 +158,39 @@ class CommercialController:
             self.commercial_menu_controller()
 
     def create_event(self, role, current_user):
-        (event_name, contract_id, customer_name,
-            customer_contact, start_date, end_date,
-            support_contact, location, attendees,
-            notes) = self.commercial_views.create_validated_contract_event(
-                role, current_user)
-        event = Event(event_name, contract_id,
-                      customer_name, customer_contact,
-                      start_date, end_date, support_contact,
-                      location, attendees, notes)
-        print('event:', event)
-        session.add(event)   # stage
-        session.commit()    # push
+        contract = self.commercial_views.display_contracts_to_update()
+        
+        # Must be commercial.
+        if self.get_permission(role, CREATE_SIGNED_OWN_EVENT):
+            user = session.query(User).filter(User.id == current_user).first()
+            print(user.username, 'Collaborator from Commercial Department.')
+            # Owner must be current user.
+            if contract.commercial_contact != current_user:
+                print('Forbidden, this contract is not one of yours!')
+                self.commercial_menu_controller()
+            else:
+                print('contract_status:', contract.contract_status.value)
+                # Contract must be signed.
+                if contract.contract_status.value != 'SIGNED':
+                    print('Operation not allowed,\
+                          because contract_status is not signed!')
+                    self.commercial_menu_controller()
+                # All conditions verified.
+                else:
+                    (event_name, contract_id, customer_name,
+                    customer_contact, start_date, end_date,
+                    support_contact, location, attendees,
+                    notes) = self.commercial_views.create_validated_contract_event(
+                        role, current_user, contract)
+                    event = Event(event_name, contract_id,
+                                  customer_name, customer_contact,
+                                  start_date, end_date, support_contact,
+                                  location, attendees, notes)
+                    print('event:', event)
+                    session.add(event)   # stage
+                    session.commit()    # push
+                    self.gestion_views.display_events()
+                    self.commercial_menu_controller()
+        else:
+            print("Operation only allowed for Commercial departement !")
+            self.commercial_menu_controller()

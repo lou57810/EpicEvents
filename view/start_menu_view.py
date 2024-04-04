@@ -17,7 +17,7 @@ class StartMenuView:
             2. Sign in.
             0. Quit.
             """)
-            answer = input("Choice: ")
+            answer = input("Select N° Menu:  ")
             return answer
 
     def input_email(self):
@@ -28,15 +28,7 @@ class StartMenuView:
         password = maskpass.askpass(prompt="Enter Password:", mask="#")
         return password
 
-    """def user_sign_in(self):
-        print('Enter Email and then, password: ')
-        email = input('Email: ')
-        password = maskpass.askpass(prompt="Password:", mask="#")
-        return email, password"""
-
-
-
-    def display_tables(self):
+    """def display_tables(self):
         print('TABLES: ')
         insp = inspect(engine)
-        print(insp.get_table_names())
+        print(insp.get_table_names())"""

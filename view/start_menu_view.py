@@ -1,8 +1,6 @@
 # import os
 # import mysql.connector
 import maskpass
-from controller.engine_controller import engine
-from sqlalchemy import inspect
 
 
 class StartMenuView:
@@ -27,8 +25,3 @@ class StartMenuView:
     def input_password(self):
         password = maskpass.askpass(prompt="Enter Password:", mask="#")
         return password
-
-    """def display_tables(self):
-        print('TABLES: ')
-        insp = inspect(engine)
-        print(insp.get_table_names())"""

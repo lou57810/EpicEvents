@@ -74,7 +74,7 @@ class SupportController:
             session.commit()
             print('\n')
             print('Event updated: ', event.event_name,
-                    key_to_update, ':', value_to_update)
+                  key_to_update, ':', value_to_update)
         else:
             print('You are not allowed to update events!')
             self.support_menu_controller()

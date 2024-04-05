@@ -1,6 +1,6 @@
 from model.event import Event
 from controller.engine_controller import session
-from model.user import User, Permissions_roles, UPDATE_OWN_EVENT
+from model.user import User  # , Permissions_roles, UPDATE_OWN_EVENT
 
 
 class SupportMenuView:
@@ -8,14 +8,14 @@ class SupportMenuView:
     def __init__(self):
         pass
 
-    def get_permission(self, role, role_fct):
+    """def get_permission(self, role, role_fct):
         for elt in Permissions_roles:
             if elt == role:
                 result = Permissions_roles[role]
         for elt in result:
             if elt == role_fct:
                 print('elt')
-                return True
+                return True"""
 
     def support_menu_view(self):
         answer = True

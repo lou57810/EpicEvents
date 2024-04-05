@@ -8,10 +8,10 @@ from model.contract import Contract
 from model.event import Event
 from model.customer import Customer
 from .engine_controller import session
-from model.user import ADD_USER, UPDATE_USER, DELETE_USER, ADD_CONTRACT, UPDATE_CONTRACT, UPDATE_EVENT
-from model.user import Permissions_roles, RoleEnum
-
-
+from model.user import (ADD_USER, UPDATE_USER, DELETE_USER,
+                        ADD_CONTRACT, UPDATE_CONTRACT, UPDATE_EVENT,
+                        DISPLAY_FILTERED_EVENTS)
+from model.user import Permissions_roles  # RoleEnum
 
 
 class GestionController:
@@ -228,8 +228,8 @@ class GestionController:
             print("Operation only allowed for Gestion departement !")
             self.gestion_menu_controller()
 
-    def display_filtered_events(self):
-        if self.get_permission(user_role, DISPLAY_FILTERED_EVENTS):
+    def display_filtered_events(self, role):
+        if self.get_permission(role, DISPLAY_FILTERED_EVENTS):
             self.gestion_views.display_filtered_events()
         else:
             print("Operation only allowed for Gestion departement !")

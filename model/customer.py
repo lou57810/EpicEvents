@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String, DateTime
 from sqlalchemy.sql import func
 from .base import Base
-from .user import User
+# from .user import User
 # from .contract import Contract
 
 
@@ -31,7 +31,6 @@ class Customer(Base):
     # Relation contract
     contracts_maps: Mapped[List["Contract"]] = relationship(
         back_populates='customer', cascade="all, delete-orphan")
-    # customers = relationship("Contract", back_populates='customer', cascade="all, delete-orphan")
 
     def __init__(self, full_name,
                  customer_email, tel, company_name,

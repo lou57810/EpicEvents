@@ -5,8 +5,6 @@ from model.contract import Contract
 from model.customer import Customer
 from model.event import Event
 from model.user import Permissions_roles
-from model.user import ADD_CUSTOMER, UPDATE_OWN_CUSTOMER, \
-            UPDATE_OWN_CONTRACT, CREATE_SIGNED_OWN_EVENT
 
 
 class CommercialMenuView:
@@ -15,7 +13,6 @@ class CommercialMenuView:
         self.user_controller = user_controller"""
     def __init__(self):
         pass
-
 
     def get_permission(self, role, role_fct):
         for elt in Permissions_roles:
@@ -48,19 +45,15 @@ class CommercialMenuView:
     def create_customer_account(self, user_role):
         self.display_customers()
         print('\n')
-        if self.get_permission(user_role, ADD_CUSTOMER):
-            full_name = input('Nom prénom du Client: ')
-            customer_email = input('Email du client: ')
-            tel = input('Tel: ')
-            company_name = input('Entreprise: ')
-            first_date = input('Date création: YYYY-MM-DD format\n')
-            last_date = input('Date dernier contact: YYYY-MM-DD format\n')
-            # Contact: Affectation automatique de l'id contact commercial.
-            return full_name, customer_email, tel, \
-                company_name, first_date, last_date
-        else:
-            print("Operation only allowed for Commercial departement !")
-            self.commercial_menu_view()
+        full_name = input('Nom prénom du Client: ')
+        customer_email = input('Email du client: ')
+        tel = input('Tel: ')
+        company_name = input('Entreprise: ')
+        first_date = input('Date création: YYYY-MM-DD format\n')
+        last_date = input('Date dernier contact: YYYY-MM-DD format\n')
+        # Contact: Affectation automatique de l'id contact commercial.
+        return full_name, customer_email, tel, \
+            company_name, first_date, last_date
 
     # Maj client
     def update_own_customer(self, user_role, current_user, customer):
@@ -69,25 +62,24 @@ class CommercialMenuView:
 
         print('#---- Customer selected ----#\n')
         print('Customer full name:', customer.full_name, "\n",
-                'Email:', customer.customer_email, "\n",
-                'Tel:', customer.tel, "\n",
-                'Company name:', customer.company_name, "\n",
-                'First date contact:', customer.first_date, "\n",
-                'Last date contact:', customer.last_date, "\n")
-                # 'Contact:', user.username, "\n")
+              'Email:', customer.customer_email, "\n",
+              'Tel:', customer.tel, "\n",
+              'Company name:', customer.company_name, "\n",
+              'First date contact:', customer.first_date, "\n",
+              'Last date contact:', customer.last_date, "\n")
         print('\n')
         query = session.query(Customer)
         column_names = query.statement.columns.keys()
 
         print('Choose one key :',
-                '\n', '1:', column_names[1],
-                '\n', '2:', column_names[2],
-                '\n', '3:', column_names[3],
-                '\n', '4:', column_names[4],
-                '\n', '5:', column_names[5],
-                '\n', '6:', column_names[6],
-                # '\n', '7:', column_names[7] Le contact reste
-                '\n')
+              '\n', '1:', column_names[1],
+              '\n', '2:', column_names[2],
+              '\n', '3:', column_names[3],
+              '\n', '4:', column_names[4],
+              '\n', '5:', column_names[5],
+              '\n', '6:', column_names[6],
+              # '\n', '7:', column_names[7] Le contact reste
+              '\n')
 
         key_to_update = input('N° Clé à modifier: ')
         if key_to_update == "1":
@@ -141,22 +133,21 @@ class CommercialMenuView:
     def update_own_contract(self, user_role, current_user, contract):
         print('#--- id contract selected ---#', contract.id, '\n')
         print('Contract_info:', contract.customer_info, "\n",
-                'Commercial contact:', contract.commercial_contact, "\n",
-                'Total amount:', contract.total_amount, "\n",
-                'Balance payable:', contract.balance_payable, "\n",
-                'Start Date:', contract.start_date, "\n",
-                'Status:', contract.contract_status, "\n")
+              'Commercial contact:', contract.commercial_contact, "\n",
+              'Total amount:', contract.total_amount, "\n",
+              'Balance payable:', contract.balance_payable, "\n",
+              'Start Date:', contract.start_date, "\n",
+              'Status:', contract.contract_status, "\n")
         print('\n')
         query = session.query(Contract)
         column_names = query.statement.columns.keys()
-        
 
         print('Choose one key :',
-                '\n', '1:', column_names[3],
-                '\n', '2:', column_names[4],
-                '\n', '3:', column_names[5],
-                '\n', '4:', column_names[6],
-                '\n')
+              '\n', '1:', column_names[3],
+              '\n', '2:', column_names[4],
+              '\n', '3:', column_names[5],
+              '\n', '4:', column_names[6],
+              '\n')
 
         key_to_update = input('N° Clé à modifier: \n')
         if key_to_update == "1":
@@ -172,7 +163,6 @@ class CommercialMenuView:
             key_to_update = column_names[6]
             value_to_update = input('Nouvelle valeur entrée: ')
         return key_to_update, value_to_update
-
 
     def display_contracts_to_update(self):
         contracts = self.display_contracts()
@@ -199,9 +189,6 @@ class CommercialMenuView:
         if contracts:
             i = 0
             z = len(contracts)
-
-            # Get username from id: (contracts[i].contact)
-            # Get info customer from customer_id: (contracts[i].customer_id)
             print('\n')
             while i < z:
                 user = session.query(User).filter(
@@ -213,13 +200,9 @@ class CommercialMenuView:
                       customer.customer_email, "\n",
                       'tel:', customer.tel, "\n",
                       'commercial_contact:', user.username, "\n",
-                      # 'total_amount:', elt.total_amount, "\n",
                       'total_amount:', contracts[i].total_amount, "\n",
-                      # 'balance_payable:', elt.balance_payable, "\n",
                       'balance_payable:', contracts[i].balance_payable, "\n",
-                      # 'start_date:', elt.start_date, "\n",
                       'start_date:', contracts[i].start_date, "\n",
-                      # 'contract_status:', elt.contract_status.value)
                       'contract_status:', contracts[i].contract_status.value)
                 i = i + 1
         return contracts
@@ -238,10 +221,9 @@ class CommercialMenuView:
         return num_list[int(support_contact)]
 
     # Contract must be signed and belong to commercial connected collaborator.
-    def create_validated_contract_event(self, user_role, current_user, contract):
+    def create_validated_contract_event(self,
+                                        user_role, current_user, contract):
         print('#------- Contrats -------#\n')
-        # contract = self.display_ordered_update_own_contracts()
-        # contract = self.display_contracts_to_update()
         contract_id = contract.id
         customers = session.query(Customer).all()
 
@@ -268,18 +250,13 @@ class CommercialMenuView:
             start_date, end_date, \
             support_contact, location, \
             attendees, notes
-       
 
     def display_events(self):
         events = session.query(Event).all()
-        # customer = session.query(Customer).all()
-        
         print('#----------Events ----------#\n')
         i = 0
         for elt in events:
-            # user = session.get(User, elt.support_contact)
             customer = session.get(Customer, elt.customer_contact)
-            
             print('N°', i, '. Event_id:', elt.id, "\n",
                   'Event name:', elt.event_name, "\n",
                   'Customer contact:', customer.full_name,
@@ -287,7 +264,8 @@ class CommercialMenuView:
                   'Tel:', customer.tel, "\n",
                   'start_date:', elt.start_date, "\n",
                   'end_date:', elt.end_date, "\n",
-                  'support contact:', self.get_username_from_id(elt.support_contact), "\n",
+                  'support contact:', self.get_username_from_id(
+                      elt.support_contact), "\n",
                   'location:', elt.location, "\n",
                   'attendees:', elt.attendees, "\n",
                   'notes:', elt.notes, "\n")

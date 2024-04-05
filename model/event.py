@@ -4,8 +4,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, ForeignKey, DateTime  # types Column
 from sqlalchemy.sql import func
 from .base import Base
-from .user import User
-from .contract import Contract
+# from .user import User
+# from .contract import Contract
 
 
 class Event(Base):

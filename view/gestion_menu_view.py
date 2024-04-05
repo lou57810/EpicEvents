@@ -4,9 +4,6 @@ from model.contract import Contract
 from model.customer import Customer
 from controller.engine_controller import session
 from model.user import Permissions_roles, RoleEnum
-from model.user import ADD_USER, UPDATE_USER, DELETE_USER
-from model.user import ADD_CONTRACT, UPDATE_CONTRACT, UPDATE_EVENT
-from model.user import DISPLAY_FILTERED_EVENTS
 
 
 class GestionMenuView:
@@ -68,7 +65,6 @@ class GestionMenuView:
         print('#### Collaborators registered ####\n')
         self.display_users()
         print('\n')
-        
         username = input('Nom du nouveau collaborateur: ')
         password = str(input('Password: '))
         email = input("collaborator email : ")
@@ -195,26 +191,26 @@ class GestionMenuView:
     def display_one_customer(self, customer, user):
         print('#---- customer_info ----#\n')
         print(' id:', customer.id, "\n",
-                'Name:', customer.full_name, "\n",
-                'email:', customer.customer_email, "\n",
-                'Tel:', customer.tel, "\n",
-                'First date:', customer.first_date, "\n",
-                'Last date:', customer.last_date, "\n",
-                'Contact:', user.username)
+              'Name:', customer.full_name, "\n",
+              'email:', customer.customer_email, "\n",
+              'Tel:', customer.tel, "\n",
+              'First date:', customer.first_date, "\n",
+              'Last date:', customer.last_date, "\n",
+              'Contact:', user.username)
 
     def create_contract(self, user_role):
-            customer_info = self.display_customers()
-            customer = session.get(Customer, customer_info)
-            user = session.get(User, customer.contact)
-            self.display_one_customer(customer, user)
+        customer_info = self.display_customers()
+        customer = session.get(Customer, customer_info)
+        user = session.get(User, customer.contact)
+        self.display_one_customer(customer, user)
 
-            total_amount = input('Montant total du contrat: ')
-            balance_payable = input('Montant restant à payer: ')
-            start_date = input('Date création: YYYY-MM-DD format\n')
-            contract_status = input(
-                            'Contrat status: (1: SIGNED or 2: UNSIGNED)')
-            return customer_info, total_amount, \
-                balance_payable, start_date, contract_status
+        total_amount = input('Montant total du contrat: ')
+        balance_payable = input('Montant restant à payer: ')
+        start_date = input('Date création: YYYY-MM-DD format\n')
+        contract_status = input(
+                        'Contrat status: (1: SIGNED or 2: UNSIGNED)')
+        return customer_info, total_amount, \
+            balance_payable, start_date, contract_status
 
     def display_ordered_update_contracts(self):
         contracts = session.query(Contract).all()
@@ -285,14 +281,14 @@ class GestionMenuView:
         if event_no_contact:
             for elt in event_no_contact:
                 print('N°', i, "\n",
-                  'Id:', elt.id, '\n',
-                  'Event Name:', elt.event_name, '\n',
-                  'Start Date:', elt.start_date, '\n',
-                  'End Date:', elt.end_date, '\n',
-                  'Location:', elt.location, '\n',
-                  'Support Contact:', elt.support_contact, '\n',
-                  'Attendees:', elt.attendees, '\n',
-                  'Notes:', elt.notes, '\n')
+                      'Id:', elt.id, '\n',
+                      'Event Name:', elt.event_name, '\n',
+                      'Start Date:', elt.start_date, '\n',
+                      'End Date:', elt.end_date, '\n',
+                      'Location:', elt.location, '\n',
+                      'Support Contact:', elt.support_contact, '\n',
+                      'Attendees:', elt.attendees, '\n',
+                      'Notes:', elt.notes, '\n')
                 i = i + 1
             return event_no_contact
         else:
@@ -320,7 +316,6 @@ class GestionMenuView:
               '6:', column_names[9], '\n',
               '7:', column_names[10], '\n')
 
-        
         key_to_update = input('N° Clé à modifier: ')
         if key_to_update == "1":
             key_to_update = column_names[1]
@@ -336,10 +331,12 @@ class GestionMenuView:
             value_to_update = input('Nouvelle valeur: ')
         elif key_to_update == "5":
             # Requête pour récupérer les utilisateurs avec le rôle "support"
-            users_support = session.query(User).filter(User.role == RoleEnum.SUPPORT.value).all()
+            users_support = session.query(
+                User).filter(User.role == RoleEnum.SUPPORT.value).all()
             i = 0
             while i < len(users_support):
-                print('Username:', users_support[i].username, ', Id:', users_support[i].id)
+                print('Username:', users_support[i].username,
+                      ', Id:', users_support[i].id)
                 i = i + 1
             key_to_update = column_names[8]
             value_to_update = input('Nouvelle valeur (id): ')
@@ -362,7 +359,8 @@ class GestionMenuView:
                   'customer_contact:', event.customer_contact, "\n",
                   'start_date:', event.start_date, "\n",
                   'end_date:', event.end_date, "\n",
-                  'support_contact:', self.get_username_from_id(event.support_contact), "\n",
+                  'support_contact:', self.get_username_from_id(
+                      event.support_contact), "\n",
                   'location:', event.location, "\n",
                   'attendees:', event.attendees, "\n",
                   'notes:', event.notes)

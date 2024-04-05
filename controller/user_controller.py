@@ -66,7 +66,7 @@ class UserController:
         if user_row:
             self.check_password(user_row)
         else:
-            user_row = None  #  Annul previous value
+            user_row = None  # Annul previous value
             self.check_email()
 
     # Redirection en fonction de l'id collaborateur, et du rôle

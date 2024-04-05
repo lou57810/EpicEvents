@@ -6,8 +6,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String, DateTime, Column, types
 from sqlalchemy.sql import func
 from .base import Base
-from .user import User
-from .customer import Customer
+# from .user import User
+# from .customer import Customer
 # from .event import Event
 
 
@@ -32,7 +32,7 @@ class Contract(Base):
         back_populates="contracts_maps")
     # Relation with event:
     event_map: Mapped[List["Event"]] = relationship(back_populates='contract')
-    #events = relationship("Event",
+    # events = relationship("Event",
     #           back_populates='contract', cascade="all, delete-orphan")
 
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False)

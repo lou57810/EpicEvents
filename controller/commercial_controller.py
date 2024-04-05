@@ -65,24 +65,31 @@ class CommercialController:
         pass
 
     def create_customer(self, role):
-        (full_name, customer_email,
-            tel, company_name, first_date,
-            last_date) = self.commercial_views.create_customer_account(role)
-        # Association automatique du commercial
-        customer = Customer(full_name, customer_email,
-                            tel, company_name, first_date,
-                            last_date, self.user_controller.current_user.id)
-        session.add(customer)   # stage
-        session.commit()    # push
-        self.commercial_views.display_customers()
-        self.commercial_menu_controller()     # Retour menu
+        if self.get_permission(role, ADD_CUSTOMER):
+            (full_name, customer_email,
+                tel, company_name,
+                first_date,
+                last_date)\
+                = self.commercial_views.create_customer_account(role)
+            # Association automatique du commercial
+            customer = Customer(full_name, customer_email,
+                                tel, company_name, first_date,
+                                last_date,
+                                self.user_controller.current_user.id)
+            session.add(customer)   # stage
+            session.commit()    # push
+            self.commercial_views.display_customers()
+            self.commercial_menu_controller()     # Retour menu
+        else:
+            print("Operation only allowed for Commercial departement !")
+            self.commercial_menu_controller()
 
     def update_customer(self, role, current_user):
-        customer_to_update = self.commercial_views.display_customers_to_update()
-        print('\n')
+                        customer_to_update\
+                        = self.commercial_views.display_customers_to_update()
         customer = session.query(Customer).filter_by(
-                   id=customer_to_update.id).one_or_none()
-        user = session.get(User, current_user)
+                           id=customer_to_update.id).one_or_none()
+        # user = session.get(User, current_user)
         if self.get_permission(role, UPDATE_OWN_CUSTOMER):
             if customer.contact != current_user:
                 print('\n')
@@ -90,9 +97,10 @@ class CommercialController:
                       'is not your customer. Retry! ####\n')
                 self.commercial_menu_controller()
             else:
-                (id, key_to_update,
-                    value_to_update) = self.commercial_views.update_own_customer(
-                        role, current_user, customer)
+                (id,
+                key_to_update, value_to_update)\
+                = self.commercial_views.update_own_customer(
+                role, current_user, customer)
                 query = session.query(Customer)
                 column_names = query.statement.columns.keys()
 
@@ -115,7 +123,8 @@ class CommercialController:
                         elif key_to_update == 'contact':
                             customer.contact = value_to_update
                 session.commit()    # push
-                print('Sortie nouvelle val de', key_to_update, ':', value_to_update)
+                print('Sortie nouvelle val de',
+                       key_to_update, ':', value_to_update)
                 self.commercial_menu_controller()
         else:
             print("Operation only allowed for Commercial departement !")
@@ -123,7 +132,8 @@ class CommercialController:
 
     def update_own_contract(self, role, current_user):
         print('verif current_user:', current_user, '\n')
-        contract_to_update = self.commercial_views.display_contracts_to_update()
+               contract_to_update\
+               = self.commercial_views.display_contracts_to_update()
         if self.get_permission(role, UPDATE_OWN_CONTRACT):
             contract = session.query(Contract).filter_by(
                 id=contract_to_update.id).one_or_none()
@@ -131,7 +141,9 @@ class CommercialController:
                 print('Forbidden, this contract is not one of your owns!')
                 self.commercial_menu_controller()
             else:
-                key_to_update, value_to_update = self.commercial_views.update_own_contract(role, current_user, contract)
+                key_to_update, value_to_update\
+                    = self.commercial_views.update_own_contract(
+                    role, current_user, contract)
                 query = session.query(Contract)
                 column_names = query.statement.columns.keys()
 
@@ -159,7 +171,7 @@ class CommercialController:
 
     def create_event(self, role, current_user):
         contract = self.commercial_views.display_contracts_to_update()
-        
+
         # Must be commercial.
         if self.get_permission(role, CREATE_SIGNED_OWN_EVENT):
             user = session.query(User).filter(User.id == current_user).first()
@@ -178,9 +190,10 @@ class CommercialController:
                 # All conditions verified.
                 else:
                     (event_name, contract_id, customer_name,
-                    customer_contact, start_date, end_date,
-                    support_contact, location, attendees,
-                    notes) = self.commercial_views.create_validated_contract_event(
+                     customer_contact, start_date, end_date,
+                     support_contact, location, attendees,
+                     notes)\
+                     = self.commercial_views.create_validated_contract_event(
                         role, current_user, contract)
                     event = Event(event_name, contract_id,
                                   customer_name, customer_contact,

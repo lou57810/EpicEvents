@@ -1,7 +1,7 @@
 import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, DateTime  # types Column
+from sqlalchemy import String, ForeignKey, DateTime, Date  # types Column
 from sqlalchemy.sql import func
 from .base import Base
 # from .user import User
@@ -23,9 +23,9 @@ class Event(Base):
     customer_contact: Mapped[str] = mapped_column(String(150))
 
     start_date: Mapped[datetime.date] = mapped_column(
-        DateTime(timezone=True), server_default=func.now())
+        Date()) #, server_default=func.now())
     end_date: Mapped[datetime.date] = mapped_column(
-        DateTime(timezone=True), server_default=func.now())
+        Date()) #, server_default=func.now())
     location: Mapped[str] = mapped_column(String(150), nullable=False)
 
     # Relation with user:

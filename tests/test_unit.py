@@ -1,26 +1,28 @@
-# import logging
-# from enum import Enum as PyEnum
-import bcrypt
-from model.user import RoleEnum, User
-from model.contract import Contract
-from model.customer import Customer
-from model.event import Event
-from model.base import Base
-# from controller.administration_controller import AdministrationController
-from view.start_menu_view import StartMenuView
+from model.user import RoleEnum
 from view.gestion_menu_view import GestionMenuView
-from controller.user_controller import UserController
-from controller.start_menu_controller import StartMenuController
-
-# from controller.user_controller import UserController # Contain check_email
-# from controller.gestion_controller import GestionController
-# from controller.start_menu_controller import StartMenuController
-# from controller.engine_controller import EngineController, session
+from controller.engine_controller import EngineController
 import pytest
-# import bcrypt
-# import builtins
-# import unittest
 from unittest.mock import patch  # MagicMock
+
+
+@patch('controller.engine_controller.create_engine')
+def test_start_engine(mock_create_engine):
+    # Instanciation EngineController
+    engine_controller = EngineController()
+
+    # Comportement attendu du mock de create_engine
+    db_name = 'test_db'
+    expected_url = "mysql+pymysql://root:edwood@localhost/" + db_name
+    mock_engine = mock_create_engine.return_value
+
+    # Appel de la méthode start_engine avec un nom de base de données
+    result = engine_controller.start_engine(db_name)
+
+    # Assert 'create_engine' appelé avec les bons paramètres
+    mock_create_engine.assert_called_once_with(expected_url)
+
+    # Résultat attendu de create_engine
+    assert result == mock_engine
 
 
 class TestGestionMenuView:

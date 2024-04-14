@@ -27,34 +27,37 @@ class AdministrationMenuView:
             4. Display databases.
             0. Start Menu.
             """)
-
-            answer = input("Choix: ")
-            # Db creation:
-            if answer == "1":
-                self.display_databases()
-                db_name = input('Entrer le nom de la bd à créer: ')
-                return 1, db_name   # Renvoi
-            # Admin user creation
-            if answer == "2":
-                db_name = input('Entrer la bd à utiliser(dbepic):')
-                return 2, db_name
-            # Db deletion
-            elif answer == "3":
-                self.display_databases()
-                db_name = input('Entrer le nom de la bd a supprimer : ')
-                return 3, db_name   # Renvoi tuple
-            # Return Menu and Db display
-            elif answer == "4":
-                return 4, None
-            # Bad entry
-            elif answer == "":
-                print("\n Choice are 1, 2, 3, 4 : Retry !")
-            # Return start_menu
-            elif answer == "0":
-                return 0, None
+            answer = input("Select N° Menu: ")
+            if int(answer) > 4:
+                print('Wrong entry. Retry !')
+            else:                
+                # Db creation:
+                if answer == "1":
+                    self.display_databases()
+                    db_name = input('Entrer le nom de la bd à créer: ')
+                    return 1, db_name   # Renvoi
+                # Admin user creation
+                if answer == "2":
+                    db_name = input('Entrer la bd à utiliser(dbepic):')
+                    return 2, db_name
+                # Db deletion
+                elif answer == "3":
+                    self.display_databases()
+                    db_name = input('Entrer le nom de la bd a supprimer : ')
+                    return 3, db_name   # Renvoi tuple
+                # Return Menu and Db display
+                elif answer == "4":
+                    return 4, None
+                # Bad entry
+                elif answer == "":
+                    print("\n Choice are 1, 2, 3, 4 : Retry !")
+                # Return start_menu
+                elif answer == "0":
+                    return 0, None
 
     def display_databases(self):
-        print('DATABASES:')
+        print('\n')
+        print('EXISTING DATABASES:')
         show_existing_db = "SHOW DATABASES"
         db_list = []
         try:
@@ -69,9 +72,11 @@ class AdministrationMenuView:
                     for db in cursor:
                         db_list.append(db)
                         print(db)
+                        
 
         except connector.Error as e:
             print(e)
+        print('\n')
         return db_list
 
     def display_tables(self):

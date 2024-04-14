@@ -1,9 +1,10 @@
 from typing import List
 import datetime
+from datetime import date
 from enum import Enum as PyEnum
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String, DateTime, Column, types
+from sqlalchemy import ForeignKey, String, DateTime, Date, Column, types
 from sqlalchemy.sql import func
 from .base import Base
 # from .user import User
@@ -38,7 +39,7 @@ class Contract(Base):
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False)
     balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)
     start_date: Mapped[datetime.date] = mapped_column(
-        DateTime(timezone=True), server_default=func.now())
+        Date()) #, server_default=func.now())
     contract_status = Column(types.Enum(SignEnum,
                              values_callable=lambda obj:
                              [e.value for e in obj]))

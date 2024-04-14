@@ -5,35 +5,32 @@
 #### Objet: Cr�ation d'un logiciel CRM interne.
 #### CRM: Customer Relationship Management.
 
-## Cr�ation d'un environnement virtuel:
+## Cr�ation d'un environnement virtuel(Windows):
 `python -m venv .venv` (.venv pour différencier du fichier .env à créer et définir selon le fichier modèle env_template)
-## Puis activation avec Windows, depuis git bash:
-`source env/scripts/activate`
+## Linux:
+`python3 -m venv .venv`
+## Puis activation avec Windows, depuis git bash: 
+`source .venv/scripts/activate`
 ## Ou sur Linux:
-`source env/bin/activate`
+`source .venv/bin/activate`
 
-## Installation de mysql depuis le site de son nom.
+## Installation de mysql et Workbench depuis le site de son nom:
+## Cette installation peut nécessiter l'install de Visual Studio C++ 2019.
+ https://dev.mysql.com/downloads/
 
 ## Installation des packages avec pip:
 ## En particulier de l'orm sqlalchemy.
 `pip install -r requirements.txt`
-
-## Installer mysql depuis le site: https://dev.mysql.com/downloads/
-## Cette installation peut nécessiter l'install de Visual Studio C++ 2019.
-## Installer dans la foulée mysql Workbench.
 
 ## Exécuter la commande `mysql -u root -p` pour créer un mot de passe.
 ## Ce mot de passe pourra vous identifier en ligne de commande et également avec Workbench.
 ## En ligne de commande nous disposons alors de toutes les commandes mysql.
 ## Par exemple: ` SHOW DATABASES;` affiche les bases de données.
 ## Ici en particulier la base de données crée pour Epic Events: dbepic.
-## Démarrer le programme:
-`python main.py`
-## Affichage:
-	1. Administration. (Permet de créer ou de supprimer une base de données, et de créer un administrateur.)
-		1. Création de la base de donnée.
-		2. Création de l'administrateur:	(Créer au préalable un fichier .env à définir selon le fichier modèle env_template:
-			Ex: DB_PASS = "****"
+## IMPORTANT:
+## (Créer au préalable un fichier .env à définir selon le fichier modèle env_template:
+## Exemple .env : (Remplacer les '****' par vos choix)
+##				DB_PASS = "****"
 				DB_USER = "root"
 				DB_ADMIN = "****"
 				DB_ADMIN_PASS = "****"
@@ -41,6 +38,14 @@
 				DB_DEPARTMENT = "1"
 				DB_NAME = "****"
 				DB_HOST = "localhost" )
+## Ce fichier permettra d'initialiser les variables dans par exemple le fichiers engine_controller.py,
+## administration_controller.py et d'autres._
+## Démarrer le programme:
+`python main.py`
+## Affichage:
+	1. Administration. (Permet de créer ou de supprimer une base de données, et de créer un administrateur.)
+		1. Création de la base de donnée.
+		2. Création de l'administrateur:
 		3. Suppression de la base de données.
 		4. Affichage des bases de données.
 		5. Quit
@@ -70,5 +75,8 @@
 
 
 	###  Lien: https://github.com/lou57810/EpicEvents Mais vous y êtes déjà.
-
+### Remplacement de :
 ### `flake8 --format=html --htmldir=flake-report --line-max-length 110`
+### Par
+### `flake8 --format=html --htmldir=flake-report
+### flake8 a son propre fichier de confi: .flake8

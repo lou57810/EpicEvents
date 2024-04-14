@@ -5,25 +5,29 @@
 # Incluez tous les fichiers Python à analyser
 [flake8]
 filename = *.py
+max-line-length = 110
+per-file-ignores =
+    # imported but unused
+    model/*.py: F821
+    */base.py: F401
 
 # Excluez les répertoires ou fichiers que vous ne souhaitez pas analyser
 exclude =
     .git,
     __pycache__,
-    .venv
-	.idea
-	.vs
-	.pytest_cache
-	.gitignore
-	__init__.py
-	conftest.py
-	env_template
-	example
-	index.html
-	README.md
-	requirements.txt
+    .venv,
+	.idea,
+	.vs,
+	.pytest_cache,
+	.gitignore,
+	__init__.py,
+	conftest.py,
+	env_template,
+	example,
+	index.html,
+	README.md,
+	requirements.txt,
+	
 
 # Définissez les règles spécifiques pour les importations entre les modules
 # Indiquez à Flake8 d'ignorer les erreurs d'importations non utilisées entre les modules
-per-file-ignores =
-    */base.py: F401

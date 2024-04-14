@@ -15,8 +15,11 @@ class StartMenuView:
             2. Sign in.
             0. Quit.
             """)
-            answer = input("Select N° Menu:  ")
-            return answer
+            answer = input("Select N° Menu: ")
+            if int(answer) > 2:
+                print('Wrong entry. Retry !')
+            else:
+                return answer
 
     def input_email(self):
         email = input('Email: ')

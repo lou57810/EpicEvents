@@ -37,7 +37,10 @@ class GestionMenuView:
             0. Deconnection.
             """)
             answer = input("Select N° Fonction ! \n")
-            return answer
+            if int(answer) > 11:
+                print('Wrong entry. Retry !')
+            else:
+                return answer
 
     def menu_role(self):
         """
@@ -275,8 +278,8 @@ class GestionMenuView:
 
     # affiche tous les événements qui n’ont pas de « support » associé
     def display_filtered_events(self, user_role):
-        event_no_contact = session.query(Event).filter(
-            Event.support_contact == None).all()
+        event_no_contact = session.query(Event).filter(Event.support_contact.is_(None)).all()
+
         i = 0
         if event_no_contact:
             for elt in event_no_contact:

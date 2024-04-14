@@ -16,7 +16,6 @@ class AdministrationController:
         self.admin_menu = AdministrationMenuView()
 
     def start_administration(self):
-        # self.admin_menu.display_databases()
         choice, dbName = self.admin_menu.administration_menu_view()
 
         if choice == 1:
@@ -26,7 +25,6 @@ class AdministrationController:
         elif choice == 3:
             self.delete_db(dbName)
         elif choice == 4:
-            # self.start_administration()
             self.admin_menu.display_databases()
             self.start_administration()
         elif choice == 0:
@@ -39,9 +37,8 @@ class AdministrationController:
             print('Database existing, choose another name !')
             self.start_administration()
         else:
-            create_database(Engine.url)     # from alchemy_utils
+            create_database(Engine.url)     # Fct from alchemy_utils
             Base.metadata.create_all(bind=Engine)
-            # test_list = list()
             test_list = self.admin_menu.display_databases()
             print('test:', test_list)
             for elt in test_list:
@@ -49,12 +46,10 @@ class AdministrationController:
                     print('Database is created')
                     self.admin_menu.display_databases()
                     self.start_administration()
-                    # return True
 
     def delete_db(self, dbName):
         engine_app = EngineController()
         Engine = engine_app.start_engine(dbName)
-        # print('engine_url:', Engine.url)
         if database_exists(Engine.url):
             with Engine.connect() as connection:
                 connection.execute(text('DROP DATABASE' + ' ' + dbName))
@@ -71,8 +66,6 @@ class AdministrationController:
         Engine = app.start_engine(dbName)
         Session = sessionmaker(bind=Engine)
         Session = Session()
-        # user_id = Session.query(User).filter_by(id=1).one_or_none()
-        print('Test avant Session, :', Session)
         user_name = Session.query(
             User).filter(User.username == "admin").one_or_none()
         print('Test apres Session, username')
@@ -84,11 +77,10 @@ class AdministrationController:
             self.start_administration()
         else:
             # Values from .env
-            username = os.getenv("DB_ADMIN")    # "admin"
-            password = os.getenv("DB_ADMIN_PASS")   # "admin"
-            email = os.getenv("DB_ADMIN_MAIL")  # "admin@localhost"
-            # role = os.getenv("DB_DEPARTMENT")
-            role = "GESTION"
+            username = os.getenv("DB_ADMIN")
+            password = os.getenv("DB_ADMIN_PASS")
+            email = os.getenv("DB_ADMIN_MAIL")
+            role = os.getenv("ROLE")
 
             bytes = password.encode('utf-8')
             hashed_password = bcrypt.hashpw(bytes, bcrypt.gensalt())

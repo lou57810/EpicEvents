@@ -1,6 +1,6 @@
 from model.event import Event
 from controller.engine_controller import session
-from model.user import User  # , Permissions_roles, UPDATE_OWN_EVENT
+from model.user import User
 
 
 class SupportMenuView:
@@ -59,7 +59,6 @@ class SupportMenuView:
     def update_own_events(self, role, current_user):
         event_filtered = self.display_filtered_events_to_update(
                         role, current_user)
-        # customer = session.get(Customer, event_filtered.customer_contact)
 
         query = session.query(Event)
         column_names = query.statement.columns.keys()

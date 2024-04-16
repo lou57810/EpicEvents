@@ -1,13 +1,10 @@
 import bcrypt
-# import logging
-
 import sentry_sdk
 from .gestion_controller import GestionController
 from .commercial_controller import CommercialController
 from .support_controller import SupportController
-from model.user import User, RoleEnum  # Customer, Base
-# from model.customer import Customer
-from .engine_controller import session  # engine
+from model.user import User, RoleEnum
+from .engine_controller import session
 from view.start_menu_view import StartMenuView
 
 

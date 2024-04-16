@@ -29,12 +29,10 @@ class SupportController:
         current_user = self.user_controller.current_user.id
 
         if choice == "1":
-            # print('Departement Support')
             self.support_views.display_filtered_events(role, current_user)
             print('\n')
             self.support_menu_controller()
         elif choice == "2":
-            # print('Departement Support')
             self.update_own_events(role, current_user)
         elif choice == "3":
             self.commercial_views.display_customers()

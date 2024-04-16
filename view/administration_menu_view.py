@@ -30,7 +30,7 @@ class AdministrationMenuView:
             answer = input("Select N° Menu: ")
             if int(answer) > 4:
                 print('Wrong entry. Retry !')
-            else:                
+            else:
                 # Db creation:
                 if answer == "1":
                     self.display_databases()
@@ -72,8 +72,6 @@ class AdministrationMenuView:
                     for db in cursor:
                         db_list.append(db)
                         print(db)
-                        
-
         except connector.Error as e:
             print(e)
         print('\n')

@@ -1,11 +1,7 @@
 from enum import Enum as PyEnum
-# import datetime
 from typing import List
-from sqlalchemy import Column, String, types  # DateTime ForeignKey
-# from sqlalchemy.dialects.mysql import LONGTEXT
+from sqlalchemy import Column, String, types
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-# relationship  DeclarativeBase
-# from sqlalchemy.sql import func
 from .base import Base
 
 

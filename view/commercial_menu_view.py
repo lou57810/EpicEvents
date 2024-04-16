@@ -20,7 +20,6 @@ class CommercialMenuView:
                 result = Permissions_roles[role]
         for elt in result:
             if elt == role_fct:
-                # print('elt')
                 return True
 
     def commercial_menu_view(self):

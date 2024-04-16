@@ -1,4 +1,4 @@
-from model.user import User  # Event, Contract, Customer # , RoleEnum
+from model.user import User
 from model.event import Event
 from model.contract import Contract
 from model.customer import Customer
@@ -16,7 +16,6 @@ class GestionMenuView:
                 result = Permissions_roles[role]
         for elt in result:
             if elt == role_fct:
-                # print('elt')
                 return True
 
     def test_integer_entry(self, var):
@@ -31,18 +30,18 @@ class GestionMenuView:
 
     def gestion_menu_view(self):
         answer = {
-        "1": "Create user.",
-        "2": "Update user.",
-        "3": "Delete user.",
-        "4": "Display users.",
-        "5": "Create contract.",
-        "6": "Update contract.",
-        "7": "Display contracts",
-        "8": "Display filtered events",
-        "9": "Update events.",
-        "10": "Display customers.",
-        "11": "Display Events.",
-        "0": "Quit"
+                "1": "Create user.",
+                "2": "Update user.",
+                "3": "Delete user.",
+                "4": "Display users.",
+                "5": "Create contract.",
+                "6": "Update contract.",
+                "7": "Display contracts",
+                "8": "Display filtered events",
+                "9": "Update events.",
+                "10": "Display customers.",
+                "11": "Display Events.",
+                "0": "Quit"
         }
         print('\n')
         while True:
@@ -101,34 +100,15 @@ class GestionMenuView:
         return users
 
     def get_num_update_user(self):
-        users = self.display_ordered_users()
         number = input("Choisir un N° user:")
-        
-        # user_num = users[int(number)]
-        # return user_num
         return number
-        #return users, number
-        """user = users[int(choix)]
-        print('\n')
-        return user"""
-
-    """def get_user_to_update(self, user):
-        id = session.get(User, user)
-        # print('user_to_update_id:', user_to_update.id)
-        print('id:', id)
-        # return user, user_to_update.id
-        return id"""
 
     def get_user_key_to_update(self, user_id):
         print('id:', user_id)
         user = session.get(User, user_id)
         print('user_values:', user)
         query = session.query(User)
-        # user = session.query(User).filter(User.id == user_id)
-        # user = session.query(User).filter_by(id=user_id).all()
-        #users = session.query(User).filter(User.id == user_id).all()
-        # print('user:', user)
-        # print('user_125:', user[0])
+
         column_names = query.statement.columns.keys()
         print('\n')
         print('##### User selected #####\n')
@@ -143,31 +123,8 @@ class GestionMenuView:
               '4:', column_names[5], '\n')
         key_to_update = input('Attribut à modifier: ')
         return key_to_update, column_names
-        
 
     def update_user_account(self, key_to_update, column_names):
-        # user_to_update = self.display_ordered_update_users()
-        # user = session.get(User, user_to_update.id)
-        
-
-        """query = session.query(User)
-        column_names = query.statement.columns.keys()
-        print('\n')
-        print('##### User selected #####\n')
-        print('username:', user.username, "\n",
-              'password:', user.password, "\n",
-              'email:', user.email, "\n",
-              'Role:', user.role.name, "\n")
-        query = session.query(User)
-        column_names = query.statement.columns.keys()
-        print('Choose one key :', '\n',
-              '1:', column_names[1], '\n',
-              '2:', column_names[2], '\n',
-              '3:', column_names[4], '\n',
-              '4:', column_names[5], '\n')
-        key_to_update = input('Attribut à modifier: ')
-        """
-        
         if key_to_update == "1":
             key_to_update = column_names[1]
             value_to_update = input('Nouvelle valeur: ')
@@ -181,9 +138,6 @@ class GestionMenuView:
             key_to_update = column_names[5]
             value_to_update = self.get_role()
             print('key_to_update', key_to_update)
-        
-        
-        # return key_to_update, value_to_update, column_names
         return key_to_update, value_to_update
 
     def delete_user_account(self, user_role):

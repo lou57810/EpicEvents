@@ -1,7 +1,6 @@
 import os
 import sentry_sdk
 import logging
-# from sentry_sdk import add_breadcrumb
 
 from dotenv import load_dotenv  # dotenv_values
 from controller.start_menu_controller import StartMenuController
@@ -10,11 +9,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 load_dotenv()
-# print('env:', os.getenv("DB_PASS"), os.getenv("DB_USER"))
 
 
 def main():
-    """
+
     # ----- START SENTRY ----- #
     sentry_sdk.init(
         dsn=os.getenv('dns'),
@@ -32,12 +30,10 @@ def main():
     logging.debug("Program is starting!")
     logging.info("Program end!")
     # ----- END SENTRY ----- #
-    """
+
     print('Repertoire de base: ', os.getcwd(), '\n')
     main_app = StartMenuController()
     main_app.start_dbepic_app()
-    
-    
 
 
 if __name__ == "__main__":

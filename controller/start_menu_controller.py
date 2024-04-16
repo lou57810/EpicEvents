@@ -1,7 +1,6 @@
 from view.start_menu_view import StartMenuView
 from .administration_controller import AdministrationController
 from .user_controller import UserController
-# from .engine_controller import EngineController
 
 
 class StartMenuController:
@@ -9,7 +8,7 @@ class StartMenuController:
         self.user_controller = UserController(self)
         self.admin_controller = AdministrationController(self)
 
-    def start_dbepic_app(self):  # Administration, Sign in run_application
+    def start_dbepic_app(self):
         main_app = StartMenuView()
         choice = main_app.start_menu_view()
 

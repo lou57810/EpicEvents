@@ -64,7 +64,6 @@ class TestGestionMenuView:
         menu_app = GestionMenuView()
         role = menu_app.get_role()
 
-        # with pytest.raises(IndexError):
         assert (role !=
                 RoleEnum.GESTION.value) | (
                 role != RoleEnum.COMMERCIAL.value

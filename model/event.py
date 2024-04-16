@@ -1,11 +1,7 @@
 import datetime
-
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, DateTime, Date  # types Column
-from sqlalchemy.sql import func
+from sqlalchemy import String, ForeignKey, Date
 from .base import Base
-# from .user import User
-# from .contract import Contract
 
 
 class Event(Base):
@@ -23,20 +19,18 @@ class Event(Base):
     customer_contact: Mapped[str] = mapped_column(String(150))
 
     start_date: Mapped[datetime.date] = mapped_column(
-        Date()) #, server_default=func.now())
+        Date())
     end_date: Mapped[datetime.date] = mapped_column(
-        Date()) #, server_default=func.now())
+        Date())
     location: Mapped[str] = mapped_column(String(150), nullable=False)
 
     # Relation with user:
     support_contact: Mapped[int] = mapped_column(
         ForeignKey("users.id"), nullable=True)
     user: Mapped["User"] = relationship(back_populates="events_map")
-    # user: Mapped["User"] = relationship(back_populates="user")
 
     attendees: Mapped[int] = mapped_column(nullable=False)
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
-    # links: List[Link] = relationship("Link", back_populates="event")
 
     def __init__(self, id, event_name, contract_id, customer_name,
                  customer_contact, start_date, end_date, support_contact,

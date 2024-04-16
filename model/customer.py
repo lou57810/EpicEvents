@@ -3,10 +3,7 @@ from typing import List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String, Date
-from sqlalchemy.sql import func
 from .base import Base
-# from .user import User
-# from .contract import Contract
 
 
 class Customer(Base):
@@ -19,11 +16,9 @@ class Customer(Base):
         String(150), nullable=False, unique=True)
     tel: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     company_name: Mapped[str] = mapped_column(String(150), nullable=False)
-    # first_date: Mapped[datetime.date] = mapped_column(Date(), server_default=func.now())
-    # last_date: Mapped[datetime.date] = mapped_column(Date(), server_default=func.now())
     first_date: Mapped[datetime.date] = mapped_column(Date())
     last_date: Mapped[datetime.date] = mapped_column(Date())
-    # default=datetime.datetime.utcnow
+
     # Relation with collaborator:
     contact: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="customers_map")

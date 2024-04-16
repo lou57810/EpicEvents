@@ -1,15 +1,11 @@
 from typing import List
 import datetime
-from datetime import date
 from enum import Enum as PyEnum
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String, DateTime, Date, Column, types
-from sqlalchemy.sql import func
+from sqlalchemy import ForeignKey, String, Date, Column, types
+
 from .base import Base
-# from .user import User
-# from .customer import Customer
-# from .event import Event
 
 
 class SignEnum(PyEnum):
@@ -33,13 +29,11 @@ class Contract(Base):
         back_populates="contracts_maps")
     # Relation with event:
     event_map: Mapped[List["Event"]] = relationship(back_populates='contract')
-    # events = relationship("Event",
-    #           back_populates='contract', cascade="all, delete-orphan")
 
     total_amount: Mapped[int] = mapped_column(String(150), nullable=False)
     balance_payable: Mapped[int] = mapped_column(String(150), nullable=False)
     start_date: Mapped[datetime.date] = mapped_column(
-        Date()) #, server_default=func.now())
+        Date())
     contract_status = Column(types.Enum(SignEnum,
                              values_callable=lambda obj:
                              [e.value for e in obj]))

@@ -1,8 +1,5 @@
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy import text  # update
 from view.commercial_menu_view import CommercialMenuView
 from view.gestion_menu_view import GestionMenuView
-# from .engine_controller import EngineController
 from .engine_controller import session  # engine
 from model.user import User
 from model.customer import Customer
@@ -25,7 +22,6 @@ class CommercialController:
                 result = Permissions_roles[role]
         for elt in result:
             if elt == role_fct:
-                # print('elt')
                 return True
 
     def commercial_menu_controller(self):
@@ -87,7 +83,6 @@ class CommercialController:
     def update_customer(self, role, current_user):
         customer_to_update = self.commercial_views.display_customers_to_update()
         customer = session.query(Customer).filter_by(id=customer_to_update.id).one_or_none()
-        # user = session.get(User, current_user)
         if self.get_permission(role, UPDATE_OWN_CUSTOMER):
             if customer.contact != current_user:
                 print('\n')

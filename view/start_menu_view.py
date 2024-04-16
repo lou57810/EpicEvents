@@ -1,5 +1,3 @@
-# import os
-# import mysql.connector
 import maskpass
 
 

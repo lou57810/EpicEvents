@@ -96,7 +96,8 @@ class GestionController:
             user = users[choice]
 
             key_to_update, column_names = self.gestion_views.get_user_key_to_update(user.id)
-            key_to_update, value_to_update = self.gestion_views.update_user_account(key_to_update, column_names)
+            key_to_update, value_to_update = self.gestion_views.update_user_account(
+                key_to_update, column_names)
 
             if key_to_update == 'username':
                 user.username = value_to_update
@@ -115,8 +116,8 @@ class GestionController:
             session.commit()
             print('\n')
             print('Updated - user:', user.username,
-                    'pass:', user.password, 'email:', user.email,
-                    'role:', user.role.name)
+                  'pass:', user.password, 'email:', user.email,
+                  'role:', user.role.name)
             self.gestion_menu_controller()
         else:
             print("Operation only allowed for Gestion departement !")

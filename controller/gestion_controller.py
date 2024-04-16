@@ -70,7 +70,6 @@ class GestionController:
 
     def create_user(self, role):
         if self.get_permission(role, ADD_USER):
-            # print('role:', self.user_controller.current_user.role.value)
             logging.info("This is a creation test message")
             (username, password,
                 email, role) = self.gestion_views.create_user_account(role)
@@ -82,7 +81,6 @@ class GestionController:
             session.add(user)   # stage
             session.commit()    # push
 
-            # users = session.query(User).all()
             print('\n')
             print('Created:', user.username, user.email, user.role.name)
             self.gestion_menu_controller()     # Retour menu gestion
@@ -92,32 +90,33 @@ class GestionController:
 
     def update_user(self, role):
         if self.get_permission(role, UPDATE_USER):
-            (id, key_to_update,
-                value_to_update) = self.gestion_views.update_user_account(role)
-            user = session.query(User).filter_by(id=id).one_or_none()
+            user_number = self.gestion_views.get_num_update_user()
+            choice = self.gestion_views.test_integer_entry(user_number)
+            users = session.query(User).all()
+            user = users[choice]
 
-            query = session.query(User)
-            column_names = query.statement.columns.keys()
+            key_to_update, column_names = self.gestion_views.get_user_key_to_update(user.id)
+            key_to_update, value_to_update = self.gestion_views.update_user_account(key_to_update, column_names)
 
-            for elt in column_names:
-                if elt == key_to_update:
-                    if key_to_update == 'username':
-                        user.username = value_to_update
-                    elif key_to_update == 'password':
-                        bytes = value_to_update.encode('utf-8')
-                        salt = bcrypt.gensalt()
-                        hashed_password = bcrypt.hashpw(bytes, salt)
-                        user.password = value_to_update
-                        user.hashed_pass = hashed_password
-                    elif key_to_update == 'email':
-                        user.email = value_to_update
-                    elif key_to_update == 'role':
-                        user.role = value_to_update
+            if key_to_update == 'username':
+                user.username = value_to_update
+                print('user.username:', user.username)
+            elif key_to_update == 'password':
+                bytes = value_to_update.encode('utf-8')
+                salt = bcrypt.gensalt()
+                hashed_password = bcrypt.hashpw(bytes, salt)
+                user.password = value_to_update
+                user.hashed_pass = hashed_password
+            elif key_to_update == 'email':
+                user.email = value_to_update
+            elif key_to_update == 'role':
+                user.role = value_to_update
+                print('user.role:', user.role)
             session.commit()
             print('\n')
             print('Updated - user:', user.username,
-                  'pass:', user.password, 'email:', user.email,
-                  'role:', user.role.name)
+                    'pass:', user.password, 'email:', user.email,
+                    'role:', user.role.name)
             self.gestion_menu_controller()
         else:
             print("Operation only allowed for Gestion departement !")

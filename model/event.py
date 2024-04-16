@@ -38,9 +38,10 @@ class Event(Base):
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
     # links: List[Link] = relationship("Link", back_populates="event")
 
-    def __init__(self, event_name, contract_id, customer_name,
+    def __init__(self, id, event_name, contract_id, customer_name,
                  customer_contact, start_date, end_date, support_contact,
                  location, attendees, notes):
+        self.id = id
         self.event_name = event_name
         self.contract_id = contract_id
         self.customer_name = customer_name
@@ -53,10 +54,13 @@ class Event(Base):
         self.notes = notes
 
     def __repr__(self):
-        return f"({self.event_name}\
-                  {self.contract_id}\n" + f" {self.customer_name}\
-                  {self.customer_contact}\
-                  {self.start_date}\n" + f"{self.end_date}\
-                  {self.support_contact}\
-                  {self.location}\n" + f"{self.attendees}\
-                  {self.notes} )"
+        return f"Event(event_name={self.event_name!r},\
+                  contract_id={self.contract_id!r},\
+                  customer_name={self.customer_name!r},\
+                  customer_contact={self.customer_contact!r},\
+                  start_date={self.start_date!r},\
+                  end_date={self.end_date!r},\
+                  support_contact={self.support_contact!r},\
+                  location={self.location!r},\
+                  attendees={self.attendees!r},\
+                  notes={self.notes!r})"

@@ -44,9 +44,10 @@ class Contract(Base):
                              values_callable=lambda obj:
                              [e.value for e in obj]))
 
-    def __init__(self, customer_info,
+    def __init__(self, id, customer_info,
                  commercial_contact, total_amount,
                  balance_payable, start_date, contract_status):
+        self.id = id
         self.customer_info = customer_info
         self.commercial_contact = commercial_contact
         self.total_amount = total_amount
@@ -55,6 +56,9 @@ class Contract(Base):
         self.contract_status = contract_status
 
     def __repr__(self):
-        return f"({self.customer_info} {self.commercial_contact}\
-                  {self.total_amount} {self.balance_payable}\
-                  {self.start_date} {self.contract_status})"
+        return f"Contract(customer_info={self.customer_info!r},\
+                commercial_contact={self.commercial_contact!r},\
+                total_amount={self.total_amount!r},\
+                balance_payable={self.balance_payable!r},\
+                start_date={self.start_date!r},\
+                contract_status={self.contract_status!r})"

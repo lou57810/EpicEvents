@@ -14,8 +14,8 @@ load_dotenv()
 
 
 def main():
-
-    # ----- SENTRY ----- #
+    """
+    # ----- START SENTRY ----- #
     sentry_sdk.init(
         dsn=os.getenv('dns'),
         # Set traces_sample_rate to 1.0 to capture 100%
@@ -31,11 +31,13 @@ def main():
     # logging.exception("An exception happened")
     logging.debug("Program is starting!")
     logging.info("Program end!")
-
+    # ----- END SENTRY ----- #
+    """
     print('Repertoire de base: ', os.getcwd(), '\n')
     main_app = StartMenuController()
     main_app.start_dbepic_app()
-    # ----- END SENTRY ----- #
+    
+    
 
 
 if __name__ == "__main__":

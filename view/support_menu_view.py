@@ -8,15 +8,6 @@ class SupportMenuView:
     def __init__(self):
         pass
 
-    """def get_permission(self, role, role_fct):
-        for elt in Permissions_roles:
-            if elt == role:
-                result = Permissions_roles[role]
-        for elt in result:
-            if elt == role_fct:
-                print('elt')
-                return True"""
-
     def support_menu_view(self):
         answer = True
         while answer:

@@ -19,28 +19,41 @@ class GestionMenuView:
                 # print('elt')
                 return True
 
+    def test_integer_entry(self, var):
+        # Vérifie si l'entrée est un entier
+        if not var.isdigit():
+            print("Veuillez entrer un nombre entier.")
+            number = input("Select N° Menu: ")
+            user_number = int(number)
+            return user_number
+        else:
+            return int(var)
+
     def gestion_menu_view(self):
-        answer = True
-        while answer:
-            print("""
-            1. Create user.
-            2. Update user.
-            3. Delete user.
-            4. Display users.
-            5. Create contract.
-            6. Update contract.
-            7. Display contracts.
-            8. Display filtered events.
-            9. Update events.
-            10. Display customers.
-            11. Display Events.
-            0. Deconnection.
-            """)
-            answer = input("Select N° Fonction ! \n")
-            if int(answer) > 11:
-                print('Wrong entry. Retry !')
+        answer = {
+        "1": "Create user.",
+        "2": "Update user.",
+        "3": "Delete user.",
+        "4": "Display users.",
+        "5": "Create contract.",
+        "6": "Update contract.",
+        "7": "Display contracts",
+        "8": "Display filtered events",
+        "9": "Update events.",
+        "10": "Display customers.",
+        "11": "Display Events.",
+        "0": "Quit"
+        }
+        print('\n')
+        while True:
+            print("\n".join(f"{key}. {value}" for key, value in answer.items()))
+            selection = input("Select N° Menu: ")
+
+            if selection in answer:
+                print('selection_type:', type(selection))
+                return selection
             else:
-                return answer
+                print("Invalid selection. Please enter a valid number.")
 
     def menu_role(self):
         """
@@ -85,29 +98,59 @@ class GestionMenuView:
                   'role:', elt.role.name)
             i = i + 1
         print('\n')
-        # self.gestion_menu_view()  # Retour menu
+        return users
 
-    def display_ordered_update_users(self):
-        users = session.query(User).all()
-        i = 0
-        for elt in users:
-            print('N°', i, '\n',
-                  'id:', elt.id, '\n',
-                  'username:', elt.username, '\n',
-                  'password:', elt.password, '\n',
-                  'email:', elt.email, '\n',
-                  'role:', elt.role.name)
-            i = i + 1
-        choix = input("Choisir un N° user:")
-        user = users[int(choix)]
+    def get_num_update_user(self):
+        users = self.display_ordered_users()
+        number = input("Choisir un N° user:")
+        
+        # user_num = users[int(number)]
+        # return user_num
+        return number
+        #return users, number
+        """user = users[int(choix)]
         print('\n')
-        return user
+        return user"""
 
-    def update_user_account(self, user_role):
-        user_to_update = self.display_ordered_update_users()
-        user = session.get(User, user_to_update.id)
+    """def get_user_to_update(self, user):
+        id = session.get(User, user)
+        # print('user_to_update_id:', user_to_update.id)
+        print('id:', id)
+        # return user, user_to_update.id
+        return id"""
 
+    def get_user_key_to_update(self, user_id):
+        print('id:', user_id)
+        user = session.get(User, user_id)
+        print('user_values:', user)
         query = session.query(User)
+        # user = session.query(User).filter(User.id == user_id)
+        # user = session.query(User).filter_by(id=user_id).all()
+        #users = session.query(User).filter(User.id == user_id).all()
+        # print('user:', user)
+        # print('user_125:', user[0])
+        column_names = query.statement.columns.keys()
+        print('\n')
+        print('##### User selected #####\n')
+        print('username:', user.username, "\n",
+              'password:', user.password, "\n",
+              'email:', user.email, "\n",
+              'Role:', user.role.name, "\n")
+        print('Choose one key :', '\n',
+              '1:', column_names[1], '\n',
+              '2:', column_names[2], '\n',
+              '3:', column_names[4], '\n',
+              '4:', column_names[5], '\n')
+        key_to_update = input('Attribut à modifier: ')
+        return key_to_update, column_names
+        
+
+    def update_user_account(self, key_to_update, column_names):
+        # user_to_update = self.display_ordered_update_users()
+        # user = session.get(User, user_to_update.id)
+        
+
+        """query = session.query(User)
         column_names = query.statement.columns.keys()
         print('\n')
         print('##### User selected #####\n')
@@ -122,8 +165,9 @@ class GestionMenuView:
               '2:', column_names[2], '\n',
               '3:', column_names[4], '\n',
               '4:', column_names[5], '\n')
-
         key_to_update = input('Attribut à modifier: ')
+        """
+        
         if key_to_update == "1":
             key_to_update = column_names[1]
             value_to_update = input('Nouvelle valeur: ')
@@ -136,8 +180,11 @@ class GestionMenuView:
         elif key_to_update == "4":
             key_to_update = column_names[5]
             value_to_update = self.get_role()
-
-        return user_to_update.id, key_to_update, value_to_update
+            print('key_to_update', key_to_update)
+        
+        
+        # return key_to_update, value_to_update, column_names
+        return key_to_update, value_to_update
 
     def delete_user_account(self, user_role):
         user_to_delete = self.display_ordered_update_users()

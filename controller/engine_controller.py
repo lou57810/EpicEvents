@@ -1,6 +1,6 @@
 import os
-from dotenv import load_dotenv # , dotenv_values
-from sqlalchemy.orm import Session, sessionmaker
+from dotenv import load_dotenv
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
 
@@ -9,7 +9,8 @@ username = os.getenv('DB_USER')
 password = os.getenv('DB_PASS')
 db_name = os.getenv('DB_NAME')
 
-engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
+engine = create_engine(
+    "mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -20,5 +21,7 @@ class EngineController:
         pass
 
     def start_engine(self, db_name):
-        Engine = create_engine("mysql+pymysql://" + username + ":" + password + "@localhost/" + db_name)
+        Engine = create_engine(
+            "mysql+pymysql://" + username +
+            ":" + password + "@localhost/" + db_name)
         return Engine

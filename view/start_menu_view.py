@@ -1,7 +1,4 @@
-# import os
 import maskpass
-from controller.engine_controller import engine
-from sqlalchemy import inspect
 
 
 class StartMenuView:
@@ -9,26 +6,23 @@ class StartMenuView:
         pass
 
     def start_menu_view(self):
-            print("Choose options:")
-            answer = True
-            while answer:
-                print("""
-                1. Administration.
-                2. Sign in.
-                0. Quit.
-                """)
-                answer = input("Choix:")
+        answer = True
+        while answer:
+            print("""
+            1. Administration.
+            2. Sign in.
+            0. Quit.
+            """)
+            answer = input("Select N° Menu: ")
+            if int(answer) > 2:
+                print('Wrong entry. Retry !')
+            else:
                 return answer
 
-    def user_sign_in(self):
+    def input_email(self):
         email = input('Email: ')
-        password = maskpass.askpass(prompt="Password:", mask="#")
-        return email, password
+        return email
 
-
-    def display_tables(self):
-        # print('Connexion à dbepic ! \n')
-        print('TABLES:')
-        insp = inspect(engine)
-        print(insp.get_table_names())
-    
+    def input_password(self):
+        password = maskpass.askpass(prompt="Enter Password:", mask="#")
+        return password

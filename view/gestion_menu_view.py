@@ -4,6 +4,7 @@ from model.contract import Contract
 from model.customer import Customer
 from controller.engine_controller import session
 from model.user import Permissions_roles, RoleEnum
+import logging
 
 
 class GestionMenuView:
@@ -52,6 +53,7 @@ class GestionMenuView:
                 print('selection:', selection)
                 return selection
             else:
+                logging.error("Invalid entry !", extra=dict(bar=43))
                 print("Invalid selection. Please enter a valid number.")
 
     def menu_role(self):

@@ -1,5 +1,6 @@
 import bcrypt
 import sentry_sdk
+import logging
 from .gestion_controller import GestionController
 from .commercial_controller import CommercialController
 from .support_controller import SupportController
@@ -34,6 +35,7 @@ class UserController:
             User).filter_by(email=input_email).one_or_none()  # fit email
 
         if not user_row:
+            logging.error("Wrong email !", extra=dict(bar=43))
             print('Wrong email, retry!')
             self.sign_in()
         else:
@@ -55,6 +57,7 @@ class UserController:
             self.report_user_login(user_row.username)  # Sentry
             self.department_redirect()
         else:
+            logging.error("Invalid password !", extra=dict(bar=43))
             print('Password incorrect ! retry.')
             self.sign_in()
 

@@ -25,7 +25,7 @@ def main():
         profiles_sample_rate=1.0,
     )
 
-    logging.error("I am an event", extra=dict(bar=43))
+    # logging.error("I am an event", extra=dict(bar=43))
     # logging.exception("An exception happened")
     # logging.debug("Program is starting!")
     # logging.info("Program end!")

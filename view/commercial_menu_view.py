@@ -102,7 +102,7 @@ class CommercialMenuView:
         """elif key_to_update == "7":
             key_to_update = column_names[7]
             value_to_update = input('Nouvelle valeur entrée: ')"""
-        return user, key_to_update, value_to_update
+        return key_to_update, value_to_update
 
     def display_customers_to_update(self):
         customers = self.display_customers()

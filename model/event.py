@@ -32,10 +32,9 @@ class Event(Base):
     attendees: Mapped[int] = mapped_column(nullable=False)
     notes: Mapped[str] = mapped_column(String(250), nullable=False)
 
-    def __init__(self, id, event_name, contract_id, customer_name,
+    def __init__(self, event_name, contract_id, customer_name,
                  customer_contact, start_date, end_date, support_contact,
                  location, attendees, notes):
-        self.id = id
         self.event_name = event_name
         self.contract_id = contract_id
         self.customer_name = customer_name

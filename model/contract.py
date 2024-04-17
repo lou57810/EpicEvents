@@ -38,10 +38,10 @@ class Contract(Base):
                              values_callable=lambda obj:
                              [e.value for e in obj]))
 
-    def __init__(self, id, customer_info,
+    def __init__(self, customer_info,
                  commercial_contact, total_amount,
                  balance_payable, start_date, contract_status):
-        self.id = id
+
         self.customer_info = customer_info
         self.commercial_contact = commercial_contact
         self.total_amount = total_amount

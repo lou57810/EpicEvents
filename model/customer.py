@@ -27,10 +27,10 @@ class Customer(Base):
     contracts_maps: Mapped[List["Contract"]] = relationship(
         back_populates='customer', cascade="all, delete-orphan")
 
-    def __init__(self, id, full_name,
+    def __init__(self, full_name,
                  customer_email, tel, company_name,
                  first_date, last_date, contact):
-        self.id = id
+
         self.full_name = full_name
         self.customer_email = customer_email
         self.tel = tel

@@ -68,10 +68,10 @@ class CommercialController:
                 last_date)\
                 = self.commercial_views.create_customer_account(role)
             # Association automatique du commercial
+            print('contact:', self.user_controller.current_user.id)
             customer = Customer(full_name, customer_email,
                                 tel, company_name, first_date,
-                                last_date,
-                                self.user_controller.current_user.id)
+                                last_date, self.user_controller.current_user.id)
             session.add(customer)   # stage
             session.commit()    # push
             self.commercial_views.display_customers()
@@ -90,7 +90,7 @@ class CommercialController:
                       'is not your customer. Retry! ####\n')
                 self.commercial_menu_controller()
             else:
-                (id, key_to_update, value_to_update) = self.commercial_views.update_own_customer(
+                (key_to_update, value_to_update) = self.commercial_views.update_own_customer(
                  role, current_user, customer)
                 query = session.query(Customer)
                 column_names = query.statement.columns.keys()

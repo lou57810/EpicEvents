@@ -49,7 +49,7 @@ class GestionMenuView:
             selection = input("Select N° Menu: ")
 
             if selection in answer:
-                print('selection_type:', type(selection))
+                print('selection:', selection)
                 return selection
             else:
                 print("Invalid selection. Please enter a valid number.")
@@ -306,7 +306,6 @@ class GestionMenuView:
 
     def update_events(self, user_role):
         event_to_update = self.select_filtered_events(user_role)
-        # choice = input('N° Evenement à modifier:')
 
         query = session.query(Event)
         column_names = query.statement.columns.keys()
